@@ -1,33 +1,37 @@
 <template>
 <div class="desktop">
-    <window title="my first app">
+    <background />
+    <Window title="my first app">
         <div>this is content</div>
-    </window>
-    <window title="my second app" :titleButtons="{minimize:false, maximize:false}">
+    </Window>
+    <Window title="my second app" :titleButtons="{minimize:false, maximize:false}">
         <div> content2 </div>
         <div> content 3 </div>
-        <Menu :value="[{ label: 'asdf' }, { label: 'aaa' }, { label: 'xxx'}]">
-            <div>click me</div>
-        </Menu>
-    </window>
+        <div v-menu="{ value: [{ label: 'asdf' }, { label: 'aaa' }, { label: 'xxx'}] }">Click me?</div>
+    </Window>
     <StatusBar />
 </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Window from './window/Window.vue'
-import StatusBar from './statusbar/StatusBar.vue'
-import Menu from './menu/Menu.vue'
+import { Component, Vue } from 'vue-property-decorator';
+import Background from './background.vue';
+import Window from './window/window.vue'
+import StatusBar from './statusbar/statusbar.vue'
+import Menu from './menu/menu'
+import { DirectiveOptions } from 'vue';
 
-export default Vue.extend({
-    components: { Window, StatusBar, Menu }
+@Component({
+    components: { Window, StatusBar, Background },
+    directives: {
+        menu: Menu
+    }
 })
+export default class Desktop extends Vue {}
 </script>
 <style lang="scss" scoped>
     .desktop {
         position: absolute;
         left: 0; right: 0; top: 0; bottom: 0;
-        background:darkslateblue url('../assets/logo.png') repeat;
         overflow:hidden;
     }
 </style>

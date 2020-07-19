@@ -1,6 +1,6 @@
 <template>
-    <div class="window" v-movable="{ active:movable, handle: 'window-title' }" v-resizable="{ active: resizable, minX: minX, minY: minY }">
-        <window-title v-if="hasTitleBar" :title=title :options="titleButtons" />
+    <div class="window" v-movable="{ active:movable, handle: 'Window-title' }" v-resizable="{ active: resizable, minX: minX, minY: minY }">
+        <Window-title v-if="hasTitleBar" :title=title :options="titleButtons" />
         <div class="window-content">
             <slot></slot>
         </div>
@@ -8,9 +8,9 @@
 </template>
 <script lang="ts">
 import Vue, { PropType } from 'vue'
-import WindowBehaviours from './logics/Window-Behaviours'
-import WindowTitle from './components/Window-title.vue'
-import WindowTitleOptions from './components/Window-title-options'
+import WindowBehaviours from './logics/window-behaviours'
+import WindowTitle from './components/window-title.vue'
+import WindowTitleOptions from './components/window-title-options'
 //import { Prop } from 'vue-property-decorator'
 
 export default Vue.extend({
@@ -51,7 +51,7 @@ export default Vue.extend({
         }
     },
     created:function(){
-        if(this.defaultWidth < this.minX) {
+        if(this.$props.defaultWidth < this.$props.minX) {
             throw "[Window] error: Default width cannot be smaller than minimum width";
         }
         if(this.defaultHeight < this.minY) {
@@ -60,8 +60,8 @@ export default Vue.extend({
     },
     mounted:function(){
         var elem = this.$el as HTMLElement;
-        elem.style.width = this.defaultWidth + "px";
-        elem.style.height = this.defaultHeight + "px";
+        elem.style.width = this.$props.defaultWidth + "px";
+        elem.style.height = this.$props.defaultHeight + "px";
     },
     components:{
         WindowTitle

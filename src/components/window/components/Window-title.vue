@@ -2,18 +2,18 @@
     <div class="window-title">
         <span class="window-title-text">{{ title }}</span>
         <div class="window-title-buttons">
-            <ui-button v-if="options.minimize" text = "_" />
-            <ui-button v-if="options.maximize" text = "[]" />
-            <ui-button :clicked="close" text = "x" />
+            <Ui-button v-if="options.minimize" text = "_" />
+            <Ui-button v-if="options.maximize" text = "[]" />
+            <Ui-button :clicked="close" text = "x" />
         </div>
     </div>
 </template>
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import UiButton from '../../ui-components/button.vue'
-import WindowTitleOptions from './Window-title-options'
+import WindowTitleOptions from './window-title-options'
 export default Vue.extend({
-    name:'Window-Title',
+    name:'Window-title',
     props:{
         title:String,
         options:{

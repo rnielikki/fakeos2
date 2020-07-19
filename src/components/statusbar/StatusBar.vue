@@ -1,14 +1,29 @@
 <template>
-    <div class="statusbar"><ui-button text = "Start" /><window-status /><clock-date /></div>
+    <div class="statusbar">
+        <Ui-button text = "Start"
+         v-menu="{
+             value: [{ label: 'Help' }, { label: 'Do nothing' }, { label: 'Sleep' }, { label: 'Turn Off'}],
+             menuInfo: startMenuInfo
+          }" />
+        <Window-status />
+        <Clock-date />
+    </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
 import UiButton from '../ui-components/button.vue'
-import ClockDate from './ClockDate.vue'
-import WindowStatus from './WindowStatus.vue'
+import ClockDate from './clock-date.vue'
+import WindowStatus from './window-status.vue'
+import Menu from '../menu/menu'
+import MenuInfo, { MenuDirection } from '../menu/models/menu-info'
+
 export default Vue.extend({
-    name:'StatusBar',
-    components: { UiButton, WindowStatus, ClockDate }
+    name:'Statusbar',
+    components: { UiButton, WindowStatus, ClockDate },
+    directives: { Menu },
+    data:function(){
+        return { startMenuInfo: new MenuInfo({ direction: MenuDirection.topRight}) }
+    }
 })
 </script>
 <style lang="scss" scoped>

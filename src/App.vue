@@ -1,23 +1,38 @@
 <template>
   <div id="app">
       <Desktop />
+      <blue-screen v-if="error" :info="info" :error="errorInfo" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Desktop from './components/Desktop.vue';
+import Desktop from './components/desktop.vue';
+import BlueScreen from './components/bluescreen.vue'
 
 @Component({
   components: {
-    Desktop
+    Desktop, BlueScreen
   },
+  errorCaptured(err, vm, info){
+    this.$data.info = info;
+    this.$data.errorInfo = err;
+    this.$data.error = true;
+    console.log(this.$data)
+  },
+  data(){
+    return {
+      error: false,
+      errorInfo: undefined,
+      info: undefined
+    }
+  }
 })
 export default class App extends Vue {}
 </script>
 
 <style lang="scss">
-html, body {
+html, body, #app {
   height:100%;
   overflow:hidden;
   margin:0;

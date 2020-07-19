@@ -1,7 +1,6 @@
-import Vnode from 'vue';
 import Movable from './movable';
 import Resizer from './resizer.vue'
-//import { component } from 'vue/types/umd';
+
 export default {
   movable:{
     bind: function (el:HTMLElement, binding:any, vnode:any) {
@@ -17,7 +16,6 @@ export default {
           throw(`Error: Component name ${handleName} cannot found.`);
         }
       }
-      (vnode as Vnode).$on
       new Movable(el as HTMLElement, handle);
     }
   },
