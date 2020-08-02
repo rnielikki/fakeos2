@@ -3,24 +3,36 @@ import MenuInfo from './models/menu-info'
 export default {
     bind: function (el:HTMLElement, binding:any) {
         el.style.position = "relative";
-        var menuInfo:MenuInfo = binding?.value?.menuInfo ?? new MenuInfo();
-        var menu = new Menu({ propsData: {
-            value : binding?.value?.value,
-            menuInfo: menuInfo
-        }});
+        var menu:Vue | null;
         let elementRect = el.getBoundingClientRect();
         var elementX = elementRect.left;
         var elementY = elementRect.top;
+        var createMenu = ()=>{
+            let menuInfo = binding?.value?.menuInfo ?? new MenuInfo();
+            menu = new Menu({ propsData: {
+                value : binding?.value?.value,
+                menuInfo: menuInfo
+            }});
+            menu.$props.menuInfo!.show = true;
+            menu.$mount();
+            el.appendChild(menu.$el);
+        }
+        var RemoveMenu = ()=>{
+            menu!.$destroy();
+            el.removeChild(menu!.$el);
+            menu = null;
+        }
         var ShowMenu = (e:MouseEvent)=>{
+            if(menu == null){
+                createMenu();
+            }
             e.preventDefault();
-            menuInfo.show = true;
-            document.addEventListener("mousedown", ()=>menuInfo.show=false, { once: true, capture: false });
-            menuInfo.x = e.clientX - elementX;
-            menuInfo.y = e.clientY - elementY;
+            menu!.$props.menuInfo!.show = true;
+            document.addEventListener("mousedown", RemoveMenu, { once: true, capture: false });
+            menu!.$props.menuInfo!.x = (e.clientX - elementX) + "px";
+            menu!.$props.menuInfo!.y = (e.clientY - elementY) + "px";
             e.stopPropagation();
         }
-        menu.$mount();
-        el.appendChild(menu.$el);
         el.addEventListener("contextmenu", ShowMenu);
     }
 }

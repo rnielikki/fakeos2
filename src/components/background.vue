@@ -1,5 +1,6 @@
 <template>
-    <div class="background" v-contextmenu="{ value: [{ label: 'Open...' }, { label: 'Display settings' }, { label: 'Theme'}] }">
+    <div class="background" v-contextmenu="{
+        value: menu }">
     </div>
 </template>
 <script lang="ts">
@@ -8,6 +9,28 @@ import ContextMenu from './menu/contextmenu'
 @Component({
     directives:{
         contextmenu: ContextMenu
+    },
+    data:function(){
+        return {
+            menu:[
+                {
+                label: 'Open...',
+                submenu:[
+                    {label:'sub1test'},
+                    {label:'test2',
+                    submenu:[
+                        { label:'lol' },
+                        {
+                            label: 'Next...',
+                            action: ()=>console.log(1)
+                        }              
+                    ]
+                }
+            ]
+    },
+    { label: 'Display settings' },
+    { label: 'Theme'}]
+        }
     }
 })
 export default class Background extends Vue {}

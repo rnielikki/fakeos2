@@ -1,7 +1,6 @@
 export default class MenuInfo {
-    x:number = 0;
-    y:number = 0;
-    show:boolean = false;
+    x:string = "0px";
+    y:string = "0px";
     direction:MenuDirection = MenuDirection.bottomRight;
     public constructor(init?:Partial<MenuInfo>) {
         Object.assign(this, init);

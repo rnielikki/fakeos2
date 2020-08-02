@@ -1,19 +1,16 @@
 <template>
-    <div class="menu-anchor" :style="{ left: menuInfo.x + 'px', top:menuInfo.y + 'px' }" v-if="menuInfo.show">
-        <div class="menu-wrapper" :style="this.directionStyle">
-            <div v-for="(item, key) in value" :key="key" class="menu-item">
-                {{ item.label }}
-            </div>
+    <div class="menu-anchor" :style="{ left: menuInfo.x, top:menuInfo.y }">
+        <!--<menu :items="items" :style="this.directionStyle" />-->
+        <div class="menu-wrapper" :style="this.directionStyle" ref="container">
         </div>
     </div>
 </template>
 <script lang="ts">
-// eslint-disable-next-line no-unused-vars
 import Vue, { PropType } from 'vue'
-// eslint-disable-next-line no-unused-vars
-import { IMenuComponent } from './models/menu-model'
-// eslint-disable-next-line no-unused-vars
+import { IMenuComponent, MenuItem, ParentMenuItem } from './models/menu-model'
 import MenuInfo, { MenuDirection } from './models/menu-info'
+import Menu from './menu.vue'
+//import MenuWrapper from './menu-wrapper.vue'
 export default Vue.extend({
     name:'Menu',
     props:{
@@ -44,11 +41,53 @@ export default Vue.extend({
                     break;
             }
             Object.assign(this, { directionStyle: directionStyle });
+    },
+    mounted:function(){
+        var content = this.$refs.container as HTMLElement;
+        for(let item of this.value){
+            content.appendChild(this.SetMenuItem(item));
         }
+    },
+    methods:{
+        SetMenuItem: function(item:IMenuComponent) {
+            var label = document.createElement("div");
+                label.classList.add("menu-item");
+                label.innerText = item.label;
+            if(Object.prototype.hasOwnProperty.call(item, "submenu")){
+                var wrapper = new Menu({
+                    propsData:{
+                        value: (item as ParentMenuItem).submenu,
+                        menuInfo:new MenuInfo({ direction: MenuDirection.bottomRight, x:"100%" })
+                    }
+                });
+                wrapper.$mount();
+                label.appendChild(wrapper.$el)
+                label.classList.add("menu-parent")
+                return label;
+            }
+            else {
+                if(Object.prototype.hasOwnProperty.call(item, "action")){
+                    label.addEventListener("mousedown", (item as MenuItem).action);
+                }
+                else{
+                    label.classList.add("deactivated");
+                }
+                return label;
+            }
+            //return item.label;
+        }
+    }
 })
 </script>
 <style lang="scss">
     @import 'src/scss/colorset.scss';
+    .menu-anchor{
+        width: 0;
+        height: 0;
+        position: absolute;
+        z-index:20;
+        overflow: visible;
+    }
     .menu-wrapper{
         position: absolute;
         background-color:$menu-background;
@@ -59,6 +98,8 @@ export default Vue.extend({
             margin:0;
             padding: .6rem .8rem;
             white-space: nowrap;
+            position:relative;
+            text-align: left;
         }
         .menu-item:hover{
                 cursor:default;
@@ -68,14 +109,22 @@ export default Vue.extend({
                 color: $selected-foreground;
             }
         .menu-item.deactivated {
-                opacity:0.8;
+            opacity:0.7;
+            text-shadow: 1px 1px white;
         }
     }
-    .menu-anchor{
-        width: 0;
-        height: 0;
-        position: absolute;
-        z-index:20;
-        overflow: visible;
+    .menu-parent{
+        &::after{
+            content:'\25BA';
+            float:right;
+            font-size:80%;
+        }
+        > .menu-anchor{
+            display:none
+        }
+        &:hover > .menu-anchor {
+            display: block;
+        }
     }
+    
 </style>

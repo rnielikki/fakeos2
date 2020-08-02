@@ -31,12 +31,8 @@ export default {
           minY: minY
         }
       });
-      //console.log(vnode);
       resizer.$mount();
       el.appendChild(resizer.$el);
-      //resizer.$mount(el as Element);
-      //vnode.context._self.$forceUpdate();
-      //console.log(resizer);
     }
   }
 }
