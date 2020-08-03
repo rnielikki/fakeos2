@@ -12,3 +12,4 @@ export enum MenuDirection {
     bottomLeft,
     bottomRight
 }
+export const defaultSubmenuInfo = new MenuInfo({ direction: MenuDirection.bottomRight, x:"100%" })

@@ -1,18 +1,25 @@
 <template>
     <div class="menu-anchor" :style="{ left: menuInfo.x, top:menuInfo.y }">
-        <!--<menu :items="items" :style="this.directionStyle" />-->
-        <div class="menu-wrapper" :style="this.directionStyle" ref="container">
+        <div class="menu-wrapper" :style="this.directionStyle">
+            <Menu-label v-for="(item, key) in value" :key="key" :item="item">
+                <Menu v-if="HasSubMenu(item)" :value="item.submenu" :menuInfo="defaultInfo" />
+            </Menu-label>
         </div>
     </div>
 </template>
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import { IMenuComponent, MenuItem, ParentMenuItem } from './models/menu-model'
-import MenuInfo, { MenuDirection } from './models/menu-info'
-import Menu from './menu.vue'
+import MenuInfo, { MenuDirection, defaultSubmenuInfo } from './models/menu-info'
+import MenuLabel from './menu-label.vue'
+
 //import MenuWrapper from './menu-wrapper.vue'
 export default Vue.extend({
     name:'Menu',
+    components:{ MenuLabel },
+    data:function(){
+        return { defaultInfo: defaultSubmenuInfo };
+    },
     props:{
         value:{
             type:Array as PropType<IMenuComponent[]>,
@@ -41,14 +48,24 @@ export default Vue.extend({
                     break;
             }
             Object.assign(this, { directionStyle: directionStyle });
-    },
+    },/*
     mounted:function(){
         var content = this.$refs.container as HTMLElement;
         for(let item of this.value){
             content.appendChild(this.SetMenuItem(item));
         }
-    },
+    },*/
     methods:{
+        HasSubMenu:(item:IMenuComponent)=>Object.prototype.hasOwnProperty.call(item, "submenu"),
+        IsActivated:function(item:IMenuComponent){
+            if(Object.prototype.hasOwnProperty.call(item, "action")){
+                console.log(this.$refs)
+                //element.addEventListener("mousedown", (item as MenuItem).action);
+                return true;
+            }
+            else return false;
+        },
+        /*
         SetMenuItem: function(item:IMenuComponent) {
             var label = document.createElement("div");
                 label.classList.add("menu-item");
@@ -75,7 +92,7 @@ export default Vue.extend({
                 return label;
             }
             //return item.label;
-        }
+        }*/
     }
 })
 </script>
@@ -92,39 +109,5 @@ export default Vue.extend({
         position: absolute;
         background-color:$menu-background;
         border:1px solid $menu-border;
-        .menu-item {
-            color:$menu-foreground;
-            display:block;
-            margin:0;
-            padding: .6rem .8rem;
-            white-space: nowrap;
-            position:relative;
-            text-align: left;
-        }
-        .menu-item:hover{
-                cursor:default;
-        }
-        .menu-item:not(.deactivated):hover {
-                background-color: $selected-background;
-                color: $selected-foreground;
-            }
-        .menu-item.deactivated {
-            opacity:0.7;
-            text-shadow: 1px 1px white;
-        }
     }
-    .menu-parent{
-        &::after{
-            content:'\25BA';
-            float:right;
-            font-size:80%;
-        }
-        > .menu-anchor{
-            display:none
-        }
-        &:hover > .menu-anchor {
-            display: block;
-        }
-    }
-    
 </style>
