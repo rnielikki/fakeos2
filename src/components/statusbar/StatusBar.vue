@@ -6,6 +6,7 @@
              menuInfo: startMenuInfo
           }" />
         <Window-status />
+        <Icon-status />
         <Clock-date />
     </div>
 </template>
@@ -14,12 +15,14 @@ import Vue from 'vue'
 import UiButton from '../ui-components/button.vue'
 import ClockDate from './clock-date.vue'
 import WindowStatus from './window-status.vue'
+import IconStatus from './icon-status.vue'
+
 import Menu from '../menu/menu'
 import MenuInfo, { MenuDirection } from '../menu/models/menu-info'
 
 export default Vue.extend({
     name:'Statusbar',
-    components: { UiButton, WindowStatus, ClockDate },
+    components: { UiButton, WindowStatus, ClockDate, IconStatus },
     directives: { Menu },
     data:function(){
         return { startMenuInfo: new MenuInfo({ direction: MenuDirection.topRight}) }
