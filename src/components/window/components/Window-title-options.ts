@@ -1,4 +1,4 @@
 export default interface WindowTitleOptions {
-    minimize:boolean;
-    maximize:boolean;
+    hasMinimizer:boolean;
+    hasMaximizer:boolean;
 }

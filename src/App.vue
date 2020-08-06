@@ -18,7 +18,6 @@ import BlueScreen from './components/bluescreen.vue'
     this.$data.info = info;
     this.$data.errorInfo = err;
     this.$data.error = true;
-    console.log(this.$data)
   },
   data(){
     return {

@@ -1,21 +1,23 @@
 <template>
 <div class="desktop">
     <background />
+    <!--
     <Window title="my first app">
         <div>this is content</div>
     </Window>
-    <Window title="my second app" :titleButtons="{minimize:false, maximize:false}">
+    <Window title="my second app" :titleOptions="{minimize:false, maximize:false}">
         <div> content2 </div>
         <div> content 3 </div>
         <div v-menu="{ value: [{ label: 'asdf' }, { label: 'aaa' }, { label: 'xxx'}] }">Click me?</div>
     </Window>
+    -->
     <StatusBar />
 </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Background from './background.vue';
-import Window from './window/window.vue'
+import Window from './window/components/window.vue'
 import StatusBar from './statusbar/statusbar.vue'
 import Menu from './menu/menu'
 import { DirectiveOptions } from 'vue';

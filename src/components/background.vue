@@ -4,8 +4,11 @@
     </div>
 </template>
 <script lang="ts">
+import VueCopmonent from 'vue'
 import { Component, Vue } from 'vue-property-decorator';
 import ContextMenu from './menu/contextmenu'
+import WindowFactory from './window/window-factory'
+import HelloWorld from '../softwares/windows/hello-world.vue'
 @Component({
     directives:{
         contextmenu: ContextMenu
@@ -22,7 +25,9 @@ import ContextMenu from './menu/contextmenu'
                         { label:'lol' },
                         {
                             label: 'Next...',
-                            action: ()=>console.log(1)
+                            action:function(){
+                                WindowFactory.OpenWindow(new HelloWorld());
+                            }
                         }              
                     ]
                 }
@@ -31,7 +36,12 @@ import ContextMenu from './menu/contextmenu'
     { label: 'Display settings' },
     { label: 'Theme'}]
         }
-    }
+    }/*,
+    methods:{
+        ShowWindow:function(){
+            WindowFactory.OpenWindow(new VueCopmonent({ template: "<div>TEST</div>"}), "my title?");
+        }
+    }*/
 })
 export default class Background extends Vue {}
 </script>

@@ -2,8 +2,8 @@
     <div class="window-title">
         <span class="window-title-text">{{ title }}</span>
         <div class="window-title-buttons">
-            <Ui-button v-if="options.minimize" text = "_" />
-            <Ui-button v-if="options.maximize" text = "[]" />
+            <Ui-button v-if="hasMinimizer" text = "_" />
+            <Ui-button v-if="hasMaximizer" text = "[]" />
             <Ui-button :clicked="close" text = "x" />
         </div>
     </div>
@@ -16,20 +16,19 @@ export default Vue.extend({
     name:'Window-title',
     props:{
         title:String,
-        options:{
-            type: Object as PropType<WindowTitleOptions>,
-            default: () => ({ maximize: true, minimize:true } as WindowTitleOptions)
-        },
+        hasMinimizer:Boolean,
+        hasMaximizer:Boolean,
+        targetWindow:{
+            type:Vue,
+            required:true
+        }
     },
     components:{
         UiButton
     },
     methods:{
-        close(){
-            var el = this.$parent.$el;
-            var parentEl = this.$parent.$parent.$el;
-            this.$parent.$destroy();
-            parentEl.removeChild(el);
+        close(e:Event){
+            this.targetWindow.$destroy();
         }
     }
 })
