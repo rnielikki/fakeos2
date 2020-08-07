@@ -1,10 +1,11 @@
 <template>
         <div class="window" v-movable="{ active:windowOptions.movable, handle: 'Window-title' }" v-resizable="{ active: windowOptions.resizable, minX: windowOptions.minX, minY: windowOptions.minY }">
-        <Window-title v-if="titleOptions !== null" :targetWindow="this" :title="title" :hasMinimizer="titleOptions.hasMinimizer" :hasMaximizer="titleOptions.hasMaximizer" />
-        <div class="window-content">
-            <slot></slot>
+            <Window-title v-if="titleOptions !== null" :targetWindow="this" :title="title" :hasMinimizer="titleOptions.hasMinimizer" :hasMaximizer="titleOptions.hasMaximizer" />
+            <div class="window-content">
+                <slot></slot>
+            </div>
+            <div v-if="hasModal" class="modal-background" ref="modalBackground"></div>
         </div>
-    </div>
 </template>
 <script lang="ts">
 import { PropType } from 'vue'
@@ -29,8 +30,16 @@ import IWindowOptions, { WindowOptions } from './window-options'
                 type:Object as PropType<IWindowOptions>,
             },
             parentElement:{
-                type:HTMLElement,
+                type:Element,
                 required:true
+            },
+            parentVue:{
+                type:Vue,
+                required:false
+            },
+            hasModal:{
+                type:Boolean,
+                default:false
             }
         },
         destroyed:function(){
@@ -62,5 +71,12 @@ export default class Window extends Vue {}
             text-align:initial;
             flex-grow: 1;
         }
+    }
+    .modal-background {
+        position:absolute;
+        left:0;
+        right:0;
+        top:0;
+        bottom:0
     }
 </style>

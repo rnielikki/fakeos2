@@ -1,8 +1,8 @@
-import VueComponent from 'vue'
 import Window from './components/window.vue'
 import WindowTitleOptions from './components/window-title-options'
-import IWindowOptions, { WindowOptions } from './components/window-options'
+import { WindowOptions, ModalOptions } from './components/window-options'
 import DialogTemplate from './components/dialog-template.vue'
+import MixinFactory from './mixins/window-mixin-factory'
 
 let mainDesktop:HTMLElement | null = null;
 
@@ -18,41 +18,43 @@ export default {
                 titleOptions:data?.titleOptions ?? ({ hasMinimizer:true, hasMaximizer:true } as WindowTitleOptions),
                 windowOptions:data?.windowOptions ?? new WindowOptions(),
                 parentElement:mainDesktop
-            } 
+            },
+            mixins:[ MixinFactory.CreateWindowMixin() ]
         });
         content.$mount()
         _window.$slots.default = [ (content as any)._vnode ];
-        //add mixin (destroyed)
         _window.$mount();
+        Object.assign(content.$data, { f_targetWindow: _window });
         mainDesktop!.appendChild(_window.$el)
     },
-    OpenModal:function(parent:HTMLElement, content:Vue, title?:string, windowOptions?:IWindowOptions){
+    OpenModal:function(parent:Vue | null, content:Vue, callback:(result:any)=>void){
+        if(parent === null){
+            throw "Error: Parent cannot be null";
+        }
         let _window = new Window({
             propsData:{
-                title:title,
+                title:content?.$props?.title ?? "Modal Window",
                 titleOptions: {hasMinimizer:false, hasMaximizer:false},
-                windowOptions: windowOptions,
-                parentElement:parent
-            }
+                windowOptions: content?.$props?.windowOptions ?? new ModalOptions(),
+                parentElement:parent.$el,
+                parentVue:parent
+            },
+            mixins:[ MixinFactory.CreateModalMixin(callback) ]
         })
-        _window.$slots.default?.push(content.$vnode);
+        content.$mount()
+        _window.$slots.default = [(content as any)._vnode];
+        Object.assign(content.$data, { f_targetWindow: _window });
         _window.$mount();
-        parent.appendChild(_window.$el)
+        parent.$props.hasModal = true;
+        parent.$el.appendChild(_window.$el);
     },
-    OpenDialog:function(parent:HTMLElement, message:string, title?:String, windowOptions?:IWindowOptions) {
-        let _window = new Window({
-            propsData:{
+    OpenDialog:function(parent:Vue | null, title:string, message:string, callback:(result:any)=>void) {
+        let _message = new DialogTemplate({
+            propsData: {
                 title:title,
-                titleOptions: {hasMinimizer:false, hasMaximizer:false},
-                windowOptions: windowOptions,
-                parentElement:parent
+                message: message
             }
         })
-        let _message = new DialogTemplate({
-            propsData: { message: message }
-        })
-        _window.$slots.default?.push((_message as any)._vnode);
-        _window.$mount();
-        parent.appendChild(_window.$el)
+        this.OpenModal(parent, _message, callback);
     }
 }
