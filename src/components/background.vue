@@ -8,6 +8,7 @@ import VueCopmonent from 'vue'
 import { Component, Vue } from 'vue-property-decorator';
 import ContextMenu from './menu/contextmenu'
 import WindowFactory from './window/window-factory'
+import WindowManager from '@/system/window-manager'
 
 @Component({
     directives:{
@@ -37,12 +38,10 @@ import WindowFactory from './window/window-factory'
             { label: 'Theme'}
             ]
         }
-    }/*,
-    methods:{
-        ShowWindow:function(){
-            WindowFactory.OpenWindow(new VueCopmonent({ template: "<div>TEST</div>"}), "my title?");
-        }
-    }*/
+    },
+    mounted:function(){
+        this.$el.addEventListener("mousedown", WindowManager.deselect);
+    }
 })
 export default class Background extends Vue {}
 </script>

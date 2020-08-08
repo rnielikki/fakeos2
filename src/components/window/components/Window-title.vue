@@ -1,6 +1,6 @@
 <template>
     <div class="window-title">
-        <img v-if="appName" :src="iconPath" />
+        <img v-if="iconPath" :src="iconPath" />
         <span class="window-title-text">{{ title }}</span>
         <div class="window-title-buttons">
             <Ui-button v-if="hasMinimizer" text = "_" />
@@ -17,7 +17,7 @@ import WindowTitleOptions from './window-title-options'
 export default Vue.extend({
     name:'Window-title',
     props:{
-        appName:String,
+        iconPath:String,
         title:String,
         hasMinimizer:Boolean,
         hasMaximizer:Boolean,
@@ -29,16 +29,6 @@ export default Vue.extend({
     components:{
         UiButton
     },
-    computed:{
-        iconPath:function(){
-            try {
-                return require("../../../softwares/"+this.$props.appName+"/icon.png");   
-            }
-            catch {
-                return require("../default.png");
-            }
-        }
-    },
     methods:{
         close(e:Event){
             this.targetWindow.$destroy();
@@ -46,14 +36,22 @@ export default Vue.extend({
     }
 })
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
     @import 'src/scss/colorset.scss';
+    .window.selected{
+        .window-title{
+            background-color:$titlebar-active-background;
+            &-text{
+            color: $titlebar-active-foreground;
+            }
+        }
+    }
     .window-title {
-        background-color:$titlebar-background;
+        background-color:$titlebar-deactive-background;
         padding:0.5rem 0.7rem;
         text-align: left;
         &-text{
-            color: $titlebar-foreground;
+            color: $titlebar-deactive-foreground;
         }
         &-buttons {
             white-space: nowrap;

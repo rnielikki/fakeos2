@@ -1,8 +1,8 @@
 <template>
-        <div class="window"
+        <div :class="['window', { selected: selected }]"
             v-movable="{ active:windowOptions.movable, handle: 'Window-title' }"
             v-resizable="{ active: windowOptions.resizable, minX: windowOptions.minX, minY: windowOptions.minY }"
-            :style="initWindowState"
+            :style="[ initWindowState, { zIndex: zIndex } ]"
             >
             <Window-title
                 v-if="titleOptions !== null"
@@ -10,7 +10,7 @@
                 :title="title"
                 :hasMinimizer="titleOptions.hasMinimizer"
                 :hasMaximizer="titleOptions.hasMaximizer"
-                :appName="appName"
+                :iconPath="iconPath"
             />
             <div class="window-content">
                 <slot></slot>
@@ -59,6 +59,14 @@ import IWindowOptions, { WindowOptions } from './window-options'
             initToCenter:{
                 type:Boolean,
                 default:false
+            },
+            selected:{
+                type:Boolean,
+                default:true
+            },
+            zIndex:{
+                type:Number,
+                default:0
             }
         },
         computed:{
@@ -77,6 +85,15 @@ import IWindowOptions, { WindowOptions } from './window-options'
                     stateInfo.top = (parentBoundingBox.height - this.$props.windowOptions.defaultHeight)/2 + "px"
                 }
                 return stateInfo;
+            },
+            iconPath:function(){
+                if(!this.$props.appName) return null;
+                try {
+                    return require("@/softwares/"+this.$props.appName+"/icon.png");   
+                }
+                catch {
+                    return require("../default.png");
+                }
             }
         },
         beforeDestroy:function(){
