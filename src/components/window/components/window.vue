@@ -8,7 +8,7 @@
         </div>
 </template>
 <script lang="ts">
-import { PropType } from 'vue'
+import VueType, { PropType } from 'vue'
 import { Vue } from 'vue-property-decorator';
 import Component from 'vue-class-component'
 import WindowBehaviours from '../logics/window-behaviours'
@@ -34,12 +34,18 @@ import IWindowOptions, { WindowOptions } from './window-options'
                 required:true
             },
             parentVue:{
-                type:Vue,
+                type:VueType,
                 required:false
             },
             hasModal:{
                 type:Boolean,
                 default:false
+            }
+        },
+        beforeDestroy:function(){
+            let slot = this.$slots.default;
+            if(slot && slot[0]){
+                slot[0]?.context?.$destroy();
             }
         },
         destroyed:function(){

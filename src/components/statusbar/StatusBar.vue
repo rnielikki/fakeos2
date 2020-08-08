@@ -2,7 +2,7 @@
     <div class="statusbar">
         <Ui-button text = "Start"
          v-menu="{
-             value: [{ label: 'Help' }, { label: 'Do nothing' }, { label: 'Sleep' }, { label: 'Turn Off'}],
+             value: startMenu,
              menuInfo: startMenuInfo
           }" />
         <Window-status />
@@ -16,6 +16,7 @@ import UiButton from '../ui-components/button.vue'
 import ClockDate from './clock-date.vue'
 import WindowStatus from './window-status.vue'
 import IconStatus from './icon-status.vue'
+import StartMenu from './start-menu'
 
 import Menu from '../menu/menu'
 import MenuInfo, { MenuDirection } from '../menu/models/menu-info'
@@ -25,7 +26,10 @@ export default Vue.extend({
     components: { UiButton, WindowStatus, ClockDate, IconStatus },
     directives: { Menu },
     data:function(){
-        return { startMenuInfo: new MenuInfo({ direction: MenuDirection.topRight}) }
+        return {
+            startMenu : StartMenu,
+            startMenuInfo: new MenuInfo({ direction: MenuDirection.topRight})
+        }
     }
 })
 </script>

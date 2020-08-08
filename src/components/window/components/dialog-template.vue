@@ -8,22 +8,15 @@
 </template>
 <script lang="ts">
 import Vue, { PropType } from 'vue'
+import ModalContentMixin from '../mixins/modal-content-mixin'
+
 export default Vue.extend({
     name:'DialogTemplate',
-    data:function(){
-        return {
-            result:""
-        };
-    },
     props:{
         title:String,
         message:String,
     },
-    methods:{
-        SetResult:function(value:any){
-            this.result = value
-        }
-    }
+    mixins:[ ModalContentMixin ]
 })
 </script>
 <style scoped>

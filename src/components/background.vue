@@ -8,7 +8,7 @@ import VueCopmonent from 'vue'
 import { Component, Vue } from 'vue-property-decorator';
 import ContextMenu from './menu/contextmenu'
 import WindowFactory from './window/window-factory'
-import HelloWorld from '../softwares/windows/hello-world.vue'
+
 @Component({
     directives:{
         contextmenu: ContextMenu
@@ -26,15 +26,16 @@ import HelloWorld from '../softwares/windows/hello-world.vue'
                         {
                             label: 'Next...',
                             action:function(){
-                                WindowFactory.OpenWindow(new HelloWorld());
+                                WindowFactory.OpenProgram("hello-world");
                             }
                         }              
                     ]
                 }
             ]
-    },
-    { label: 'Display settings' },
-    { label: 'Theme'}]
+            },
+            { label: 'Display settings' },
+            { label: 'Theme'}
+            ]
         }
     }/*,
     methods:{
