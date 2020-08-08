@@ -1,6 +1,17 @@
 <template>
-        <div class="window" v-movable="{ active:windowOptions.movable, handle: 'Window-title' }" v-resizable="{ active: windowOptions.resizable, minX: windowOptions.minX, minY: windowOptions.minY }">
-            <Window-title v-if="titleOptions !== null" :targetWindow="this" :title="title" :hasMinimizer="titleOptions.hasMinimizer" :hasMaximizer="titleOptions.hasMaximizer" />
+        <div class="window"
+            v-movable="{ active:windowOptions.movable, handle: 'Window-title' }"
+            v-resizable="{ active: windowOptions.resizable, minX: windowOptions.minX, minY: windowOptions.minY }"
+            :style="initWindowState"
+            >
+            <Window-title
+                v-if="titleOptions !== null"
+                :targetWindow="this"
+                :title="title"
+                :hasMinimizer="titleOptions.hasMinimizer"
+                :hasMaximizer="titleOptions.hasMaximizer"
+                :appName="appName"
+            />
             <div class="window-content">
                 <slot></slot>
             </div>
@@ -20,6 +31,10 @@ import IWindowOptions, { WindowOptions } from './window-options'
         components:{ WindowTitle },
         directives: WindowBehaviours,
         props:{
+            appName:{
+                type:String,
+                required:false
+            },
             title:{
                 type:String
             },
@@ -40,6 +55,28 @@ import IWindowOptions, { WindowOptions } from './window-options'
             hasModal:{
                 type:Boolean,
                 default:false
+            },
+            initToCenter:{
+                type:Boolean,
+                default:false
+            }
+        },
+        computed:{
+            initWindowState(){
+                let stateInfo = {
+                        left:"0px",
+                        top:"0px",
+                        width:this.$props.windowOptions.defaultWidth + "px",
+                        height:this.$props.windowOptions.defaultHeight + "px",
+                        minWidth:this.$props.windowOptions.minX + "px",
+                        minHeight:this.$props.windowOptions.minY + "px"
+                    }
+                if(this.$props.initToCenter){
+                    let parentBoundingBox = this.$props.parentElement.getBoundingClientRect();
+                    stateInfo.left = (parentBoundingBox.width - this.$props.windowOptions.defaultWidth)/2 + "px"
+                    stateInfo.top = (parentBoundingBox.height - this.$props.windowOptions.defaultHeight)/2 + "px"
+                }
+                return stateInfo;
             }
         },
         beforeDestroy:function(){
@@ -59,8 +96,6 @@ export default class Window extends Vue {}
     .window {
         background-color: $window-background;
         border:1px solid $window-border;
-        min-width: 600px;
-        min-height:400px;
         position: absolute;
         display:flex;
         flex-direction: column;

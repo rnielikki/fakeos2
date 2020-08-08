@@ -1,5 +1,6 @@
 <template>
     <div class="window-title">
+        <img v-if="appName" :src="iconPath" />
         <span class="window-title-text">{{ title }}</span>
         <div class="window-title-buttons">
             <Ui-button v-if="hasMinimizer" text = "_" />
@@ -12,9 +13,11 @@
 import Vue, { PropType } from 'vue'
 import UiButton from '../../ui-components/button.vue'
 import WindowTitleOptions from './window-title-options'
+
 export default Vue.extend({
     name:'Window-title',
     props:{
+        appName:String,
         title:String,
         hasMinimizer:Boolean,
         hasMaximizer:Boolean,
@@ -25,6 +28,16 @@ export default Vue.extend({
     },
     components:{
         UiButton
+    },
+    computed:{
+        iconPath:function(){
+            try {
+                return require("../../../softwares/"+this.$props.appName+"/icon.png");   
+            }
+            catch {
+                return require("../default.png");
+            }
+        }
     },
     methods:{
         close(e:Event){
@@ -38,10 +51,10 @@ export default Vue.extend({
     .window-title {
         background-color:$titlebar-background;
         padding:0.5rem 0.7rem;
+        text-align: left;
         &-text{
             color: $titlebar-foreground;
         }
-
         &-buttons {
             white-space: nowrap;
             float:right;
@@ -52,6 +65,12 @@ export default Vue.extend({
                 padding:.1rem;
                 margin-left:.27rem;
             }
+        }
+        img {
+            width:1.1rem;
+            height:1.1rem;
+            margin-right:.6rem;
+            vertical-align: middle;
         }
     }
     ui-button {

@@ -8,8 +8,6 @@ export default class Movable{
     constructor(element:HTMLElement, handle:HTMLElement) {
         this.element = element;
         this.handle = handle;
-        element.style.left = element.getBoundingClientRect().left + "px";
-        element.style.top = element.getBoundingClientRect().top + "px";
         this.element.style.position = 'absolute';
         handle.addEventListener("mousedown", this.register, false);
         //document.addEventListener("mouseout", this.unregister);

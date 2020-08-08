@@ -13,12 +13,14 @@ export default Vue.extend({
     name:'HelloWorld',
     data:function(){
         return {
-            title:"my title",
             f_targetWindow:null,
-            resultText:""
         }
     },
     props:{
+        title:{
+            type:String,
+            default:"my title"
+        },
         testText:{
             type:String,
             default:":P"

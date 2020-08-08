@@ -9,12 +9,16 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import ModalContentMixin from '../mixins/modal-content-mixin'
+import IWindowOptions from './window-options'
 
 export default Vue.extend({
     name:'DialogTemplate',
     props:{
         title:String,
         message:String,
+        windowOptions: {
+            type:Object as PropType<IWindowOptions>
+        },
     },
     mixins:[ ModalContentMixin ]
 })
