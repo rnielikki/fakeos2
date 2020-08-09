@@ -1,10 +1,12 @@
 <template>
     <div class="statusbar">
-        <Ui-button text = "Start"
+        <div class="start-icon"
          v-menu="{
              value: startMenu,
              menuInfo: startMenuInfo
-          }" />
+          }">
+          <img :src="require('./start.png')" />
+          </diV>
         <Window-status />
         <Icon-status />
         <Clock-date />
@@ -12,9 +14,8 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import UiButton from '../ui-components/button.vue'
 import ClockDate from './clock-date.vue'
-import WindowStatus from './window-status.vue'
+import WindowStatus from './window-status/window-status.vue'
 import IconStatus from './icon-status.vue'
 import StartMenu from './start-menu'
 
@@ -23,7 +24,7 @@ import MenuInfo, { MenuDirection } from '../menu/models/menu-info'
 
 export default Vue.extend({
     name:'Statusbar',
-    components: { UiButton, WindowStatus, ClockDate, IconStatus },
+    components: { WindowStatus, ClockDate, IconStatus },
     directives: { Menu },
     data:function(){
         return {
@@ -43,7 +44,11 @@ export default Vue.extend({
         left:0;
         right:0;
         bottom:0;
-        background-color: $window-background;
+        background-color: $statusbar-background;
+        color:$statusbar-foreground;
         text-align: left;
+    }
+    .start-icon:hover img {
+        opacity:0.7;
     }
 </style>

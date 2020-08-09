@@ -19,33 +19,11 @@ export default {
             else{
                 comp = new component.default();
             }
-            this.OpenWindow(comp, programName);
+            OpenWindow(comp, programName, getIcon(programName));
         })
         .catch(()=>{
             this.OpenDialog(null, "Load Failed", `Couldn't find the ${programName}, or the program is corrupted?`)
         })
-    },
-    OpenWindow:function(content:Vue, appName?:string, center:boolean = false) {
-        if(mainDesktop == null){
-            mainDesktop = document.querySelector(".desktop")
-        }
-        let props = content?.$props;
-        let _window = new Window({
-            propsData:{
-                appName: appName,
-                title:props?.title ?? "undefined... I mean, Untitled",
-                titleOptions:props?.titleOptions ?? ({ hasMinimizer:true, hasMaximizer:true } as WindowTitleOptions),
-                windowOptions:props?.windowOptions ?? new WindowOptions(),
-                parentElement:mainDesktop,
-                initToCenter: center
-            },
-            mixins:[ MixinFactory.CreateWindowMixin() ]
-        });
-        content.$mount()
-        _window.$slots.default = [ (content as any)._vnode ];
-        _window.$mount();
-        Object.assign(content.$data, { f_targetWindow: _window });
-        mainDesktop!.appendChild(_window.$el)
     },
     OpenModal:function(parent:Vue | null, content:Vue, callback?:(result:any)=>void){
         if(parent === null){
@@ -85,6 +63,37 @@ export default {
                 })
             }
         });
-        (parent == null)?this.OpenWindow(_message, undefined, true):this.OpenModal(parent, _message, callback);
+        (parent == null)?OpenWindow(_message, undefined, undefined, true):this.OpenModal(parent, _message, callback);
+    }
+}
+function OpenWindow(content:Vue, appName?:string, iconPath?:string, center:boolean = false) {
+    if(mainDesktop == null){
+        mainDesktop = document.querySelector(".desktop")
+    }
+    let props = content?.$props;
+    let _window = new Window({
+        propsData:{
+            appName: appName,
+            title:props?.title ?? "undefined... I mean, Untitled",
+            titleOptions:props?.titleOptions ?? ({ hasMinimizer:true, hasMaximizer:true } as WindowTitleOptions),
+            windowOptions:props?.windowOptions ?? new WindowOptions(),
+            parentElement:mainDesktop,
+            initToCenter: center,
+            iconPath: iconPath
+        },
+        mixins:[ MixinFactory.CreateWindowMixin() ]
+    });
+    content.$mount()
+    _window.$slots.default = [ (content as any)._vnode ];
+    _window.$mount();
+    Object.assign(content.$data, { f_targetWindow: _window });
+    mainDesktop!.appendChild(_window.$el)
+}
+function getIcon(appName:string):string{
+    try {
+        return require("@/softwares/"+appName+"/icon.png");   
+    }
+    catch {
+        return require("./default.png");
     }
 }

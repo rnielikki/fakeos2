@@ -1,5 +1,5 @@
 <template>
-        <div :class="['window', { selected: selected }]"
+        <div :class="['window', { selected: selected && modal === null }]"
             v-movable="{ active:windowOptions.movable, handle: 'Window-title' }"
             v-resizable="{ active: windowOptions.resizable, minX: windowOptions.minX, minY: windowOptions.minY }"
             :style="[ initWindowState, { zIndex: zIndex } ]"
@@ -15,7 +15,7 @@
             <div class="window-content">
                 <slot></slot>
             </div>
-            <div v-if="hasModal" class="modal-background" ref="modalBackground"></div>
+            <div v-if="modal!==null" class="modal-background" ref="modalBackground"></div>
         </div>
 </template>
 <script lang="ts">
@@ -32,6 +32,10 @@ import IWindowOptions, { WindowOptions } from './window-options'
         directives: WindowBehaviours,
         props:{
             appName:{
+                type:String,
+                required:false
+            },
+            iconPath:{
                 type:String,
                 required:false
             },
@@ -52,9 +56,9 @@ import IWindowOptions, { WindowOptions } from './window-options'
                 type:VueType,
                 required:false
             },
-            hasModal:{
-                type:Boolean,
-                default:false
+            modal:{
+                type:Object as PropType<Window | null>,
+                default:null
             },
             initToCenter:{
                 type:Boolean,
@@ -85,15 +89,6 @@ import IWindowOptions, { WindowOptions } from './window-options'
                     stateInfo.top = (parentBoundingBox.height - this.$props.windowOptions.defaultHeight)/2 + "px"
                 }
                 return stateInfo;
-            },
-            iconPath:function(){
-                if(!this.$props.appName) return null;
-                try {
-                    return require("@/softwares/"+this.$props.appName+"/icon.png");   
-                }
-                catch {
-                    return require("../default.png");
-                }
             }
         },
         beforeDestroy:function(){

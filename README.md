@@ -24,6 +24,7 @@ Oh, sorry, you cannot learn routing with FakeOS 2.
 Currently you can contribute by:
 
 * **Small fix / Refactoring**: Currently the program building is going forward, so we may not see the back - the better solution. Cleaning up the code surely helps us. Even small ones.
+  * **CSS renaming**: If css is not scoped, it should have prefix. We decided it to `f_`. Small fix, big help!
 * **Features**: the features below will be added
   * Window selection control (on `system/window-manager.ts`)
     * hint: `created()`, `destroyed()` on the component
@@ -35,7 +36,14 @@ Currently you can contribute by:
   * Clock managing (low priority)
 * **Bugs**: (Can be added:)
   * Currently a bug was found that callback doesn't update the binded component - even the watcher works, but force update doesn't work (You can see more about this on `softwares/hello-world/hello-world.vue`) and `src/components/window/components/dialog-template.vue`
+* **Design**: FakeOS logo, Start Menu and program Icon, Folder, File icon and Background etc.
+  * CSS beautify
+  * Icons: (transparent) PNG. And thank you if you use SVG tool to produce PNG icons, because it looks beautiful and reusable! We didn't decide the icon size.
+  * Background: If the image is not for pattern background: JPG, at least 1920x1080. If it's pattern image, you can use JPG/PNG, but make sure that it's not oversized.
+  * You should make your icon yourself or at least make sure it doesn't violence the license by using our project. We strongly recommend to make by yourself if there are no strong reason.
+  * Any animated gif/png is not allowed for the system (except it's sample image or inside app)
 * **Tests**
+* **Documentations**
 
 ### Attitudes
 
