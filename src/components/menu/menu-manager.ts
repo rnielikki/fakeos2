@@ -28,7 +28,8 @@ export default class MenuManager{
     }
     RemoveMenu = ()=>{
         //v-if attaches too many <!-- --> damn
-        this.menu!.$destroy();
+        if(!this.menu) return;
+        this.menu.$destroy();
         this.element.removeChild(this.menu!.$el);
         this.menu = null;
     }
@@ -39,6 +40,12 @@ export default class MenuManager{
         e.preventDefault();
         this.menu!.$props.menuInfo!.show = true;
         document.addEventListener("mousedown", this.RemoveMenu, { once: true, capture: false });
+        document.addEventListener("click", (e)=>{
+            let elem = e.target as HTMLElement;
+            if(elem && elem.classList.contains("activated")){
+                this.RemoveMenu()
+            }
+        }, { once: true, capture: true });
         if(this.callback !== null)
             this.callback(e as MouseEvent);
         e.stopPropagation();

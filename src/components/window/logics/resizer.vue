@@ -11,16 +11,32 @@ import ResizerCollection from './resizer';
 
 export default Vue.extend({
     name: 'Resizer',
+    data:function(){
+        return {
+            ResizerTypes:['top', 'bottom', 'left', 'right', 'topleft', 'topright', 'bottomleft', 'bottomright'],
+            ifInit:false
+        }
+    },
     props:{
-        target:HTMLElement,
-        minX:Number,
-        minY:Number
+        target:{
+            type: Element
+        },
+        minX:{
+                type:Number,
+                default:600
+            },
+        minY:{
+                type:Number,
+                default:400
+            }
     },
-    created: function(){
-        Object.assign(this, { ResizerTypes:['top', 'bottom', 'left', 'right', 'topleft', 'topright', 'bottomleft', 'bottomright'] });
-    },
-    mounted: function(){
-        new ResizerCollection(this, this.$props.target, this.minX, this.minY);
+    watch:{
+        target:function(el:Element){
+            if(this.$data.ifInit == false) {
+                new ResizerCollection(this, this.$props.target, this.minX, this.minY);
+                this.$data.ifInit = true;
+            }
+        }
     }
 })
 </script>

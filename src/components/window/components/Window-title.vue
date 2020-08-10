@@ -3,8 +3,8 @@
         <img v-if="iconPath" :src="iconPath" />
         <span class="window-title-text">{{ title }}</span>
         <div class="window-title-buttons">
-            <Ui-button v-if="hasMinimizer" text = "_" />
-            <Ui-button v-if="hasMaximizer" text = "[]" />
+            <Ui-button v-if="hasMinimizer" :clicked="targetWindow.minimize" text = "_" />
+            <Ui-button v-if="hasMaximizer" :clicked="targetWindow.maximize" text = "[]" />
             <Ui-button :clicked="close" text = "x" />
         </div>
     </div>
@@ -13,6 +13,7 @@
 import Vue, { PropType } from 'vue'
 import UiButton from '../../ui-components/button.vue'
 import WindowTitleOptions from './window-title-options'
+import Window from './window.vue'
 
 export default Vue.extend({
     name:'Window-title',
@@ -22,7 +23,7 @@ export default Vue.extend({
         hasMinimizer:Boolean,
         hasMaximizer:Boolean,
         targetWindow:{
-            type:Vue,
+            type:Window,
             required:true
         }
     },

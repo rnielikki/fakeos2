@@ -13,7 +13,6 @@ import { IMenuComponent, MenuItem, ParentMenuItem } from './models/menu-model'
 import MenuInfo, { MenuDirection, defaultSubmenuInfo } from './models/menu-info'
 import MenuLabel from './menu-label.vue'
 
-//import MenuWrapper from './menu-wrapper.vue'
 export default Vue.extend({
     name:'Menu',
     components:{ MenuLabel },
@@ -48,51 +47,16 @@ export default Vue.extend({
                     break;
             }
             Object.assign(this, { directionStyle: directionStyle });
-    },/*
-    mounted:function(){
-        var content = this.$refs.container as HTMLElement;
-        for(let item of this.value){
-            content.appendChild(this.SetMenuItem(item));
-        }
-    },*/
+    },
     methods:{
         HasSubMenu:(item:IMenuComponent)=>Object.prototype.hasOwnProperty.call(item, "submenu"),
         IsActivated:function(item:IMenuComponent){
             if(Object.prototype.hasOwnProperty.call(item, "action")){
                 console.log(this.$refs)
-                //element.addEventListener("mousedown", (item as MenuItem).action);
                 return true;
             }
             else return false;
         },
-        /*
-        SetMenuItem: function(item:IMenuComponent) {
-            var label = document.createElement("div");
-                label.classList.add("menu-item");
-                label.innerText = item.label;
-            if(Object.prototype.hasOwnProperty.call(item, "submenu")){
-                var wrapper = new Menu({
-                    propsData:{
-                        value: (item as ParentMenuItem).submenu,
-                        menuInfo:new MenuInfo({ direction: MenuDirection.bottomRight, x:"100%" })
-                    }
-                });
-                wrapper.$mount();
-                label.appendChild(wrapper.$el)
-                label.classList.add("menu-parent")
-                return label;
-            }
-            else {
-                if(Object.prototype.hasOwnProperty.call(item, "action")){
-                    label.addEventListener("mousedown", (item as MenuItem).action);
-                }
-                else{
-                    label.classList.add("deactivated");
-                }
-                return label;
-            }
-            //return item.label;
-        }*/
     }
 })
 </script>

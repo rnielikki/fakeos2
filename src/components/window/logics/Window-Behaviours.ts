@@ -1,5 +1,4 @@
 import Movable from './movable';
-import Resizer from './resizer.vue'
 
 export default {
   movable:{
@@ -12,27 +11,11 @@ export default {
       }
       else {
         handle = vnode.children.find((child:any)=>child.componentOptions.tag==handleName)?.elm;
-        if(handle == null) {
+        if(!handle) {
           throw(`Error: Component name ${handleName} cannot found.`);
         }
       }
       new Movable(el as HTMLElement, handle);
-    }
-  },
-  resizable:{
-    bind: function(el:HTMLElement, binding:any, vnode:any) {
-      if(!binding?.value?.active) return;
-      var minX:number = (!binding?.value?.minX)?600:binding.value.minX;
-      var minY:number = (!binding?.value?.minY)?400:binding.value.minY;
-      var resizer = new Resizer({
-        propsData:{
-          target: el,
-          minX: minX,
-          minY: minY
-        }
-      });
-      resizer.$mount();
-      el.appendChild(resizer.$el);
     }
   }
 }

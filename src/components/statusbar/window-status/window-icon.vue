@@ -15,7 +15,13 @@ export default Vue.extend({
     },
     mounted:function(){
         this.$el.addEventListener("mousedown", ()=>{
-            WindowManager.select(this.$props.targetApp)
+            let isCurrent = WindowManager.isSelected(this.$props.targetApp);
+            if(this.$props.targetApp.minimized || isCurrent) {
+                this.$props.targetApp.minimize();
+            }
+            else if(!isCurrent) {
+                WindowManager.select(this.$props.targetApp)
+            }
         }, true);
     }
 })

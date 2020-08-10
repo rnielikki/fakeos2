@@ -31,6 +31,9 @@ export default {
     },
     deselect:function(){
         select(null);
+    },
+    isSelected:function(target:Window){
+        return currentWindow === target;
     }
 }
 export let WindowEvents = {

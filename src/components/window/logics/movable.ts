@@ -10,10 +10,9 @@ export default class Movable{
         this.handle = handle;
         this.element.style.position = 'absolute';
         handle.addEventListener("mousedown", this.register, false);
-        //document.addEventListener("mouseout", this.unregister);
     }
     private register = (e:MouseEvent) => {
-        if(!this.element || !this.handle) return;
+        if(!this.element?.dataset?.movable || !this.handle) return;
         this.mouseX = e.clientX - parseInt(this.element.style.left || "0", 10);
         this.mouseY = e.clientY - parseInt(this.element.style.top || "0", 10);
         document.addEventListener("mousemove", this.move, false);

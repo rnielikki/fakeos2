@@ -1,9 +1,11 @@
 <template>
-        <div :class="['window', { selected: selected && modal === null }]"
+        <div v-show="!this.minimized"
+            :class="['window', { selected: selected && modal === null }]"
             v-movable="{ active:windowOptions.movable, handle: 'Window-title' }"
-            v-resizable="{ active: windowOptions.resizable, minX: windowOptions.minX, minY: windowOptions.minY }"
-            :style="[ initWindowState, { zIndex: zIndex } ]"
+            :data-movable="windowOptions.movable"
+            :style="{ zIndex: zIndex }"
             >
+            <resizer v-if="windowOptions.resizable" v-show="!maximized" :minX="windowOptions.minX" :minY="windowOptions.minY" ref="resizer" :target="currentElement" />
             <Window-title
                 v-if="titleOptions !== null"
                 :targetWindow="this"
@@ -26,10 +28,21 @@ import WindowBehaviours from '../logics/window-behaviours'
 import WindowTitle from './window-title.vue'
 import WindowTitleOptions from './window-title-options'
 import IWindowOptions, { WindowOptions } from './window-options'
+import windowManager from '@/system/window-manager';
+import Resizer from '../logics/resizer.vue'
+import Position from '../logics/position'
 
 @Component({
-        components:{ WindowTitle },
+        components:{ WindowTitle, Resizer },
         directives: WindowBehaviours,
+        data:function(){
+            return {
+                minimized:false,
+                maximized:false,
+                currentElement:null,
+                positionState:null
+            }
+        },
         props:{
             appName:{
                 type:String,
@@ -73,22 +86,68 @@ import IWindowOptions, { WindowOptions } from './window-options'
                 default:0
             }
         },
-        computed:{
-            initWindowState(){
-                let stateInfo = {
-                        left:"0px",
-                        top:"0px",
-                        width:this.$props.windowOptions.defaultWidth + "px",
-                        height:this.$props.windowOptions.defaultHeight + "px",
-                        minWidth:this.$props.windowOptions.minX + "px",
-                        minHeight:this.$props.windowOptions.minY + "px"
-                    }
+        watch:{
+            maximized: function(value) {
+                if(value) {
+                    let htmlElement = this.$el as HTMLElement
+                    //save state
+                    let currentBoundingBox = this.$el.getBoundingClientRect();
+                    this.$data.positionState = new Position(currentBoundingBox.width, currentBoundingBox.height, currentBoundingBox.top, currentBoundingBox.left);
+                    //maximize
+                    htmlElement.style.top = "0px";
+                    htmlElement.style.left = "0px";
+                    htmlElement.style.width = "100%";
+                    htmlElement.style.height = "100%";
+                }
+                else {
+                    //release state
+                    this.$data.positionState.setStyle(this.$el as HTMLElement)
+                }
+            }
+        },
+        mounted:function(){
+            this.$data.currentElement = this.$el;
+            (this as any).initWindowState();
+        },
+        methods:{
+            initWindowState:function() {
+                let el = this.$el as HTMLElement
+                el.style.width = this.$props.windowOptions.defaultWidth + "px",
+                el.style.height = this.$props.windowOptions.defaultHeight + "px",
+                el.style.minWidth = this.$props.windowOptions.minX + "px",
+                el.style.minHeight = this.$props.windowOptions.minY + "px"
+                
                 if(this.$props.initToCenter){
                     let parentBoundingBox = this.$props.parentElement.getBoundingClientRect();
-                    stateInfo.left = (parentBoundingBox.width - this.$props.windowOptions.defaultWidth)/2 + "px"
-                    stateInfo.top = (parentBoundingBox.height - this.$props.windowOptions.defaultHeight)/2 + "px"
+                    el.style.left = (parentBoundingBox.width - this.$props.windowOptions.defaultWidth)/2 + "px"
+                    el.style.top = (parentBoundingBox.height - this.$props.windowOptions.defaultHeight)/2 + "px"
                 }
-                return stateInfo;
+                else {
+                    el.style.left = "0px"
+                    el.style.top = "0px"
+                }
+            },
+            minimize:function() {
+                let minimized = this.$data.minimized;
+                if(minimized) {
+                    windowManager.select(this)
+                }
+                else {
+                    windowManager.deselect()
+                }
+                this.$data.minimized = !minimized;
+            },
+            maximize:function() {
+                if(this.$data.maximized) {
+                    //unmaximize
+                    this.$data.maximized = false;
+                    this.$props.windowOptions.movable = true;
+                }
+                else {
+                    //maximize
+                    this.$data.maximized = true;
+                    this.$props.windowOptions.movable = false;
+                }
             }
         },
         beforeDestroy:function(){

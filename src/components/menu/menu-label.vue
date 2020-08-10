@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'menu-parent': HasSubMenu, 'deactivated':!HasSubMenu && !IsActivated }" ref="label" class="menu-item">
+    <div :class="{ 'menu-parent': HasSubMenu, 'deactivated':!HasSubMenu && !IsActivated, 'activated':IsActivated }" ref="label" class="menu-item" v-on:mousedown.stop>
         {{item.label}}
         <slot></slot>
     </div>
@@ -21,7 +21,7 @@ export default Vue.extend({
     mounted:function(){
         var checkActivated = (item:IMenuComponent)=>{
             if(Object.prototype.hasOwnProperty.call(item, "action")){
-                this.$el.addEventListener("mousedown", (item as MenuItem).action);
+                this.$el.addEventListener("click", (item as MenuItem).action);
                 return true;
             }
             else return false;
