@@ -1,10 +1,10 @@
 import Window from './components/window.vue'
 import WindowTitleOptions from './components/window-title-options'
 import IWindowOptions, { WindowOptions, ModalOptions } from './components/window-options'
-import DialogTemplate from './components/dialog-template.vue'
+import DialogTemplate from './components/dialogs/dialog-template.vue'
 import MixinFactory from './mixins/window-mixin-factory'
-
-let mainDesktop:HTMLElement | null = null;
+import SystemGlobal from '@/system/global'
+import DialogButton, { OKButton } from './components/dialogs/dialog-model'
 
 export default {
     //options are propsData
@@ -50,16 +50,17 @@ export default {
         parent.$props.hasModal = true;
         parent.$el.appendChild(_window.$el);
     },
-    OpenDialog:function(parent:Vue | null, title:string, message:string, callback?:(result:any)=>void, windowOptions?:IWindowOptions) {
+    OpenDialog:function(parent:Vue | null, title:string, message:string, buttons:Array<DialogButton> = OKButton, callback?:(result:any)=>void, windowOptions?:IWindowOptions) {
         let _message = new DialogTemplate({
             propsData: {
                 title:title,
                 message: message,
+                buttons:buttons,
                 windowOptions:windowOptions ?? new ModalOptions({
-                    defaultWidth:300,
-                    defaultHeight:200,
+                    defaultWidth:-1,
+                    defaultHeight:-1,
                     minX:300,
-                    minY:200
+                    minY:100
                 })
             }
         });
@@ -67,9 +68,6 @@ export default {
     }
 }
 function OpenWindow(content:Vue, appName?:string, iconPath?:string, center:boolean = false) {
-    if(mainDesktop == null){
-        mainDesktop = document.querySelector(".desktop")
-    }
     let props = content?.$props;
     let _window = new Window({
         propsData:{
@@ -77,7 +75,7 @@ function OpenWindow(content:Vue, appName?:string, iconPath?:string, center:boole
             title:props?.title ?? "undefined... I mean, Untitled",
             titleOptions:props?.titleOptions ?? ({ hasMinimizer:true, hasMaximizer:true } as WindowTitleOptions),
             windowOptions:props?.windowOptions ?? new WindowOptions(),
-            parentElement:mainDesktop,
+            parentElement:SystemGlobal.desktop,
             initToCenter: center,
             iconPath: iconPath
         },
@@ -87,7 +85,7 @@ function OpenWindow(content:Vue, appName?:string, iconPath?:string, center:boole
     _window.$slots.default = [ (content as any)._vnode ];
     _window.$mount();
     Object.assign(content.$data, { f_targetWindow: _window });
-    mainDesktop!.appendChild(_window.$el)
+    SystemGlobal.desktop!.appendChild(_window.$el)
 }
 function getIcon(appName:string):string{
     try {

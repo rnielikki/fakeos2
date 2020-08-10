@@ -28,8 +28,25 @@ export default Vue.extend({
     },
     methods:{
         GetSomeMessage:function(){
-            WindowFactory.OpenDialog(this.f_targetWindow, "untitled", "this is a message", (res:any) =>{
-                Vue.set(this.$props, "testText", res?.toString());  
+            WindowFactory.OpenDialog(this.f_targetWindow, "animal question?", "Which type are you?", [
+                {
+                    text:"Moo",
+                    value:"Cow"
+                },
+                {
+                    text:"Meow",
+                    value:"Cat"
+                },
+                {
+                    text:"Hau",
+                    value:"Dog"
+                },
+                {
+                    text:"Quack",
+                    value:"Duck"
+                }
+            ], (res:any) =>{
+                Vue.set(this.$props, "testText", res?.toString());
             })
         }
     },

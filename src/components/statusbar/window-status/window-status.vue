@@ -21,8 +21,8 @@ export default Vue.extend({
             this.$data.allWindows.push(win);
         });
         WindowEvents.OnRemoved.subscribe((win)=>{
-            let targetIndex = this.$data.allWindows.indexOf(win);
-            this.$data.allWindows.splice(win, 1);
+            let id = (win as any)._uid
+            this.$set(this.$data, "allWindows", this.$data.allWindows.filter((w:any)=>w._uid !== id))
         });
     }
 })

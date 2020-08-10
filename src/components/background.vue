@@ -1,5 +1,5 @@
 <template>
-    <div class="background" v-contextmenu="{
+    <div class="f_background" id="f_background" v-contextmenu="{
         value: menu }">
     </div>
 </template>
@@ -46,7 +46,7 @@ import WindowManager from '@/system/window-manager'
 export default class Background extends Vue {}
 </script>
 <style lang="scss" scoped>
-    .background {
+    .f_background {
         z-index:0;
         height:100%; 
         left:0;top:0;right:0;bottom:0;

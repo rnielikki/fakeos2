@@ -28,7 +28,7 @@ import WindowBehaviours from '../logics/window-behaviours'
 import WindowTitle from './window-title.vue'
 import WindowTitleOptions from './window-title-options'
 import IWindowOptions, { WindowOptions } from './window-options'
-import windowManager from '@/system/window-manager';
+import WindowManager from '@/system/window-manager';
 import Resizer from '../logics/resizer.vue'
 import Position from '../logics/position'
 
@@ -112,8 +112,9 @@ import Position from '../logics/position'
         methods:{
             initWindowState:function() {
                 let el = this.$el as HTMLElement
-                el.style.width = this.$props.windowOptions.defaultWidth + "px",
-                el.style.height = this.$props.windowOptions.defaultHeight + "px",
+                let winOptions = this.$props.windowOptions;
+                el.style.width = (winOptions.defaultWidth<=0)?"auto":winOptions.defaultWidth + "px",
+                el.style.height = (winOptions.defaultHeight<=0)?"auto":winOptions.defaultHeight + "px",
                 el.style.minWidth = this.$props.windowOptions.minX + "px",
                 el.style.minHeight = this.$props.windowOptions.minY + "px"
                 
@@ -130,10 +131,10 @@ import Position from '../logics/position'
             minimize:function() {
                 let minimized = this.$data.minimized;
                 if(minimized) {
-                    windowManager.select(this)
+                    WindowManager.select(this)
                 }
                 else {
-                    windowManager.deselect()
+                    WindowManager.deselect()
                 }
                 this.$data.minimized = !minimized;
             },
@@ -148,6 +149,9 @@ import Position from '../logics/position'
                     this.$data.maximized = true;
                     this.$props.windowOptions.movable = false;
                 }
+            },
+            close:function(){
+                this.$destroy();
             }
         },
         beforeDestroy:function(){

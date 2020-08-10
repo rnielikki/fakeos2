@@ -2,6 +2,7 @@
     <div v-on:click="clicked">{{ text }}</div>
 </template>
 <script lang="ts">
+//provides basic button with default theme.
 import Vue from 'vue'
 export default Vue.extend({
     name: 'UiButton',

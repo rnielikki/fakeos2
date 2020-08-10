@@ -1,5 +1,5 @@
 <template>
-<div class="desktop">
+<div class="f_desktop" id="f_desktop">
     <background />
     <!--
     <Window title="my first app">
@@ -31,7 +31,7 @@ import { DirectiveOptions } from 'vue';
 export default class Desktop extends Vue {}
 </script>
 <style lang="scss" scoped>
-    .desktop {
+    .f_desktop {
         position: absolute;
         left: 0; right: 0; top: 0; bottom: 0;
         overflow:hidden;

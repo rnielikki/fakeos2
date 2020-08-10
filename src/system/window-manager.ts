@@ -18,10 +18,11 @@ export default {
         onAdded.forEach(func=>func(target));
     },
     unregister:function(target:Window){
-        deleteWindow(target);
-        currentWindow = null;
-        reorderZIndex();
-        onRemoved.forEach(func=>func(target));
+        if(deleteWindow(target)) {
+            onRemoved.forEach(func=>func(target));
+            currentWindow = null;
+            reorderZIndex();
+        }
     },
     select:function(target:Window){
         if(currentWindow === target) return;
@@ -69,18 +70,19 @@ function select(target:Window | null){
     currentWindow = target;
 }
 function deleteWindow(target:Window):boolean{
-    let targetIndex = openedWindows.indexOf(target);
-    if(targetIndex !== -1){
-        openedWindows.splice(targetIndex, 1);
-        reorderZIndex(targetIndex);
+    let oldLength = openedWindows.length;
+    let targetId = (target as any)._uid
+    openedWindows = openedWindows.filter((w:any)=>w._uid!==targetId);
+    if(oldLength !== openedWindows.length){
+        reorderZIndex();
         return true;
     }
     else{
         return false;
     }
 }
-function reorderZIndex(targetIndex:number = 0){
-    for(let i=targetIndex; i < openedWindows.length; i++) {
+function reorderZIndex(){
+    for(let i=0; i < openedWindows.length; i++) {
         let props = openedWindows[i].$props;
         props.selected = false;
         props.zIndex = i;
