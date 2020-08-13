@@ -1,8 +1,8 @@
 <template>
     <div class="menu-anchor" :style="{ left: menuInfo.x, top:menuInfo.y }">
         <div class="menu-wrapper" :style="this.directionStyle">
-            <Menu-label v-for="(item, key) in value" :key="key" :item="item">
-                <Menu v-if="HasSubMenu(item)" :value="item.submenu" :menuInfo="defaultInfo" />
+            <Menu-label v-for="(item, key) in value" :key="key" :item="item" :onDeleted="onDeleted">
+                <Menu v-if="HasSubMenu(item)" :value="item.submenu" :menuInfo="defaultInfo" :onDeleted="onDeleted" />
             </Menu-label>
         </div>
     </div>
@@ -27,7 +27,8 @@ export default Vue.extend({
         menuInfo: {
             type:Object as PropType<MenuInfo>,
             default: ()=>{ return new MenuInfo()}
-        }
+        },
+        onDeleted:Function
     },
     created:function(){
             var menuInfo = this.$props.menuInfo;
@@ -52,7 +53,6 @@ export default Vue.extend({
         HasSubMenu:(item:IMenuComponent)=>Object.prototype.hasOwnProperty.call(item, "submenu"),
         IsActivated:function(item:IMenuComponent){
             if(Object.prototype.hasOwnProperty.call(item, "action")){
-                console.log(this.$refs)
                 return true;
             }
             else return false;

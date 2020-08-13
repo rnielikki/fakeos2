@@ -17,11 +17,12 @@ export default Vue.extend({
     },
     props:{
         item:Object as PropType<IMenuComponent>,
+        onDeleted:Function
     },
     mounted:function(){
         var checkActivated = (item:IMenuComponent)=>{
             if(Object.prototype.hasOwnProperty.call(item, "action")){
-                this.$el.addEventListener("click", (item as MenuItem).action);
+                this.$el.addEventListener("click", (e)=>{ (item as MenuItem).action(); this.onDeleted(); e.stopPropagation() });
                 return true;
             }
             else return false;

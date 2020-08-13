@@ -4,7 +4,7 @@ import Window from '../components/window/components/Window.vue'
 //- ADD TEST: window target array index should be same as z-index
 let openedWindows = new Array<Window>();
 let currentWindow:Window | null = null;
-document.querySelector(".background")?.addEventListener("mousedown", ()=>select(null));
+document.addEventListener("mousedown",()=>select(null), true);
 
 let onAdded = new Array<Function>();
 let onRemoved = new Array<Function>();

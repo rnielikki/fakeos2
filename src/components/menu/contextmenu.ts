@@ -1,4 +1,3 @@
-import Menu from './menu.vue'
 import MenuInfo from './models/menu-info'
 import MenuManager from './menu-manager'
 

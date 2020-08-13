@@ -187,6 +187,9 @@ export default class Window extends Vue {}
             text-align:initial;
             flex-grow: 1;
         }
+        &:not(.selected) .window-content {
+            pointer-events: none;
+        }
     }
     .modal-background {
         position:absolute;

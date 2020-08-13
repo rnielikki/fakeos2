@@ -6,7 +6,7 @@ export default class MenuManager{
     element:HTMLElement;
     bindingType:string;
     value:IMenuComponent[];
-    menu:Vue | null;
+    menu:Vue | null = null;
     menuInfo:MenuInfo;
     callback:((e:MouseEvent)=>void) | null = null
     constructor(el:HTMLElement, value:IMenuComponent[], menuInfo:MenuInfo, bindingType:string){
@@ -14,23 +14,24 @@ export default class MenuManager{
         this.value = value;
         this.menuInfo = menuInfo;
         this.bindingType = bindingType;
-        this.menu = null;
         el.style.position = "relative";
         el.addEventListener(bindingType, this.ShowMenu);
     }
+    //1. v-if attaches too many <!-- --> damn
+    //2. option can be changed depending on the state (any state - system or software)
     createMenu = ()=>{
         this.menu = new Menu({ propsData: {
             value : this.value,
-            menuInfo: this.menuInfo
+            menuInfo: this.menuInfo,
+            onDeleted: this.RemoveMenu
         }});
         this.menu.$mount();
         this.element.appendChild(this.menu.$el);
     }
     RemoveMenu = ()=>{
-        //v-if attaches too many <!-- --> damn
         if(!this.menu) return;
         this.menu.$destroy();
-        this.element.removeChild(this.menu!.$el);
+        this.element.removeChild(this.menu.$el);
         this.menu = null;
     }
     ShowMenu = (e:Event)=>{
@@ -40,12 +41,6 @@ export default class MenuManager{
         e.preventDefault();
         this.menu!.$props.menuInfo!.show = true;
         document.addEventListener("mousedown", this.RemoveMenu, { once: true, capture: false });
-        document.addEventListener("click", (e)=>{
-            let elem = e.target as HTMLElement;
-            if(elem && elem.classList.contains("activated")){
-                this.RemoveMenu()
-            }
-        }, { once: true, capture: true });
         if(this.callback !== null)
             this.callback(e as MouseEvent);
         e.stopPropagation();
