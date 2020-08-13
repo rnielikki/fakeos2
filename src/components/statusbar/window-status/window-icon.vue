@@ -1,5 +1,10 @@
 <template>
-<div :class="{selected: this.targetApp.$props.selected }">
+<div
+    :class="{selected: this.targetApp.$data.selected }"
+    v-contextMenu="{
+        value: targetApp.rightClickMenu,
+        menuInfo: menuInfo
+    }">
     <img :src="iconPath">
 </div>
 </template>
@@ -8,11 +13,16 @@ import Vue from 'vue'
 import Window from '@/components/window/components/window.vue'
 import WindowManager from '@/system/window-manager'
 
+//import { IMenuComponent } from '@/components/menu/models/menu-model'
+import ContextMenu from '../../menu/contextmenu'
+import MenuInfo, { MenuDirection } from '../../menu/models/menu-info'
+
 export default Vue.extend({
     props:{
         iconPath:String,
         targetApp:Window
     },
+    directives:{ contextMenu:ContextMenu },
     mounted:function(){
         this.$el.addEventListener("mousedown", ()=>{
             let isCurrent = WindowManager.isSelected(this.$props.targetApp);
@@ -23,6 +33,11 @@ export default Vue.extend({
                 WindowManager.select(this.$props.targetApp)
             }
         }, true);
+    },
+    computed:{
+        menuInfo:function(){
+            return new MenuInfo({ direction: MenuDirection.topRight })
+        }
     }
 })
 </script>

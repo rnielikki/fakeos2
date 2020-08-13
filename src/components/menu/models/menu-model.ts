@@ -1,4 +1,4 @@
-export  interface IMenuComponent {
+export interface IMenuComponent {
     label:string;
 }
 

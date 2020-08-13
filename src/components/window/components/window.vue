@@ -13,6 +13,7 @@
                 :hasMinimizer="titleOptions.hasMinimizer"
                 :hasMaximizer="titleOptions.hasMaximizer"
                 :iconPath="iconPath"
+                v-contextMenu="{ value: rightClickMenu }"
             />
             <div class="window-content">
                 <slot></slot>
@@ -32,15 +33,23 @@ import WindowManager from '@/system/window-manager';
 import Resizer from '../logics/resizer.vue'
 import Position from '../logics/position'
 
+import { IMenuComponent } from '@/components/menu/models/menu-model'
+import ContextMenu from '../../menu/contextmenu'
+
 @Component({
         components:{ WindowTitle, Resizer },
-        directives: WindowBehaviours,
+        directives: {
+            ...WindowBehaviours,
+            contextMenu: ContextMenu
+        },
         data:function(){
             return {
                 minimized:false,
                 maximized:false,
                 currentElement:null,
-                positionState:null
+                positionState:null,
+                zIndex:0,
+                selected:false
             }
         },
         props:{
@@ -77,13 +86,31 @@ import Position from '../logics/position'
                 type:Boolean,
                 default:false
             },
-            selected:{
-                type:Boolean,
-                default:true
-            },
-            zIndex:{
-                type:Number,
-                default:0
+            rightClickMenu:{
+                type:Array as PropType<IMenuComponent[]>,
+                default:function(){
+                    //TypeScript is too good language to handle so
+                    let _anyThis = this as any;
+                    let _actions=[
+                        {
+                            label: "Close",
+                            action: ()=>_anyThis.close()
+                        }
+                    ]
+                    if(this.$props.titleOptions.hasMinimizer) {
+                        _actions.unshift({
+                            label:"Minimize",
+                            action:()=>_anyThis.minimize()
+                        })
+                    }
+                    if(this.$props.titleOptions.hasMaximizer) {
+                        _actions.unshift({
+                            label:"Maximize",
+                            action:()=>_anyThis.maximize()
+                        })
+                    }
+                    return _actions;
+                }
             }
         },
         watch:{
@@ -117,16 +144,24 @@ import Position from '../logics/position'
                 el.style.height = (winOptions.defaultHeight<=0)?"auto":winOptions.defaultHeight + "px",
                 el.style.minWidth = this.$props.windowOptions.minX + "px",
                 el.style.minHeight = this.$props.windowOptions.minY + "px"
-                
-                if(this.$props.initToCenter){
-                    let parentBoundingBox = this.$props.parentElement.getBoundingClientRect();
-                    el.style.left = (parentBoundingBox.width - this.$props.windowOptions.defaultWidth)/2 + "px"
-                    el.style.top = (parentBoundingBox.height - this.$props.windowOptions.defaultHeight)/2 + "px"
-                }
-                else {
-                    el.style.left = "0px"
-                    el.style.top = "0px"
-                }
+                this.$nextTick(function(){
+                    if(this.$props.initToCenter){
+                        let parentBoundingBox = this.$props.parentElement.getBoundingClientRect();
+                        let _width = this.$props.windowOptions.defaultWidth;
+                        let _height = this.$props.windowOptions.defaultHeight;
+                        if(_width < 0 || _height < 0){
+                            let thisBoundingbox = this.$el.getBoundingClientRect();
+                            _width = (_width < 0)?thisBoundingbox.width:_width;
+                            _height = (_height < 0)?thisBoundingbox.height:_height;
+                        }
+                        el.style.left = (parentBoundingBox.width - _width)/2 + "px"
+                        el.style.top = (parentBoundingBox.height - _height)/2 + "px"
+                    }
+                    else {
+                        el.style.left = "0px"
+                        el.style.top = "0px"
+                    }
+                })
             },
             minimize:function() {
                 let minimized = this.$data.minimized;
@@ -187,7 +222,7 @@ export default class Window extends Vue {}
             text-align:initial;
             flex-grow: 1;
         }
-        &:not(.selected) .window-content {
+        &:not(.selected) > .window-content {
             pointer-events: none;
         }
     }

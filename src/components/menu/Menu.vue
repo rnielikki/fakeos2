@@ -17,7 +17,9 @@ export default Vue.extend({
     name:'Menu',
     components:{ MenuLabel },
     data:function(){
-        return { defaultInfo: defaultSubmenuInfo };
+        return {
+            defaultInfo: defaultSubmenuInfo
+            };
     },
     props:{
         value:{
@@ -30,7 +32,8 @@ export default Vue.extend({
         },
         onDeleted:Function
     },
-    created:function(){
+    computed:{
+        directionStyle:function(){
             var menuInfo = this.$props.menuInfo;
             var directionStyle;
             switch(menuInfo.direction){
@@ -47,7 +50,8 @@ export default Vue.extend({
                     directionStyle = { left: 0, top: 0 }
                     break;
             }
-            Object.assign(this, { directionStyle: directionStyle });
+            return directionStyle;
+        }
     },
     methods:{
         HasSubMenu:(item:IMenuComponent)=>Object.prototype.hasOwnProperty.call(item, "submenu"),

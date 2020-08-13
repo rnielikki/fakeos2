@@ -13,7 +13,7 @@ let onRemoved = new Array<Function>();
 //- ADD TEST:and it's same as currentWindow (if 0 selected then currentWindow is null)
 export default {
     register:function(target:Window){
-        target.$props.zIndex = openedWindows.length;
+        target.$data.zIndex = openedWindows.length;
         selectAndPush(target);
         onAdded.forEach(func=>func(target));
     },
@@ -57,15 +57,15 @@ export let WindowEvents = {
 }
 function selectAndPush(target:Window){
     select(target);
-    target.$props.zIndex = openedWindows.length;
+    target.$data.zIndex = openedWindows.length;
     openedWindows.push(target);
 }
 function select(target:Window | null){
     if(currentWindow !== null){
-        currentWindow.$props.selected = false;
+        currentWindow.$data.selected = false;
     }
     if(target !== null){
-        target.$props.selected = true;
+        target.$data.selected = true;
     }
     currentWindow = target;
 }
@@ -83,8 +83,8 @@ function deleteWindow(target:Window):boolean{
 }
 function reorderZIndex(){
     for(let i=0; i < openedWindows.length; i++) {
-        let props = openedWindows[i].$props;
-        props.selected = false;
-        props.zIndex = i;
+        let data = openedWindows[i].$data;
+        data.selected = false;
+        data.zIndex = i;
     }
 }

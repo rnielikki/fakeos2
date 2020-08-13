@@ -14,7 +14,7 @@ export default Vue.extend({
     watch:{
         selected:function(value){
             if(this.$props.modal !== null) {
-                this.$props.modal.$props.selected = value;
+                this.$props.modal.$data.selected = value;
             }
         }
     }

@@ -9,11 +9,10 @@ export default {
             menuInfo
             , "contextmenu");
 
-        let elementRect = el.getBoundingClientRect();
-        var elementX = elementRect.left;
-        var elementY = elementRect.top;
-
         var ChangePosition = (e:MouseEvent)=>{
+            let elementRect = el.getBoundingClientRect();
+            var elementX = elementRect.left;
+            var elementY = elementRect.top;
             menuInfo!.x = (e.clientX - elementX) + "px";
             menuInfo!.y = (e.clientY - elementY) + "px";
         }
