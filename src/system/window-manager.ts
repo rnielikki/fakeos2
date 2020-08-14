@@ -1,4 +1,5 @@
 import Window from '../components/window/components/Window.vue'
+import Observable from './core/observer'
 // currently opened windows.
 // the array is in the order of recent selection.
 //- ADD TEST: window target array index should be same as z-index
@@ -6,8 +7,8 @@ let openedWindows = new Array<Window>();
 let currentWindow:Window | null = null;
 document.addEventListener("mousedown",()=>select(null), true);
 
-let onAdded = new Array<Function>();
-let onRemoved = new Array<Function>();
+let addedObservable = new Observable<Window>();
+let removedObservable = new Observable<Window>();
 
 //- ADD TEST:only one or less window 'selected' is true
 //- ADD TEST:and it's same as currentWindow (if 0 selected then currentWindow is null)
@@ -15,11 +16,11 @@ export default {
     register:function(target:Window){
         target.$data.zIndex = openedWindows.length;
         selectAndPush(target);
-        onAdded.forEach(func=>func(target));
+        addedObservable.invoke(target)
     },
     unregister:function(target:Window){
         if(deleteWindow(target)) {
-            onRemoved.forEach(func=>func(target));
+            removedObservable.invoke(target);
             currentWindow = null;
             reorderZIndex();
         }
@@ -39,19 +40,19 @@ export default {
 }
 export let WindowEvents = {
     OnAdded:{
-        subscribe:function(func:(target:Window)=>void){
-            onAdded.push(func);
+        subscribe:function(func:(target?:Window)=>void){
+            addedObservable.register(func);
         },
-        unsubscribe:function(func:(target:Window)=>void){
-            onAdded = onAdded.filter(f=>f!==func)
+        unsubscribe:function(func:(target?:Window)=>void):boolean{
+            return addedObservable.unregister(func);
         }
     },
     OnRemoved:{
-        subscribe:function(func:(target:Window)=>void){
-            onRemoved.push(func);
+        subscribe:function(func:(target?:Window)=>void){
+            return removedObservable.register(func);
         },
-        unsubscribe:function(func:(target:Window)=>void){
-            onRemoved = onAdded.filter(f=>f!==func)
+        unsubscribe:function(func:(target?:Window)=>void):boolean{
+            return removedObservable.unregister(func);
         }
     }
 }

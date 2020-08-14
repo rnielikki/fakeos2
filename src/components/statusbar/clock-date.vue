@@ -6,14 +6,19 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import Clock from '../../system/clock'
+import Timer from '@/system/time/timer'
+import CurrentDateTime from '@/system/time/current'
+import Formatter from '@/system/time/formatter'
 export default Vue.extend({
     name:'ClockDate',
     data:function(){
         return {
-            date:Clock.currentDay,
-            time:Clock.currentTime
+            date:Formatter.getDayFormat(CurrentDateTime.currentDate),
+            time:""
         }
+    },
+    created:function(){
+        Timer.seconds.subscribe((dateTime)=>this.$data.time = Formatter.getTimeFormat(dateTime!))
     }
 })
 </script>
