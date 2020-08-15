@@ -26,14 +26,15 @@ Currently you can contribute by:
 * **Small fix / Refactoring**: Currently the program building is going forward, so we may not see the back - the better solution. Cleaning up the code surely helps us. Even small ones.
   * **CSS renaming**: If css is not scoped, it should have prefix. We decided it to `f_`. Small fix, big help!
 * **Features**: the features below will be added
-  * Window selection control (on `system/window-manager.ts`)
-    * hint: `created()`, `destroyed()` on the component
-  * Make dialog template ready - OK / OkCancel / user defined.
-  * Icon set
-  * File hierarchy
-  * Default apps
-  * Status bar click window (e.g. sound)
-  * Clock managing (low priority)
+  * Not yet started
+    * Icon set
+    * File hierarchy
+    * Default apps
+  * Currently doing:
+    * Status bar click window (e.g. sound / calendar)
+    * Double click to maximize / Click on the status bar to minimize etc.
+  * Done
+    * Default clock observer
 * **Bugs**: (Can be added:)
   * Currently a bug was found that callback doesn't update the binded component - even the watcher works, but force update doesn't work (You can see more about this on `softwares/hello-world/hello-world.vue`) and `src/components/window/components/dialog-template.vue`
 * **Design**: FakeOS logo, Start Menu and program Icon, Folder, File icon and Background etc.
