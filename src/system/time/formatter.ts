@@ -6,6 +6,10 @@ export default {
     getTimeFormat: function(date:number | Date){
         let _date:Date = asDate(date);
         return leadZero(_date.getHours())+":"+leadZero(_date.getMinutes())+":"+leadZero(_date.getSeconds());
+    },
+    getHourMinuteFormat: function(date:number | Date){
+        let _date:Date = asDate(date);
+        return leadZero(_date.getHours())+":"+leadZero(_date.getMinutes());
     }
 }
 function asDate(date:number | Date){

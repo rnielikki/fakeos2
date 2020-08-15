@@ -40,18 +40,18 @@ export default {
 }
 export let WindowEvents = {
     OnAdded:{
-        subscribe:function(func:(target?:Window)=>void){
+        subscribe:function(func:(target:Window)=>void){
             addedObservable.register(func);
         },
-        unsubscribe:function(func:(target?:Window)=>void):boolean{
+        unsubscribe:function(func:(target:Window)=>void):boolean{
             return addedObservable.unregister(func);
         }
     },
     OnRemoved:{
-        subscribe:function(func:(target?:Window)=>void){
+        subscribe:function(func:(target:Window)=>void){
             return removedObservable.register(func);
         },
-        unsubscribe:function(func:(target?:Window)=>void):boolean{
+        unsubscribe:function(func:(target:Window)=>void):boolean{
             return removedObservable.unregister(func);
         }
     }

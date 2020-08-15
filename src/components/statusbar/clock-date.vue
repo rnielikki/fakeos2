@@ -12,13 +12,20 @@ import Formatter from '@/system/time/formatter'
 export default Vue.extend({
     name:'ClockDate',
     data:function(){
+        let current = CurrentDateTime.currentDate;
         return {
-            date:Formatter.getDayFormat(CurrentDateTime.currentDate),
-            time:""
+            date:Formatter.getDayFormat(current),
+            time:Formatter.getHourMinuteFormat(current),
+            f_private_today: current.getDate()
         }
     },
     created:function(){
-        Timer.seconds.subscribe((dateTime)=>this.$data.time = Formatter.getTimeFormat(dateTime!))
+        Timer.minutes.subscribe((dateTime)=>{
+                this.$data.time = Formatter.getHourMinuteFormat(dateTime)
+                if(dateTime.getDate()!=this.f_private_today) {
+                    this.$data.date = Formatter.getDayFormat(CurrentDateTime.currentDate);
+                }
+            })
     }
 })
 </script>
