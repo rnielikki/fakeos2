@@ -1,15 +1,4 @@
-export default class MenuInfo {
-    x:string = "0px";
-    y:string = "0px";
-    direction:MenuDirection = MenuDirection.bottomRight;
-    public constructor(init?:Partial<MenuInfo>) {
-        Object.assign(this, init);
-    }
-}
-export enum MenuDirection {
-    topLeft,
-    topRight,
-    bottomLeft,
-    bottomRight
-}
-export const defaultSubmenuInfo = new MenuInfo({ direction: MenuDirection.bottomRight, x:"100%" })
+import PopupInfo, { popupDirection } from '../../popups/popup-info'
+
+export const defaultSubmenuInfo = new PopupInfo({ direction: popupDirection.bottomRight, x:"100%" })
+export const defaultMenuInfo = new PopupInfo({ direction: popupDirection.bottomRight })

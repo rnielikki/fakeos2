@@ -20,7 +20,7 @@ import IconStatus from './icon-status.vue'
 import StartMenu from './start-menu'
 
 import Menu from '../menu/menu'
-import MenuInfo, { MenuDirection } from '../menu/models/menu-info'
+import PopupInfo, { PopupDirection, popupDirection } from '../popups/popup-info'
 
 export default Vue.extend({
     name:'Statusbar',
@@ -29,7 +29,7 @@ export default Vue.extend({
     data:function(){
         return {
             startMenu : StartMenu,
-            startMenuInfo: new MenuInfo({ direction: MenuDirection.topRight})
+            startMenuInfo: new PopupInfo({ direction: popupDirection.topRight})
         }
     }
 })

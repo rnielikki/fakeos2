@@ -1,48 +1,25 @@
 import Menu from './menu.vue';
-import MenuInfo from './models/menu-info';
+import PopupInfo from '../popups/popup-info';
 import { IMenuComponent } from './models/menu-model'
+import Popup from '../popups/popup'
+import { defaultMenuInfo } from './models/menu-info'
 
 export default class MenuManager{
-    element:HTMLElement;
-    bindingType:string;
     value:IMenuComponent[];
-    menu:Vue | null = null;
-    menuInfo:MenuInfo;
+    popup:Popup;
     callback:((e:MouseEvent)=>void) | null = null
-    constructor(el:HTMLElement, value:IMenuComponent[], menuInfo:MenuInfo, bindingType:string){
-        this.element = el;
+    constructor(el:HTMLElement,  value:IMenuComponent[], bindingType:string, popupInfo?:PopupInfo){
         this.value = value;
-        this.menuInfo = menuInfo;
-        this.bindingType = bindingType;
-        el.style.position = "relative";
-        el.addEventListener(bindingType, this.ShowMenu);
+        this.popup = new Popup(el, this.menuFactory, bindingType, popupInfo ?? new PopupInfo());
     }
-    //1. v-if attaches too many <!-- --> damn
-    //2. option can be changed depending on the state (any state - system or software)
-    createMenu = ()=>{
-        this.menu = new Menu({ propsData: {
+    setCallback(callback:((e:MouseEvent)=>void)){
+        this.popup.callback = callback
+    }
+    menuFactory = ()=>{
+        return new Menu({ propsData: {
             value : this.value,
-            menuInfo: this.menuInfo,
-            onDeleted: this.RemoveMenu
+            popupInfo: this.popup.popupInfo ?? defaultMenuInfo,
+            onDeleted: this.popup.remove
         }});
-        this.menu.$mount();
-        this.element.appendChild(this.menu.$el);
-    }
-    RemoveMenu = ()=>{
-        if(!this.menu) return;
-        this.menu.$destroy();
-        this.element.removeChild(this.menu.$el);
-        this.menu = null;
-    }
-    ShowMenu = (e:Event)=>{
-        if(this.menu == null){
-            this.createMenu();
-        }
-        e.preventDefault();
-        this.menu!.$props.menuInfo!.show = true;
-        document.addEventListener("mousedown", this.RemoveMenu, { once: true, capture: false });
-        if(this.callback !== null)
-            this.callback(e as MouseEvent);
-        e.stopPropagation();
     }
 }

@@ -1,8 +1,8 @@
 <template>
-    <div class="menu-anchor" :style="{ left: menuInfo.x, top:menuInfo.y }">
+    <div class="menu-anchor" :style="{ left: popupInfo.x, top:popupInfo.y }">
         <div class="menu-wrapper" :style="this.directionStyle">
             <Menu-label v-for="(item, key) in value" :key="key" :item="item" :onDeleted="onDeleted">
-                <Menu v-if="HasSubMenu(item)" :value="item.submenu" :menuInfo="defaultInfo" :onDeleted="onDeleted" />
+                <Menu v-if="HasSubMenu(item)" :value="item.submenu" :popupInfo="defaultInfo" :onDeleted="onDeleted" />
             </Menu-label>
         </div>
     </div>
@@ -10,7 +10,8 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import { IMenuComponent, MenuItem, ParentMenuItem } from './models/menu-model'
-import MenuInfo, { MenuDirection, defaultSubmenuInfo } from './models/menu-info'
+import PopupInfo, { PopupDirection } from '../popups/popup-info'
+import { defaultSubmenuInfo } from './models/menu-info'
 import MenuLabel from './menu-label.vue'
 
 export default Vue.extend({
@@ -26,31 +27,14 @@ export default Vue.extend({
             type:Array as PropType<IMenuComponent[]>,
             default: ()=>[]
         },
-        menuInfo: {
-            type:Object as PropType<MenuInfo>,
-            default: ()=>{ return new MenuInfo()}
+        popupInfo: {
+            type:Object as PropType<PopupInfo>
         },
         onDeleted:Function
     },
     computed:{
         directionStyle:function(){
-            var menuInfo = this.$props.menuInfo;
-            var directionStyle;
-            switch(menuInfo.direction){
-                case MenuDirection.topLeft:
-                    directionStyle = { right: 0, bottom: 0 };
-                    break;
-                case MenuDirection.topRight:
-                    directionStyle = { left: 0, bottom: 0 }
-                    break;
-                case MenuDirection.bottomLeft:
-                    directionStyle = { right: 0, top: 0 }
-                    break;
-                case MenuDirection.bottomRight:
-                    directionStyle = { left: 0, top: 0 }
-                    break;
-            }
-            return directionStyle;
+            return this.$props.popupInfo.direction;
         }
     },
     methods:{

@@ -15,7 +15,7 @@ import WindowManager from '@/system/window-manager'
 
 //import { IMenuComponent } from '@/components/menu/models/menu-model'
 import ContextMenu from '../../menu/contextmenu'
-import MenuInfo, { MenuDirection } from '../../menu/models/menu-info'
+import PopupInfo, { popupDirection } from '../../popups/popup-info'
 
 export default Vue.extend({
     props:{
@@ -36,7 +36,7 @@ export default Vue.extend({
     },
     computed:{
         menuInfo:function(){
-            return new MenuInfo({ direction: MenuDirection.topRight })
+            return new PopupInfo({ direction: popupDirection.topRight })
         }
     }
 })

@@ -1,13 +1,13 @@
-import MenuInfo from './models/menu-info'
+import { defaultMenuInfo } from './models/menu-info'
 import MenuManager from './menu-manager'
 
 export default {
     bind: function (el:HTMLElement, binding:any) {
-        let menuInfo = binding?.value?.menuInfo ?? new MenuInfo()
+        let menuInfo = binding?.value?.menuInfo ?? defaultMenuInfo
         let manager = new MenuManager(el,
             binding?.value?.value,
-            menuInfo
-            , "contextmenu");
+            "contextmenu",
+            menuInfo);
 
         var ChangePosition = (e:MouseEvent)=>{
             let elementRect = el.getBoundingClientRect();
@@ -16,6 +16,6 @@ export default {
             menuInfo!.x = (e.clientX - elementX) + "px";
             menuInfo!.y = (e.clientY - elementY) + "px";
         }
-        manager.callback = ChangePosition;
+        manager.setCallback(ChangePosition)
     }
 }
