@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'menu-parent': HasSubMenu, 'deactivated':!HasSubMenu && !IsActivated, 'activated':IsActivated }" ref="label" class="menu-item" v-on:mousedown.stop>
+    <div :class="['f_menu-item', { 'f_menu-parent': HasSubMenu, 'deactivated':!HasSubMenu && !IsActivated, 'activated':IsActivated }]" ref="label" v-on:mousedown.stop>
         {{item.label}}
         <slot></slot>
     </div>
@@ -35,7 +35,7 @@ export default Vue.extend({
 </script>
 <style lang="scss">
 @import 'src/scss/colorset.scss';
-    .menu-item {
+    .f_menu-item {
         color:$menu-foreground;
         display:block;
         margin:0;
@@ -44,27 +44,27 @@ export default Vue.extend({
         position:relative;
         text-align: left;
     }
-    .menu-item:hover{
+    .f_menu-item:hover{
             cursor:default;
     }
-    .menu-item:not(.deactivated):hover {
+    .f_menu-item:not(.deactivated):hover {
             background-color: $selected-background;
             color: $selected-foreground;
         }
-    .menu-item.deactivated {
+    .f_menu-item.deactivated {
         opacity:0.7;
         text-shadow: 1px 1px white;
     }
-    .menu-parent{
+    .f_menu-parent{
         &::after{
             content:'\25BA';
             float:right;
             font-size:80%;
         }
-        > .menu-anchor{
+        > .f_popup-anchor{
             display:none
         }
-        &:hover > .menu-anchor {
+        &:hover > .f_popup-anchor {
             display: block;
         }
     }

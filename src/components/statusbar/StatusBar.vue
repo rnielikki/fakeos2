@@ -14,7 +14,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import ClockDate from './clock-date.vue'
+import ClockDate from './clock-date/clock-date.vue'
 import WindowStatus from './window-status/window-status.vue'
 import IconStatus from './icon-status.vue'
 import StartMenu from './start-menu'

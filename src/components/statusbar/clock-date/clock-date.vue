@@ -9,6 +9,10 @@ import Vue from 'vue'
 import Timer from '@/system/time/timer'
 import CurrentDateTime from '@/system/time/current'
 import Formatter from '@/system/time/formatter'
+import Popup from '../../popups/popup'
+import ClockDatePopup from './clock-date-popup.vue'
+import PopupInfo, { popupDirection } from '@/components/popups/popup-info'
+
 export default Vue.extend({
     name:'ClockDate',
     data:function(){
@@ -26,6 +30,12 @@ export default Vue.extend({
                     this.$data.date = Formatter.getDayFormat(CurrentDateTime.currentDate);
                 }
             })
+    },
+    mounted:function(){
+        new Popup(this.$el as HTMLElement, ()=>new ClockDatePopup(), "click", new PopupInfo({
+            direction:popupDirection.topLeft,
+            x:"100%"
+        }));
     }
 })
 </script>

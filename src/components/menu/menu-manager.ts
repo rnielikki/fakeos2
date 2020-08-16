@@ -18,7 +18,6 @@ export default class MenuManager{
     menuFactory = ()=>{
         return new Menu({ propsData: {
             value : this.value,
-            popupInfo: this.popup.popupInfo ?? defaultMenuInfo,
             onDeleted: this.popup.remove
         }});
     }

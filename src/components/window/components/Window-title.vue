@@ -1,5 +1,5 @@
 <template>
-    <div class="window-title">
+    <div class="window-title" @dblclick="targetWindow.maximize">
         <img v-if="iconPath" :src="iconPath" />
         <span class="window-title-text">{{ title }}</span>
         <div class="window-title-buttons">

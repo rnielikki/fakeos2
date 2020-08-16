@@ -5,7 +5,7 @@ import Observable from './core/observer'
 //- ADD TEST: window target array index should be same as z-index
 let openedWindows = new Array<Window>();
 let currentWindow:Window | null = null;
-document.addEventListener("mousedown",()=>select(null), true);
+document.addEventListener("mousedown",(e)=>select(null, e), true);
 
 let addedObservable = new Observable<Window>();
 let removedObservable = new Observable<Window>();
@@ -61,7 +61,11 @@ function selectAndPush(target:Window){
     target.$data.zIndex = openedWindows.length;
     openedWindows.push(target);
 }
-function select(target:Window | null){
+function select(target:Window | null, e?:Event){
+    let id = (e?.target as HTMLElement)?.dataset?.windowId
+    if(id && id == (currentWindow as any)?._uid){
+        return;
+    }
     if(currentWindow !== null){
         currentWindow.$data.selected = false;
     }

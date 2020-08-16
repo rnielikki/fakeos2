@@ -1,10 +1,12 @@
 import PopupInfo from './popup-info';
+import PopupComponent from './popup.vue'
 
 export default class Popup {
     parentElement:HTMLElement;
     bindingType:string;
     popupContent:Vue | null = null;
     popupInfo:PopupInfo;
+    child:Vue | null = null;
     callback:((e:MouseEvent)=>void) | null = null
     contentFactory:(()=>Vue);
     constructor(button:HTMLElement, contentFactory:()=>Vue, bindingType:string, popupInfo?:PopupInfo){
@@ -18,22 +20,30 @@ export default class Popup {
     //1. v-if attaches too many <!-- --> damn
     //2. option can be changed depending on the state (any state - system or software)
     create = ()=>{
-        this.popupContent = this.contentFactory();
+        this.popupContent = new PopupComponent({
+            propsData:{
+                popupInfo: this.popupInfo
+            }
+        });
+        this.child = this.contentFactory();
+        this.child.$mount();
+        this.popupContent.$slots.default = [ (this.child as any)._vnode ]
         this.popupContent.$mount();
         this.parentElement.appendChild(this.popupContent.$el);
     }
     remove = ()=>{
         if(!this.popupContent) return;
         this.popupContent.$destroy();
+        this.child?.$destroy();
         this.parentElement.removeChild(this.popupContent.$el);
         this.popupContent = null;
+        this.child = null;
     }
     show = (e:Event)=>{
         if(this.popupContent == null){
             this.create();
         }
         e.preventDefault();
-        this.popupContent!.$props.popupInfo.show = true;
         document.addEventListener("mousedown", this.remove, { once: true, capture: false });
         if(this.callback !== null)
             this.callback(e as MouseEvent);

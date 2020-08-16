@@ -4,8 +4,10 @@
     v-contextMenu="{
         value: targetApp.rightClickMenu,
         menuInfo: menuInfo
-    }">
-    <img :src="iconPath">
+    }"
+    :style="{ backgroundImage: 'url('+iconPath+')' }"
+    @click="selectOrMinimize"
+    :data-window-id="this.targetApp._uid">
 </div>
 </template>
 <script lang="ts">
@@ -23,20 +25,23 @@ export default Vue.extend({
         targetApp:Window
     },
     directives:{ contextMenu:ContextMenu },
-    mounted:function(){
-        this.$el.addEventListener("mousedown", ()=>{
-            let isCurrent = WindowManager.isSelected(this.$props.targetApp);
-            if(this.$props.targetApp.minimized || isCurrent) {
-                this.$props.targetApp.minimize();
-            }
-            else if(!isCurrent) {
-                WindowManager.select(this.$props.targetApp)
-            }
-        }, true);
-    },
     computed:{
         menuInfo:function(){
             return new PopupInfo({ direction: popupDirection.topRight })
+        }
+    },
+    mounted:function(){
+        this.$el.addEventListener("mousedown,",e=>e.stopPropagation(),false)
+    },
+    methods:{
+        selectOrMinimize:function(){
+            let app = this.$props.targetApp;
+            if(WindowManager.isSelected(app) || app.minimized) {
+                this.$props.targetApp.minimize();
+            }
+            else {
+                WindowManager.select(app)
+            }
         }
     }
 })
@@ -48,12 +53,13 @@ export default Vue.extend({
         width:2.1rem; height:2.1rem;
         vertical-align: middle;
         margin:0 .2rem;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        border:1px solid $statusbar-selected;
         &.selected {
             background-color:$statusbar-selected;
         }
-    }
-    img {
-        width:100%;
-        height:100%;
     }
 </style>

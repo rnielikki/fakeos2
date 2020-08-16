@@ -32,11 +32,13 @@ Currently you can contribute by:
     * Default apps
   * Currently doing:
     * Status bar click window (e.g. sound / calendar)
-    * Double click to maximize / Click on the status bar to minimize etc.
   * Done
     * Default clock observer
+    * Popup (for example, status bar icons - menu uses popup too)
+    * Double click to maximize / Click on the status bar to minimize
 * **Bugs**: (Can be added:)
   * Currently a bug was found that callback doesn't update the binded component - even the watcher works, but force update doesn't work (You can see more about this on `softwares/hello-world/hello-world.vue`) and `src/components/window/components/dialog-template.vue`
+    * So, some of Vue watching/updating works, but forceUpdate/updating DOM currently not working! (When use callback) For example, `components/statusbar/clcok-date-popup.vue`
 * **Design**: FakeOS logo, Start Menu and program Icon, Folder, File icon and Background etc.
   * CSS beautify
   * Icons: (transparent) PNG. And thank you if you use SVG tool to produce PNG icons, because it looks beautiful and reusable! We didn't decide the icon size.

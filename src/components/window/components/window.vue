@@ -163,7 +163,7 @@ import ContextMenu from '../../menu/contextmenu'
                     }
                 })
             },
-            minimize:function() {
+            minimize:function(e) {
                 let minimized = this.$data.minimized;
                 if(minimized) {
                     WindowManager.select(this)
@@ -174,6 +174,7 @@ import ContextMenu from '../../menu/contextmenu'
                 this.$data.minimized = !minimized;
             },
             maximize:function() {
+                if(!this.$props.windowOptions.resizable) return;
                 if(this.$data.maximized) {
                     //unmaximize
                     this.$data.maximized = false;
