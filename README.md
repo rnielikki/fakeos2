@@ -39,11 +39,13 @@ Currently you can contribute by:
 * **Bugs**: (Can be added:)
   * Currently a bug was found that callback doesn't update the binded component - even the watcher works, but force update doesn't work (You can see more about this on `softwares/hello-world/hello-world.vue`) and `src/components/window/components/dialog-template.vue`
     * So, some of Vue watching/updating works, but forceUpdate/updating DOM currently not working! (When use callback) For example, `components/statusbar/clcok-date-popup.vue`
-* **Design**: FakeOS logo, Start Menu and program Icon, Folder, File icon and Background etc.
+* **Design / Resources**: FakeOS logo, Start Menu and program Icon, Folder, File icon and Background etc.
   * CSS beautify
   * Icons: (transparent) PNG. And thank you if you use SVG tool to produce PNG icons, because it looks beautiful and reusable! We didn't decide the icon size.
-  * Background: If the image is not for pattern background: JPG, at least 1920x1080. If it's pattern image, you can use JPG/PNG, but make sure that it's not oversized.
-  * You should make your icon yourself or at least make sure it doesn't violence the license by using our project. We strongly recommend to make by yourself if there are no strong reason.
+  * Background: If the image is not for pattern background: JPG, at least 1920x1080, compression quality 60-90%. If it's pattern image, you can use JPG/PNG, but make sure that it's not oversized.
+  * Sound: `*.wav` is allowed for &lt;5 seconds sound effects, otherwise use `*.mp3` or `*.ogg`, Max. 256Mbps, not good quality needed
+  * Video: I don't know video standards ¯\\_(ツ)_/¯ Help me
+  * You should make your resources (all images and sounds) yourself or at least make sure it doesn't violence the license by using our project. We strongly recommend to make by yourself if there are no strong reason.
   * Any animated gif/png is not allowed for the system (except it's sample image or inside app)
 * **Tests**
 * **Documentations**

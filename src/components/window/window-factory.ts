@@ -8,8 +8,10 @@ import DialogButton, { OKButton } from './components/dialogs/dialog-model'
 
 export default {
     //options are propsData
-    OpenProgram:function(programName:string, options?:object) {
-        import(`@/softwares/${programName}/${programName}.vue`).then((component)=>{
+    OpenProgram:function(fullProgramName:string, options?:object) {
+        let _index = fullProgramName.lastIndexOf('/');
+        let programName = (_index < 0)?fullProgramName:fullProgramName.substring(_index+1);
+        import(`@/softwares/${fullProgramName}/${programName}.vue`).then((component)=>{
             let comp:Vue;
             if(options){
                 comp = new component.default({
@@ -22,7 +24,8 @@ export default {
             OpenWindow(comp, programName, getIcon(programName));
         })
         .catch(()=>{
-            this.OpenDialog(null, "Load Failed", `Couldn't find the ${programName}, or the program is corrupted?`)
+            this.OpenDialog(null, "Load Failed", `Couldn't find the ${fullProgramName}, or the program is corrupted?`)
+            console.log()
         })
     },
     OpenModal:function(parent:Vue | null, content:Vue, callback?:(result:any)=>void){
@@ -72,7 +75,7 @@ function OpenWindow(content:Vue, appName?:string, iconPath?:string, center:boole
     let _window = new Window({
         propsData:{
             appName: appName,
-            title:props?.title ?? "undefined... I mean, Untitled",
+            title:content?.$data?.title ?? "undefined... I mean, Untitled",
             titleOptions:props?.titleOptions ?? ({ hasMinimizer:true, hasMaximizer:true } as WindowTitleOptions),
             windowOptions:props?.windowOptions ?? new WindowOptions(),
             parentElement:SystemGlobal.desktop,

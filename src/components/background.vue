@@ -33,6 +33,12 @@ import WindowFactory from './window/window-factory'
                 }
             ]
             },
+            {
+                label: 'Play for me',
+                action:function(){
+                    WindowFactory.OpenProgram("core/player")
+                }
+            },
             { label: 'Display settings' },
             { label: 'Theme'}
             ]
