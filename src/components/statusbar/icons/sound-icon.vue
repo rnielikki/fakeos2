@@ -1,5 +1,8 @@
 <template>
-    <div><span class="icon">&#128266;</span></div>
+    <div>
+        <span class="icon" v-if="volume==0">&#128263;</span>
+        <span class="icon" v-else>&#128266;</span>
+    </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
@@ -10,11 +13,17 @@ import PopupInfo, { popupDirection } from '../../popups/popup-info'
 
 export default Vue.extend({
     name:'SoundIcon',
+    data:function(){
+        return {
+                volume:SoundManager.masterSound
+            }
+    },
     mounted:function(){
         new Popup(this.$el as HTMLElement, ()=>new SoundIconPopup(), "click", new PopupInfo({
             direction:popupDirection.topLeft,
             x:"100%"
         }));
+        SoundManager.MasterChangeListener.Add((vol)=>this.$set(this.$data, "volume", vol));
     }
 })
 </script>

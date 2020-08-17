@@ -1,8 +1,9 @@
-import Sound from './sound'
+import Observable from '@/system/core/observer'
 
 //mastersound range is 0-1.
 let master:number = 1;
-let nowPlaying = new Array<Sound>();
+let observableMasterSound = new Observable<number>();
+
 export default {
     get masterSound(){
         return master;
@@ -13,16 +14,14 @@ export default {
             return;
         }
         master = value;
-        nowPlaying.forEach(sound=>{
-            sound.setVolume(sound.volume)
-        })
+        observableMasterSound.invoke(value);
     },
-    SoundList:{
-        Add(sound:Sound){
-            nowPlaying.push(sound)
+    MasterChangeListener:{
+        Add(func:(n:number)=>void){
+            observableMasterSound.register(func)
         },
-        Remove(sound:Sound){
-            nowPlaying = nowPlaying.filter(s=>s!==sound);
+        Remove(func:(n:number)=>void){
+            observableMasterSound.unregister(func)
         }
     }
 }

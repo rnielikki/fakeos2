@@ -11,6 +11,7 @@ export default class Sound{
     constructor(path:string, autoPlay:boolean = true, defaultVolume:number = 1){
         this._audioSource = this.context.createBufferSource();
         this._soundPromise = fetch(path).then(res=>res.arrayBuffer()).then(buffer=>{
+            console.log("___")
             this.context.decodeAudioData(buffer, (buff)=>{
                 if(buff){
                     this._audioSource.buffer = buff;
@@ -26,7 +27,7 @@ export default class Sound{
         });
         this._soundPromise.then(()=>{
             this.setVolume(defaultVolume);
-            SoundManager.SoundList.Add(this);
+            SoundManager.MasterChangeListener.Add(this.updateVolume);
             if(autoPlay) {
                 this.play();
             }
@@ -73,9 +74,12 @@ export default class Sound{
         this._gainNode.connect(this.context.destination)
         this._audioSource.connect(this._gainNode)
     }
+    updateVolume = ()=>{
+        this.setVolume(this._volume)
+    }
     private dispose(){
         this._audioSource?.stop(0); //destroy buffer
         this.context.close();
-        SoundManager.SoundList.Remove(this);
+        SoundManager.MasterChangeListener.Remove(this.updateVolume);
     }
 }
