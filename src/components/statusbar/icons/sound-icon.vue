@@ -1,7 +1,8 @@
 <template>
     <div>
-        <span class="icon" v-if="volume==0">&#128263;</span>
-        <span class="icon" v-else>&#128266;</span>
+        <span>
+            <img  class="icon" :src=soundIcon />
+        </span>
     </div>
 </template>
 <script lang="ts">
@@ -15,20 +16,49 @@ export default Vue.extend({
     name:'SoundIcon',
     data:function(){
         return {
-                volume:SoundManager.masterSound
+                volume:0,
+                icons:[
+                    "", //sound0
+                    "", //sound1
+                    "", //sound2
+                    ""  //sound3
+                ],
+                soundIcon:"./images/sound1.png"
             }
+    },
+    created:function(){
+        this.$data.volume = this.getSoundScale(SoundManager.masterSound);
     },
     mounted:function(){
         new Popup(this.$el as HTMLElement, ()=>new SoundIconPopup(), "click", new PopupInfo({
             direction:popupDirection.topLeft,
             x:"100%"
         }));
-        SoundManager.MasterChangeListener.Add((vol)=>this.$set(this.$data, "volume", vol));
+        SoundManager.MasterChangeListener.Add((vol)=>this.$set(this.$data, "volume", this.getSoundScale(vol)));
+    },
+    methods:{
+        getSoundScale:function(volume:number){
+            return Math.ceil(volume*2.1);
+        },
+        getSoundIcon:function(scale:number){
+            if(!this.$data.icons[scale]) {
+                this.$data.icons[scale] = require(`./images/sound${this.$data.volume}.png`);
+            }
+            return this.$data.icons[scale];
+        }
+    },
+    watch:{
+        volume:function(value) {
+            if(!this.$data.icons[this.$data.volume]) {
+                this.$data.icons[this.$data.volume] = require(`./images/sound${this.$data.volume}.png`);
+            }
+            this.$set(this.$data, "soundIcon",this.getSoundIcon(this.$data.volume));
+        },
     }
 })
 </script>
 <style scoped>
     .icon{
-        font-size:1.5rem;
+        width:2.1rem;
     }
 </style>
