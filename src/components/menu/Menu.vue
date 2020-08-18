@@ -11,7 +11,7 @@
 import Vue, { PropType } from 'vue'
 import { IMenuComponent, MenuItem, ParentMenuItem } from './models/menu-model'
 import Popup from '../popups/popup.vue'
-import { defaultSubmenuInfo } from './models/menu-info'
+import { createDefaultSubmenuInfo } from './models/menu-info'
 import MenuLabel from './menu-label.vue'
 
 export default Vue.extend({
@@ -19,7 +19,7 @@ export default Vue.extend({
     components:{ MenuLabel, Popup },
     data:function(){
         return {
-            submenuInfo: defaultSubmenuInfo
+            submenuInfo: createDefaultSubmenuInfo()
         };
     },
     props:{

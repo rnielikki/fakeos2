@@ -18,7 +18,6 @@ export default Vue.extend({
     name:'DialogTemplate',
     components:{ UiButton },
     props:{
-        title:String,
         message:String,
         windowOptions: {
             type:Object as PropType<IWindowOptions>

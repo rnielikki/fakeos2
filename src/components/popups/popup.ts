@@ -38,6 +38,7 @@ export default class Popup {
         this.parentElement.removeChild(this.popupContent.$el);
         this.popupContent = null;
         this.child = null;
+        this.parentElement.classList.remove("f_popup-selected")
     }
     show = (e:Event)=>{
         if(this.popupContent == null){
@@ -48,5 +49,6 @@ export default class Popup {
         if(this.callback !== null)
             this.callback(e as MouseEvent);
         e.stopPropagation();
+        this.parentElement.classList.add("f_popup-selected")
     }
 }

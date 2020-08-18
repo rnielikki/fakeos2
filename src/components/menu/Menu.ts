@@ -1,4 +1,4 @@
-import { defaultMenuInfo } from './models/menu-info'
+import { createDefaultMenuInfo } from './models/menu-info'
 import MenuManager from './menu-manager'
 
 export default {
@@ -6,6 +6,6 @@ export default {
         new MenuManager(el,
             binding?.value?.value,
             "click",
-            binding?.value?.menuInfo ?? defaultMenuInfo);
+            binding?.value?.menuInfo ?? createDefaultMenuInfo());
     }
 }

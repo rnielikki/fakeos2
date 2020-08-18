@@ -11,7 +11,6 @@ export default class Sound{
     constructor(path:string, autoPlay:boolean = true, defaultVolume:number = 1){
         this._audioSource = this.context.createBufferSource();
         this._soundPromise = fetch(path).then(res=>res.arrayBuffer()).then(buffer=>{
-            console.log("___")
             this.context.decodeAudioData(buffer, (buff)=>{
                 if(buff){
                     this._audioSource.buffer = buff;

@@ -8,13 +8,15 @@
 <script lang="ts">
 import Vue from 'vue'
 import WindowFactory from '../../components/window/window-factory'
+import AppMenu from './menu'
 
 export default Vue.extend({
     name:'HelloWorld',
     data:function(){
         return {
             f_targetWindow:null,
-            title: "hello world?"
+            title: "hello world?",
+            menu:AppMenu(this)
         }
     },
     props:{

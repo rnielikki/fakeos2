@@ -5,6 +5,7 @@ import DialogTemplate from './components/dialogs/dialog-template.vue'
 import MixinFactory from './mixins/window-mixin-factory'
 import SystemGlobal from '@/system/global'
 import DialogButton, { OKButton } from './components/dialogs/dialog-model'
+import { IMenuComponent } from '../menu/models/menu-model'
 
 export default {
     //options are propsData
@@ -21,11 +22,11 @@ export default {
             else{
                 comp = new component.default();
             }
-            OpenWindow(comp, programName, getIcon(programName));
+            OpenWindow(comp, programName, getIcon(programName), comp.$data.menu);
         })
-        .catch(()=>{
+        .catch((err)=>{
             this.OpenDialog(null, "Load Failed", `Couldn't find the ${fullProgramName}, or the program is corrupted?`)
-            console.log()
+            console.warn(err)
         })
     },
     OpenModal:function(parent:Vue | null, content:Vue, callback?:(result:any)=>void){
@@ -56,7 +57,6 @@ export default {
     OpenDialog:function(parent:Vue | null, title:string, message:string, buttons:Array<DialogButton> = OKButton, callback?:(result:any)=>void, windowOptions?:IWindowOptions) {
         let _message = new DialogTemplate({
             propsData: {
-                title:title,
                 message: message,
                 buttons:buttons,
                 windowOptions:windowOptions ?? new ModalOptions({
@@ -67,10 +67,11 @@ export default {
                 })
             }
         });
-        (parent == null)?OpenWindow(_message, undefined, undefined, true):this.OpenModal(parent, _message, callback);
+        _message.$data.title = title;
+        (parent == null)?OpenWindow(_message, undefined, undefined, undefined, true):this.OpenModal(parent, _message, callback);
     }
 }
-function OpenWindow(content:Vue, appName?:string, iconPath?:string, center:boolean = false) {
+function OpenWindow(content:Vue, appName?:string, iconPath?:string, menu?:{content?:IMenuComponent[], rightClick?:IMenuComponent[]}, center:boolean = false) {
     let props = content?.$props;
     let _window = new Window({
         propsData:{
@@ -80,10 +81,15 @@ function OpenWindow(content:Vue, appName?:string, iconPath?:string, center:boole
             windowOptions:props?.windowOptions ?? new WindowOptions(),
             parentElement:SystemGlobal.desktop,
             initToCenter: center,
-            iconPath: iconPath
+            iconPath: iconPath,
+            windowMenu:menu?.content ?? [],
+            rightClickMenu: menu?.rightClick ?? undefined
         },
         mixins:[ MixinFactory.CreateWindowMixin() ]
     });
+    if(!_window.$props.rightClickMenu){
+        _window.$props.rightClickMenu=createRightClickMenu(_window);
+    }
     content.$mount()
     _window.$slots.default = [ (content as any)._vnode ];
     _window.$mount();
@@ -97,4 +103,28 @@ function getIcon(appName:string):string{
     catch {
         return require("./default.png");
     }
+}
+
+function createRightClickMenu(_window:Window){
+    //TypeScript is too good language to handle so
+    let _anyWindow = _window as any;
+    let _actions=[
+        {
+            label: "Close",
+            action: ()=>_anyWindow.close()
+        }
+    ]
+    if(_window.$props.titleOptions.hasMinimizer) {
+        _actions.unshift({
+            label:"Minimize",
+            action:()=>_anyWindow.minimize()
+        })
+    }
+    if(_window.$props.titleOptions.hasMaximizer) {
+        _actions.unshift({
+            label:"Maximize",
+            action:()=>_anyWindow.maximize()
+        })
+    }
+    return _actions;
 }

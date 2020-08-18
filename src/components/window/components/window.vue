@@ -16,6 +16,7 @@
                 v-contextMenu="{ value: rightClickMenu }"
             />
             <div class="window-content">
+                <WindowMenu v-if="windowMenu" :menu="windowMenu" />
                 <slot></slot>
             </div>
             <div v-if="modal!==null" class="modal-background" ref="modalBackground"></div>
@@ -25,11 +26,14 @@
 import VueType, { PropType } from 'vue'
 import { Vue } from 'vue-property-decorator';
 import Component from 'vue-class-component'
+
 import WindowBehaviours from '../logics/window-behaviours'
 import WindowTitle from './window-title.vue'
 import WindowTitleOptions from './window-title-options'
 import IWindowOptions, { WindowOptions } from './window-options'
 import WindowManager from '@/system/window-manager';
+import WindowMenu from './window-menu.vue'
+
 import Resizer from '../logics/resizer.vue'
 import Position from '../logics/position'
 
@@ -37,7 +41,7 @@ import { IMenuComponent } from '@/components/menu/models/menu-model'
 import ContextMenu from '../../menu/contextmenu'
 
 @Component({
-        components:{ WindowTitle, Resizer },
+        components:{ WindowTitle, Resizer, WindowMenu },
         directives: {
             ...WindowBehaviours,
             contextMenu: ContextMenu
@@ -86,31 +90,11 @@ import ContextMenu from '../../menu/contextmenu'
                 type:Boolean,
                 default:false
             },
+            windowMenu:{
+                type:Array as PropType<IMenuComponent[]>
+            },
             rightClickMenu:{
-                type:Array as PropType<IMenuComponent[]>,
-                default:function(){
-                    //TypeScript is too good language to handle so
-                    let _anyThis = this as any;
-                    let _actions=[
-                        {
-                            label: "Close",
-                            action: ()=>_anyThis.close()
-                        }
-                    ]
-                    if(this.$props.titleOptions.hasMinimizer) {
-                        _actions.unshift({
-                            label:"Minimize",
-                            action:()=>_anyThis.minimize()
-                        })
-                    }
-                    if(this.$props.titleOptions.hasMaximizer) {
-                        _actions.unshift({
-                            label:"Maximize",
-                            action:()=>_anyThis.maximize()
-                        })
-                    }
-                    return _actions;
-                }
+                type:Array as PropType<IMenuComponent[]>
             }
         },
         watch:{
