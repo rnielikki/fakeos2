@@ -7,11 +7,11 @@
             >
             <resizer v-if="windowOptions.resizable" v-show="!maximized" :minX="windowOptions.minX" :minY="windowOptions.minY" ref="resizer" :target="currentElement" />
             <Window-title
-                v-if="titleOptions !== null"
+                v-if="title !== null"
                 :targetWindow="this"
                 :title="title"
-                :hasMinimizer="titleOptions.hasMinimizer"
-                :hasMaximizer="titleOptions.hasMaximizer"
+                :hasMinimizer="hasMinimizer"
+                :hasMaximizer="windowOptions.resizable"
                 :iconPath="iconPath"
                 v-contextMenu="{ value: rightClickMenu }"
             />
@@ -29,7 +29,6 @@ import Component from 'vue-class-component'
 
 import WindowBehaviours from '../logics/window-behaviours'
 import WindowTitle from './window-title.vue'
-import WindowTitleOptions from './window-title-options'
 import IWindowOptions, { WindowOptions } from './window-options'
 import WindowManager from '@/system/window-manager';
 import WindowMenu from './window-menu.vue'
@@ -66,10 +65,11 @@ import ContextMenu from '../../menu/contextmenu'
                 required:false
             },
             title:{
-                type:String
+                type:String,
+                default:null
             },
-            titleOptions:{
-                type: Object as PropType<WindowTitleOptions | null>
+            hasMinimizer:{
+                type:Boolean
             },
             windowOptions:{
                 type:Object as PropType<IWindowOptions>,
@@ -148,6 +148,13 @@ import ContextMenu from '../../menu/contextmenu'
                 })
             },
             minimize:function(e) {
+                if(!this.$props.hasMinimizer) return;
+
+                if(this.$props.modal){
+                    WindowManager.select(this);
+                    return;
+                }
+
                 let minimized = this.$data.minimized;
                 if(minimized) {
                     WindowManager.select(this)
@@ -159,6 +166,12 @@ import ContextMenu from '../../menu/contextmenu'
             },
             maximize:function() {
                 if(!this.$props.windowOptions.resizable) return;
+
+                if(this.$props.modal){
+                    WindowManager.select(this);
+                    return;
+                }
+
                 if(this.$data.maximized) {
                     //unmaximize
                     this.$data.maximized = false;
@@ -171,6 +184,13 @@ import ContextMenu from '../../menu/contextmenu'
                 }
             },
             close:function(){
+                if((this as any).selectModal) return;
+
+                if(this.$props.modal){
+                    WindowManager.select(this);
+                    return;
+                }
+                
                 this.$destroy();
             }
         },

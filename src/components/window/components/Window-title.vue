@@ -12,7 +12,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import UiButton from '../../ui-components/button.vue'
-import WindowTitleOptions from './window-title-options'
 import Window from './window.vue'
 
 export default Vue.extend({

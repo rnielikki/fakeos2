@@ -10,7 +10,7 @@ let _globals:{
         return (_desktop==null)?(_desktop=getElement("#f_desktop")):_desktop;
     },
     get background(){
-        return (_background==null)?(_desktop=getElement("#f_desktop")):_background;
+        return (_background==null)?(_desktop=getElement("#f_background")):_background;
     },
     getDesktop:function(){
         return new Promise((resolve, reject)=>{

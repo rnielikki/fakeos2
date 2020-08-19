@@ -37,13 +37,9 @@ export default Vue.extend({
 <style lang="scss" scoped>
     @import 'src/scss/colorset.scss';
     .statusbar {
-        position:absolute;
         display: flex;
         align-items: center;
-        padding:.2rem;
-        left:0;
-        right:0;
-        bottom:0;
+        padding:.2rem;;
         background-color: $statusbar-background;
         color:$statusbar-foreground;
         text-align: left;

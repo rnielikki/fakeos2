@@ -10,21 +10,21 @@
 import Vue, { PropType } from 'vue'
 import ModalContentMixin from '../../mixins/modal-content-mixin'
 import IWindowOptions from '../window-options'
-import WindowTitleOptions from '../window-title-options'
 import UiButton from '@/components/ui-components/button.vue'
 import DialogButton, { OKButton } from './dialog-model'
 
 export default Vue.extend({
     name:'DialogTemplate',
     components:{ UiButton },
+    data:function(){
+        return {
+            hasMinimizer:false
+        }
+    },
     props:{
         message:String,
         windowOptions: {
             type:Object as PropType<IWindowOptions>
-        },
-        titleOptions: {
-            type:Object as PropType<WindowTitleOptions>,
-            default:()=>({ hasMinimizer:false, hasMaximizer:false} as WindowTitleOptions)
         },
         buttons:{
             type:Array as PropType<DialogButton[]>,

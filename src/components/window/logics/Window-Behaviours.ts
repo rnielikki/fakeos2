@@ -1,4 +1,4 @@
-import Movable from './movable';
+import Movable from '@/system/core/movable';
 
 export default {
   movable:{

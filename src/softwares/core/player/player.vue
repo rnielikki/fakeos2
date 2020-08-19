@@ -26,8 +26,6 @@ export default Vue.extend({
         }
     },
     mounted:function() {
-        let elem = this.$refs.player as HTMLElement;
-        elem?.parentElement?.removeChild(elem); //weird but works - maybe duplicated item created, don't know why
         this.$data.soundRes = new Sound(require("@/assets/musics/sample.mp3"))
     },
     beforeDestroy:function(){

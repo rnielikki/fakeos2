@@ -1,5 +1,4 @@
 import Window from './components/window.vue'
-import WindowTitleOptions from './components/window-title-options'
 import IWindowOptions, { WindowOptions, ModalOptions } from './components/window-options'
 import DialogTemplate from './components/dialogs/dialog-template.vue'
 import MixinFactory from './mixins/window-mixin-factory'
@@ -36,7 +35,7 @@ export default {
         let _window = new Window({
             propsData:{
                 title:content?.$props?.title ?? "Modal Window",
-                titleOptions: {hasMinimizer:false, hasMaximizer:false},
+                hasMinimizer: false,
                 windowOptions: content?.$props?.windowOptions ?? new ModalOptions(),
                 parentElement:parent.$el,
                 parentVue:parent,
@@ -72,14 +71,13 @@ export default {
     }
 }
 function OpenWindow(content:Vue, appName?:string, iconPath?:string, menu?:{content?:IMenuComponent[], rightClick?:IMenuComponent[]}, center:boolean = false) {
-    let props = content?.$props;
     let _window = new Window({
         propsData:{
             appName: appName,
-            title:content?.$data?.title ?? "undefined... I mean, Untitled",
-            titleOptions:props?.titleOptions ?? ({ hasMinimizer:true, hasMaximizer:true } as WindowTitleOptions),
-            windowOptions:props?.windowOptions ?? new WindowOptions(),
-            parentElement:SystemGlobal.desktop,
+            title:content?.$data?.title,
+            hasMinimizer:content?.$data?.hasMinimizer ?? true,
+            windowOptions:content?.$props?.windowOptions ?? new WindowOptions(),
+            parentElement:SystemGlobal.background,
             initToCenter: center,
             iconPath: iconPath,
             windowMenu:menu?.content ?? [],
@@ -94,7 +92,7 @@ function OpenWindow(content:Vue, appName?:string, iconPath?:string, menu?:{conte
     _window.$slots.default = [ (content as any)._vnode ];
     _window.$mount();
     Object.assign(content.$data, { f_targetWindow: _window });
-    SystemGlobal.desktop!.appendChild(_window.$el)
+    SystemGlobal.background!.appendChild(_window.$el)
 }
 function getIcon(appName:string):string{
     try {
@@ -114,13 +112,13 @@ function createRightClickMenu(_window:Window){
             action: ()=>_anyWindow.close()
         }
     ]
-    if(_window.$props.titleOptions.hasMinimizer) {
+    if(_window.$props.hasMinimizer) {
         _actions.unshift({
             label:"Minimize",
             action:()=>_anyWindow.minimize()
         })
     }
-    if(_window.$props.titleOptions.hasMaximizer) {
+    if(_window.$props.windowOptions.resizable) {
         _actions.unshift({
             label:"Maximize",
             action:()=>_anyWindow.maximize()

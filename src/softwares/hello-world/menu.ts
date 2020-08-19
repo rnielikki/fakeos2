@@ -26,16 +26,18 @@ export default function(target:Vue){
                     {
                         label: "versin info",
                         action:()=>{
-                            windowFactory.OpenDialog(null, "Version Info", "FakeOS2\nProgram info")
+                            windowFactory.OpenDialog(target.$data.f_targetWindow, "Version Info", "FakeOS2\nProgram info")
                         }
                     }
                 ]
             }
-        ],
+        ]/*,
         rightClick:[
             {label:'whatever'},
-            {label:'you cannot close this'},
-            {label:'with this lol'}
-        ]
+            {
+                label:"close",
+                action:()=>target.$data.f_targetWindow.close()
+            }
+        ]*/
     }
 }

@@ -57,7 +57,7 @@ export default class Sound{
     }
     //volume range is 0-1
     //the actual gain will be -1(mute) - 0 (full)
-    async setVolume(volume:number){
+    setVolume = async (volume:number)=>{
         await this._soundPromise;
         if(volume < 0 || volume > 1) {
             console.warn("Warning: the volume range is not correct (should be 0-1). The sound setting will be ignored.\nThe input volume: "+volume);
@@ -76,9 +76,9 @@ export default class Sound{
     updateVolume = ()=>{
         this.setVolume(this._volume)
     }
-    private dispose(){
+    private dispose=()=>{
+        SoundManager.MasterChangeListener.Remove(this.updateVolume);
         this._audioSource?.stop(0); //destroy buffer
         this.context.close();
-        SoundManager.MasterChangeListener.Remove(this.updateVolume);
     }
 }
