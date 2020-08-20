@@ -86,8 +86,12 @@ function OpenWindow(content:Vue, appName?:string, iconPath?:string, menu?:{conte
         mixins:[ MixinFactory.CreateWindowMixin() ]
     });
     if(!_window.$props.rightClickMenu){
-        _window.$props.rightClickMenu=createRightClickMenu(_window);
+        _window.$props.rightClickMenu=[];
     }
+    else{
+        _window.$props.rightClickMenu.push({ label: "--"})
+    }
+    _window.$props.rightClickMenu = _window.$props.rightClickMenu.concat(createRightClickMenu(_window));
     content.$mount()
     _window.$slots.default = [ (content as any)._vnode ];
     _window.$mount();
@@ -99,7 +103,7 @@ function getIcon(appName:string):string{
         return require("@/softwares/"+appName+"/icon.png");   
     }
     catch {
-        return require("./default.png");
+        return require("@/system/resources/window-icon.png");
     }
 }
 

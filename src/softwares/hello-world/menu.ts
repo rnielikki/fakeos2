@@ -31,13 +31,12 @@ export default function(target:Vue){
                     }
                 ]
             }
-        ]/*,
+        ],
         rightClick:[
-            {label:'whatever'},
             {
-                label:"close",
-                action:()=>target.$data.f_targetWindow.close()
+                label:'whatever',
+                action:()=>{}
             }
-        ]*/
+        ]
     }
 }

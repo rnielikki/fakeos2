@@ -1,5 +1,6 @@
 <template>
-    <div :class="['f_menu-item', { 'f_menu-parent': HasSubMenu, 'deactivated':!HasSubMenu && !IsActivated, 'activated':IsActivated }]" ref="label" v-on:mousedown.stop>
+    <hr v-if="isHorizon()" class="f_menu-hr" />
+    <div v-else :class="['f_menu-item', { 'f_menu-parent': HasSubMenu, 'deactivated':!HasSubMenu && !IsActivated, 'activated':IsActivated }]" ref="label" v-on:mousedown.stop>
         <span class="f_menu-item-label">{{item.label}}</span>
         <slot></slot>
     </div>
@@ -30,6 +31,11 @@ export default Vue.extend({
 
         this.HasSubMenu = Object.prototype.hasOwnProperty.call(this.item, "submenu"),
         this.IsActivated = checkActivated(this.item);
+    },
+    methods:{
+        isHorizon:function(){
+            return this.item.label=="--" && !Object.prototype.hasOwnProperty.call(this.item, "action")
+        }
     }
 })
 </script>
@@ -75,5 +81,15 @@ export default Vue.extend({
             padding-right:1.1rem;
             box-sizing: border-box;
         }
+    }
+    .f_menu-hr {
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+        margin-block-start: 0;
+        margin-block-end: 0;
+        /* " CSS " */
+        background-color: $menu-border;
+        height: 1px;
+        border: 0;
     }
 </style>
