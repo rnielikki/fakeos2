@@ -1,7 +1,7 @@
 <template>
     <div class="f_background" id="f_background" v-contextmenu="{
         value: menu }">
-        <desktop-icon label = "test" appName="hello-world" />
+        <IconCollection />
     </div>
 </template>
 <script lang="ts">
@@ -9,13 +9,13 @@ import VueCopmonent from 'vue'
 import { Component, Vue } from 'vue-property-decorator';
 import ContextMenu from './menu/contextmenu'
 import WindowFactory from './window/window-factory'
-import DesktopIcon from '@/components/desktop-icon/desktop-icon.vue'
+import IconCollection from '@/components/desktop-icon/icon-collection.vue'
 
 @Component({
     directives:{
         contextmenu: ContextMenu
     },
-    components:{ DesktopIcon },
+    components:{ IconCollection },
     data:function(){
         return {
             menu:[
@@ -56,5 +56,6 @@ export default class Background extends Vue {}
         height:100%; 
         left:0;top:0;right:0;bottom:0;
         background:darkslateblue url('../assets/logo.png') repeat;
+        position:relative
     }
 </style>
