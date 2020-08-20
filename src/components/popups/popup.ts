@@ -14,7 +14,6 @@ export default class Popup {
         this.contentFactory = contentFactory;
         this.bindingType = bindingType;
         this.popupInfo = popupInfo ?? new PopupInfo();
-        button.style.position = "relative";
         button.addEventListener(bindingType, this.show);
     }
     //1. v-if attaches too many <!-- --> damn

@@ -1,5 +1,5 @@
 <template>
-    <div class="f_menu">
+    <div class="f_menu" v-if="value.length>0">
         <Menu-label v-for="(item, key) in value" :key="key" :item="item" :onDeleted="onDeleted">
             <Popup class="f_menu" :popupInfo="submenuInfo" v-if="HasSubMenu(item)">
                 <Menu :value="item.submenu" :onDeleted="onDeleted" />

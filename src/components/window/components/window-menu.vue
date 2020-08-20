@@ -38,6 +38,7 @@ export default Vue.extend({
         min-width:2.3rem;
         text-align:center;
         box-sizing: border-box;
+        position: relative;
         &:hover {
             background-color: $selected-foreground;
             color: $selected-background;

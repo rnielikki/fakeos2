@@ -58,6 +58,7 @@ export default Vue.extend({
         -o-background-size: cover;
         background-size: cover;
         border:1px solid $statusbar-selected;
+        position: relative;
         &.selected {
             background-color:$statusbar-selected;
         }

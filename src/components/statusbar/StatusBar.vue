@@ -44,7 +44,10 @@ export default Vue.extend({
         color:$statusbar-foreground;
         text-align: left;
     }
-    .start-icon:hover img {
-        opacity:0.7;
+    .start-icon{
+        position: relative;
+        &:hover img {
+            opacity:0.7;
+        }
     }
 </style>

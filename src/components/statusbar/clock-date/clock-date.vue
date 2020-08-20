@@ -42,6 +42,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
     .clockdate{
         text-align: center;
+        position: relative;
     }
     .date{
         font-size:80%

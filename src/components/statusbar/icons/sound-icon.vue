@@ -1,8 +1,6 @@
 <template>
-    <div>
-        <span>
-            <img  class="icon" :src=soundIcon />
-        </span>
+    <div class="sound-icon">
+        <img  class="icon" :src=soundIcon />
     </div>
 </template>
 <script lang="ts">
@@ -58,6 +56,9 @@ export default Vue.extend({
 })
 </script>
 <style scoped>
+    .sound-icon {
+        position: relative;
+    }
     .icon{
         width:2.1rem;
     }
