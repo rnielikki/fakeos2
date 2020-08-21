@@ -1,6 +1,6 @@
 <template>
-    <div v-contextMenu="{ value: value }" class="f_background-icon" @dblclick="model.action">
-        <img :src="this.model.icon" />
+    <div v-contextMenu="{ value: value }" class="f_background-icon" @dblclick="model.action" draggable="true" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent>
+        <img :src="this.model.icon" draggable="false" />
         <div class="f_background-icon-label" :contenteditable="editable" @mousedown.stop ref="label">{{ model.label }}</div>
     </div>
 </template>
@@ -10,8 +10,10 @@ import ContextMenu from '../menu/contextmenu'
 import windowFactory from '../window/window-factory'
 import IconModel from './models/icon-model'
 
+let f_dragTarget:Vue | null = null
+
 export default Vue.extend({
-    name:"DesktopIcon",
+    name:"Icon",
     directives:{ ContextMenu },
     data:function(){
         return {
@@ -27,7 +29,7 @@ export default Vue.extend({
                 {
                     label: "Delete",
                     action:()=>this.$destroy()
-                }
+                },
             ],
             editable:false
         }
@@ -42,12 +44,23 @@ export default Vue.extend({
             this.editable = true;
             let labelElement = this.$refs.label as HTMLElement;
             labelElement.focus();
-            console.log(getSelection())
             document.addEventListener("mousedown",()=>{
                     this.editable=false;
-                    console.log(this.model.label)
                 })
-        }
+        },
+        dragging:function(){
+            (this.$el as HTMLElement).style.opacity = "0.5"
+        },
+        dragged:function(){
+            (this.$el as HTMLElement).style.opacity = "1"
+            if(f_dragTarget){
+                (this.$parent as any).changeOrder(this, f_dragTarget)
+                f_dragTarget = null;
+            }
+        },
+        dropped:function(e:Event){
+            f_dragTarget = this;
+        },
     },
     destroyed:function(){
         this.$el?.parentElement?.removeChild(this.$el)
@@ -57,7 +70,9 @@ export default Vue.extend({
 <style lang="scss">
 .f_background-icon {
     @import 'src/scss/colorset.scss';
-    position:absolute;
+    position:relative;
+    display:inline-block;
+    margin:.8rem .5rem;
     &-label {
         text-shadow:2px 0px 0px #000, -2px 0px 0px #000, 0px -2px 0px #000, 0px 2px 0px #000;
         color:#fff;
