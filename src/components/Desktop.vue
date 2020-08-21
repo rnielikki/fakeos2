@@ -6,7 +6,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Background from './background.vue';
+import Background from './background/background.vue';
 import Window from './window/components/window.vue'
 import StatusBar from './statusbar/statusbar.vue'
 import Menu from './menu/menu'

@@ -1,13 +1,15 @@
 <template>
-    <div v-contextMenu="{ value: value }" class="f_background-icon" @dblclick="openApp">
-        <img :src=icon />
-        <div class="f_background-icon-label" :contenteditable="editable" @mousedown.stop ref="label">{{ label }}</div>
+    <div v-contextMenu="{ value: value }" class="f_background-icon" @dblclick="model.action">
+        <img :src="this.model.icon" />
+        <div class="f_background-icon-label" :contenteditable="editable" @mousedown.stop ref="label">{{ model.label }}</div>
     </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
 import ContextMenu from '../menu/contextmenu'
 import windowFactory from '../window/window-factory'
+import IconModel from './models/icon-model'
+
 export default Vue.extend({
     name:"DesktopIcon",
     directives:{ ContextMenu },
@@ -16,7 +18,7 @@ export default Vue.extend({
             value:[
                 {
                     label:"Open",
-                    action:()=>(this as any).openApp()
+                    action:this.model.action
                 },
                 {
                     label: "Rename",
@@ -31,26 +33,11 @@ export default Vue.extend({
         }
     },
     props:{
-        icon:{
-            type:String,
-            default:require("@/system/resources/window-icon.png")
-        },
-        label:{
-            type:String
-        },
-        appName:{
-            type:String
-        },
-        appOptions:{
-            type:Object,
-            default:undefined
+        model:{
+            type:IconModel
         }
     },
     methods:{
-        openApp:function(){
-            if(!this.appName) return;
-            windowFactory.OpenProgram(this.appName, this.appOptions);
-        },
         editLabel:function(){
             this.editable = true;
             let labelElement = this.$refs.label as HTMLElement;
@@ -58,7 +45,7 @@ export default Vue.extend({
             console.log(getSelection())
             document.addEventListener("mousedown",()=>{
                     this.editable=false;
-                    this.$props.label = labelElement.innerText;
+                    console.log(this.model.label)
                 })
         }
     },
@@ -69,6 +56,7 @@ export default Vue.extend({
 </script>
 <style lang="scss">
 .f_background-icon {
+    @import 'src/scss/colorset.scss';
     position:absolute;
     &-label {
         text-shadow:2px 0px 0px #000, -2px 0px 0px #000, 0px -2px 0px #000, 0px 2px 0px #000;
@@ -77,6 +65,10 @@ export default Vue.extend({
             background-color:#fff;
             color:#000;
             text-shadow:none;
+        }
+        &.selected {
+            color:$selected-foreground;
+            background-color:$selected-background;
         }
     }
     img {

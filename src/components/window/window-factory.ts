@@ -5,6 +5,7 @@ import MixinFactory from './mixins/window-mixin-factory'
 import SystemGlobal from '@/system/global'
 import DialogButton, { OKButton } from './components/dialogs/dialog-model'
 import { IMenuComponent } from '../menu/models/menu-model'
+import IconLoader from '../icon/icon-loader'
 
 export default {
     //options are propsData
@@ -21,7 +22,7 @@ export default {
             else{
                 comp = new component.default();
             }
-            OpenWindow(comp, programName, getIcon(programName), comp.$data.menu);
+            OpenWindow(comp, programName, IconLoader.getIcon(programName), comp.$data.menu);
         })
         .catch((err)=>{
             this.OpenDialog(null, "Load Failed", `Couldn't find the ${fullProgramName}, or the program is corrupted?`)
@@ -98,34 +99,26 @@ function OpenWindow(content:Vue, appName?:string, iconPath?:string, menu?:{conte
     Object.assign(content.$data, { f_targetWindow: _window });
     SystemGlobal.background!.appendChild(_window.$el)
 }
-function getIcon(appName:string):string{
-    try {
-        return require("@/softwares/"+appName+"/icon.png");   
-    }
-    catch {
-        return require("@/system/resources/window-icon.png");
-    }
-}
+
 
 function createRightClickMenu(_window:Window){
-    //TypeScript is too good language to handle so
     let _anyWindow = _window as any;
     let _actions=[
         {
             label: "Close",
-            action: ()=>_anyWindow.close()
+            action:_anyWindow.close
         }
     ]
-    if(_window.$props.hasMinimizer) {
-        _actions.unshift({
-            label:"Minimize",
-            action:()=>_anyWindow.minimize()
-        })
-    }
     if(_window.$props.windowOptions.resizable) {
         _actions.unshift({
             label:"Maximize",
-            action:()=>_anyWindow.maximize()
+            action:_anyWindow.maximize
+        })
+    }
+    if(_window.$props.hasMinimizer) {
+        _actions.unshift({
+            label:"Minimize",
+            action:_anyWindow.minimize
         })
     }
     return _actions;

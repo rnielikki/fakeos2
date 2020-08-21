@@ -6,7 +6,6 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-//import Resizer from './resizer'
 import ResizerCollection from './resizer';
 
 export default Vue.extend({

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <window-icon v-for="(window, key) in allWindows" :key="key" :iconPath="window.$props.iconPath" :targetApp="window"></window-icon>
+        <window-icon v-for="win in allWindows" :key="win._uid" :iconPath="win.$props.iconPath" :targetApp="win"></window-icon>
     </div>
 </template>
 <script lang="ts">

@@ -52,7 +52,7 @@ import ContextMenu from '../../menu/contextmenu'
                 currentElement:null,
                 positionState:null,
                 zIndex:0,
-                selected:false
+                selected:false,
             }
         },
         props:{
@@ -184,13 +184,10 @@ import ContextMenu from '../../menu/contextmenu'
                 }
             },
             close:function(){
-                if((this as any).selectModal) return;
-
                 if(this.$props.modal){
                     WindowManager.select(this);
                     return;
                 }
-                
                 this.$destroy();
             }
         },
