@@ -1,6 +1,12 @@
 <template>
     <div class="iconCollection" :style="gridFlow">
-        <icon v-for="value in icons" :key="value.id" :model="value" @dragover="changeOrder" />
+        <icon v-for="(value, index) in icons" :key="value.id" :model="value"
+        v-draggable="{
+            index: index,
+            collection: icons,
+            data: value,
+            horizontal:true
+        }" />
     </div>
 </template>
 <script lang="ts">
@@ -8,6 +14,7 @@ import Vue, { PropType } from 'vue'
 import Icon from '@/components/icon/icon.vue'
 import IconModel from './models/icon-model'
 import { IconDirection } from './models/icon-collection-model'
+import Draggable from '@/system/core/draggable'
 
 export default Vue.extend({
     name:"IconCollection",
@@ -17,6 +24,7 @@ export default Vue.extend({
             selected:null
         }
     },
+    directives: { Draggable },
     props:{
         icons:{
             type:Array as PropType<IconModel[]>,
@@ -35,17 +43,6 @@ export default Vue.extend({
             else{
                 return { flexDirection: "column" }
             }
-        }
-    },
-    methods:{
-        changeOrder:function(sender:Vue, target:Vue){
-            //@ts-ignore
-            let senderModel = sender.$props.model;
-            let targetModel = target.$props.model;
-            let senderIndex = this.icons.findIndex(icon=>icon.id === senderModel.id);
-            let targetIndex = this.icons.findIndex(icon=>icon.id === targetModel.id)
-            this.$set(this.$props.icons, senderIndex, targetModel);
-            this.$set(this.$props.icons, targetIndex, senderModel);
         }
     }
 })

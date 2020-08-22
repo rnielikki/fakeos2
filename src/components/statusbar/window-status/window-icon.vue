@@ -1,14 +1,16 @@
 <template>
-<div
-    :class="{selected: this.targetApp.$data.selected }"
-    v-contextMenu="{
-        value: targetApp.rightClickMenu,
-        menuInfo: menuInfo
-    }"
-    :style="{ backgroundImage: 'url('+iconPath+')' }"
-    @click="selectOrMinimize"
-    :data-window-id="this.targetApp._uid">
-</div>
+    <div style="height:2.1rem"  @dragover.prevent>
+        <div
+            :class="[{selected: this.targetApp.$data.selected }, 'f_status-window-icon']"
+            v-contextMenu="{
+                value: targetApp.rightClickMenu,
+                menuInfo: menuInfo
+            }"
+            :style="{ backgroundImage: 'url('+iconPath+')' }"
+            @click="selectOrMinimize"
+            :data-window-id="this.targetApp._uid">
+        </div>
+    </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
@@ -50,9 +52,11 @@ export default Vue.extend({
 @import 'src/scss/colorset.scss';
     div{
         display: inline-block;
+    }
+    .f_status-window-icon{
         width:2.1rem; height:2.1rem;
         vertical-align: middle;
-        margin:0 .2rem;
+        margin:0;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;

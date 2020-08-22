@@ -1,16 +1,26 @@
 <template>
     <div>
-        <window-icon v-for="win in allWindows" :key="win._uid" :iconPath="win.$props.iconPath" :targetApp="win"></window-icon>
+        <window-icon v-for="(win, index) in allWindows" :key="win._uid" :iconPath="win.$props.iconPath" :targetApp="win"
+        v-draggable="{
+            index: index,
+            collection: allWindows,
+            data: win,
+            gap: '.45rem',
+            horizontal:false
+        }"
+        ></window-icon>
     </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
 import WindowIcon from './window-icon.vue'
 import { WindowEvents } from '@/system/window-manager'
+import Draggable from '@/system/core/draggable'
 
 export default Vue.extend({
     name: 'WindowStatus',
     components:{ WindowIcon },
+    directives: { Draggable },
     data:function(){
         return {
             allWindows:new Array<Window>()

@@ -1,5 +1,6 @@
 <template>
-    <div v-contextMenu="{ value: value }" class="f_background-icon" @dblclick="model.action" draggable="true" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent>
+    <div v-contextMenu="{ value: value }" class="f_background-icon"
+    @dblclick="model.action" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent  @dragover="dragToApp">
         <img :src="this.model.icon" draggable="false" />
         <div class="f_background-icon-label" :contenteditable="editable" @mousedown.stop ref="label">{{ model.label }}</div>
     </div>
@@ -54,13 +55,27 @@ export default Vue.extend({
         dragged:function(){
             (this.$el as HTMLElement).style.opacity = "1"
             if(f_dragTarget){
-                (this.$parent as any).changeOrder(this, f_dragTarget)
                 f_dragTarget = null;
             }
         },
         dropped:function(e:Event){
             f_dragTarget = this;
         },
+        dragToApp:function(){
+            //@ts-ignore
+            if(this.model.data && f_dragTarget?.model?.appName === this.model.appName !== null) {
+                //@ts-ignore
+                f_dragTarget.model.action(this.model.data);
+            }
+            /*
+            let senderModel = sender.$props.model;
+            let targetModel = target.$props.model;
+            let senderIndex = this.icons.findIndex(icon=>icon.id === senderModel.id);
+            let targetIndex = this.icons.findIndex(icon=>icon.id === targetModel.id)
+            this.$set(this.$props.icons, senderIndex, targetModel);
+            this.$set(this.$props.icons, targetIndex, senderModel);
+            */
+        }
     },
     destroyed:function(){
         this.$el?.parentElement?.removeChild(this.$el)
@@ -72,7 +87,6 @@ export default Vue.extend({
     @import 'src/scss/colorset.scss';
     position:relative;
     display:inline-block;
-    margin:.8rem .5rem;
     &-label {
         text-shadow:2px 0px 0px #000, -2px 0px 0px #000, 0px -2px 0px #000, 0px 2px 0px #000;
         color:#fff;
@@ -90,5 +104,8 @@ export default Vue.extend({
         width:64px;
         height:64px;
     }
+}
+div {
+    vertical-align:middle;
 }
 </style>
