@@ -1,7 +1,7 @@
 <template>
         <div v-show="!this.minimized"
             :class="['window', { selected: selected && modal === null }]"
-            v-movable="{ active:windowOptions.movable, handle: 'Window-title' }"
+            v-movable="{ active:windowOptions.movable && title !== null, handle: 'Window-title' }"
             :data-movable="windowOptions.movable"
             :style="{ zIndex: zIndex }"
             >
@@ -27,7 +27,7 @@ import VueType, { PropType } from 'vue'
 import { Vue } from 'vue-property-decorator';
 import Component from 'vue-class-component'
 
-import WindowBehaviours from '../logics/window-behaviours'
+import Movable from '@/system/core/movable-directive'
 import WindowTitle from './window-title.vue'
 import IWindowOptions, { WindowOptions } from './window-options'
 import WindowManager from '@/system/window-manager';
@@ -42,7 +42,7 @@ import ContextMenu from '../../menu/contextmenu'
 @Component({
         components:{ WindowTitle, Resizer, WindowMenu },
         directives: {
-            ...WindowBehaviours,
+            Movable,
             contextMenu: ContextMenu
         },
         data:function(){

@@ -1,6 +1,8 @@
 <template>
     <div class="iconCollection" :style="gridFlow">
         <icon v-for="(value, index) in icons" :key="value.id" :model="value"
+        @selected="()=>select(value.id)"
+        :isSelected ="selected===value.id"
         v-draggable="{
             index: index,
             collection: icons,
@@ -21,7 +23,7 @@ export default Vue.extend({
     components:{ Icon },
     data:function(){
         return {
-            selected:null
+            selected:-1
         }
     },
     directives: { Draggable },
@@ -44,10 +46,22 @@ export default Vue.extend({
                 return { flexDirection: "column" }
             }
         }
+    },
+    mounted:function(){
+        document.addEventListener("mousedown", this.deselect, true)
+    },
+    methods: {
+        select:function(id:number) {
+            this.selected = id
+        },
+        deselect:function(){
+            this.select(-1);
+        }
     }
 })
 </script>
-<style scoped>
+<style lang="scss" scoped>
+@import 'src/scss/colorset.scss';
 /* flexbox for line change */
     .iconCollection {
         display:flex;

@@ -1,7 +1,6 @@
 import Movable from '@/system/core/movable';
 
 export default {
-  movable:{
     bind: function (el:HTMLElement, binding:any, vnode:any) {
       if(!binding?.value?.active) return;
       var handleName:string = binding?.value?.handle as string;
@@ -17,5 +16,4 @@ export default {
       }
       new Movable(el as HTMLElement, handle);
     }
-  }
 }

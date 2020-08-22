@@ -1,6 +1,7 @@
 <template>
     <div v-contextMenu="{ value: value }" class="f_background-icon"
-    @dblclick="model.action" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent  @dragover="dragToApp">
+    @mousedown="$emit('selected')" @dblclick="model.action" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent  @dragover="dragToApp"
+    :class="{ selected:isSelected }">
         <img :src="this.model.icon" draggable="false" />
         <div class="f_background-icon-label" :contenteditable="editable" @mousedown.stop ref="label">{{ model.label }}</div>
     </div>
@@ -38,6 +39,10 @@ export default Vue.extend({
     props:{
         model:{
             type:IconModel
+        },
+        isSelected:{
+            type:Boolean,
+            default:false
         }
     },
     methods:{
@@ -90,19 +95,26 @@ export default Vue.extend({
     &-label {
         text-shadow:2px 0px 0px #000, -2px 0px 0px #000, 0px -2px 0px #000, 0px 2px 0px #000;
         color:#fff;
+        overflow-wrap: break-word;
+        width: 75px;
+        height:1rem;
+        overflow-y:hidden;
         &[contenteditable=true]{
             background-color:#fff;
             color:#000;
             text-shadow:none;
         }
-        &.selected {
-            color:$selected-foreground;
-            background-color:$selected-background;
-        }
     }
     img {
         width:64px;
         height:64px;
+    }
+    &.selected {
+        background-color:$selected-background;
+        .f_background-icon-label {
+            color:$selected-foreground;
+            overflow-y:visible !important;
+        }
     }
 }
 div {
