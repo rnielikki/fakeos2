@@ -1,16 +1,17 @@
 <template>
-    <div v-contextMenu="{ value: value }" class="f_background-icon"
+    <div v-contextMenu="{ value: value }" class="f_collection-icon"
     @mousedown="$emit('selected')" @dblclick="model.action" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent  @dragover="dragToApp"
     :class="{ selected:isSelected }">
         <img :src="this.model.icon" draggable="false" />
-        <div class="f_background-icon-label" :contenteditable="editable" @mousedown.stop ref="label">{{ model.label }}</div>
+        <div class="f_collection-icon-label" :contenteditable="editable" @mousedown.stop ref="label">{{ model.label }}</div>
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import Vue, { PropType } from 'vue'
 import ContextMenu from '../menu/contextmenu'
 import windowFactory from '../window/window-factory'
 import IconModel from './models/icon-model'
+import backgroundMenu from '../background/background-menu'
 
 let f_dragTarget:Vue | null = null
 
@@ -38,7 +39,7 @@ export default Vue.extend({
     },
     props:{
         model:{
-            type:IconModel
+            type:Object as PropType<IconModel>
         },
         isSelected:{
             type:Boolean,
@@ -72,14 +73,7 @@ export default Vue.extend({
                 //@ts-ignore
                 f_dragTarget.model.action(this.model.data);
             }
-            /*
-            let senderModel = sender.$props.model;
-            let targetModel = target.$props.model;
-            let senderIndex = this.icons.findIndex(icon=>icon.id === senderModel.id);
-            let targetIndex = this.icons.findIndex(icon=>icon.id === targetModel.id)
-            this.$set(this.$props.icons, senderIndex, targetModel);
-            this.$set(this.$props.icons, targetIndex, senderModel);
-            */
+
         }
     },
     destroyed:function(){
@@ -88,7 +82,7 @@ export default Vue.extend({
 })
 </script>
 <style lang="scss">
-.f_background-icon {
+.f_collection-icon {
     @import 'src/scss/colorset.scss';
     position:relative;
     display:inline-block;
@@ -111,7 +105,7 @@ export default Vue.extend({
     }
     &.selected {
         background-color:$selected-background;
-        .f_background-icon-label {
+        .f_collection-icon-label {
             color:$selected-foreground;
             overflow-y:visible !important;
         }

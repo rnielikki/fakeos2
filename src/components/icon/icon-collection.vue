@@ -1,32 +1,30 @@
 <template>
-    <div class="iconCollection" :style="gridFlow">
-        <icon v-for="(value, index) in icons" :key="value.id" :model="value"
-        @selected="()=>select(value.id)"
-        :isSelected ="selected===value.id"
-        v-draggable="{
-            index: index,
-            collection: icons,
-            data: value,
-            horizontal:true
-        }" />
-    </div>
+    <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="false">
+             <template v-slot:default="model">
+                 <icon :model="model.model"
+                 v-on:dragend.native="model.dragend"
+                 @selected="()=>select(model.model.id)"
+                :isSelected ="selected===model.model.id"
+                draggable="true" />
+            </template>
+    </draggable-collection>
 </template>
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import Icon from '@/components/icon/icon.vue'
 import IconModel from './models/icon-model'
 import { IconDirection } from './models/icon-collection-model'
-import Draggable from '@/system/core/draggable'
+import DraggableCollection from '@/system/core/draggable/draggable-collection.vue'
+import DropTarget from '@/system/core/draggable/drop-target.vue'
 
 export default Vue.extend({
     name:"IconCollection",
-    components:{ Icon },
+    components:{ Icon, DraggableCollection },
     data:function(){
         return {
             selected:-1
         }
     },
-    directives: { Draggable },
     props:{
         icons:{
             type:Array as PropType<IconModel[]>,

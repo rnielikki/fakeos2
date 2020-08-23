@@ -1,16 +1,15 @@
 <template>
-    <div style="height:2.1rem"  @dragover.prevent>
         <div
             :class="[{selected: this.targetApp.$data.selected }, 'f_status-window-icon']"
             v-contextMenu="{
                 value: targetApp.rightClickMenu,
                 menuInfo: menuInfo
             }"
-            :style="{ backgroundImage: 'url('+iconPath+')' }"
+            :style="{ backgroundImage: 'url('+targetApp.$props.iconPath+')', height:'2.1rem' }"
             @click="selectOrMinimize"
-            :data-window-id="this.targetApp._uid">
+            :data-window-id="this.targetApp._uid"
+            @dragover.prevent>
         </div>
-    </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
@@ -23,7 +22,6 @@ import PopupInfo, { popupDirection } from '../../popups/popup-info'
 
 export default Vue.extend({
     props:{
-        iconPath:String,
         targetApp:Window
     },
     directives:{ contextMenu:ContextMenu },
@@ -50,10 +48,8 @@ export default Vue.extend({
 </script>
 <style lang="scss" scoped>
 @import 'src/scss/colorset.scss';
-    div{
-        display: inline-block;
-    }
     .f_status-window-icon{
+        display: inline-block;
         width:2.1rem; height:2.1rem;
         vertical-align: middle;
         margin:0;
