@@ -1,17 +1,9 @@
 import IFileInfo, { DirectoryInfo, FileInfo } from './fileinfo';
 
-export let fileSystemObject = {
-    "C:":{
-        "Users":{
-            "Images": toFileSystem(require.context("@/assets/images", true, /\.(jpe?g|png|gif|bmp)$/i).keys()),
-            "Musics": toFileSystem(require.context("@/assets/musics", true, /\.(mp3|ogg|wav)$/i).keys())
-        },
-        "Program":toFileSystem(require.context("@/softwares/", true, /^((?!core).)*\.vue$/).keys().filter(value=>isMainExecutable(value))),
-        "System": toFileSystem(require.context("@/softwares/core", true, /\.vue$/).keys().filter(value=>isMainExecutable(value)))
-    }
+const RootFileInfo:IFileInfo = {
+    name:"",
+    parent:null
 }
-
-export default
 
 function isMainExecutable(path:string):boolean{
     path = path.substring(2);
@@ -45,16 +37,40 @@ function toFileSystem(input:Array<string>) {
     }
 }
 
-function toDirectoryInfo(fileSystem:object, parent:IFileInfo) {
-    let _obj = Object(fileSystem);
-    for(let key in fileSystem){
-        if(!Object.prototype.hasOwnProperty.call(fileSystem, key)) continue;
-        let value = _obj[key];
-        if(typeof value == "string") {
-            return new FileInfo(key, parent, (value)?JSON.parse(value):null);
-        }
-        else {
-            //new DirectoryInfo(key, parent);
-        }
+function toDirectoryInfo(name:string, fileSystem:object, parent:IFileInfo):any {
+    let obj = Object(fileSystem);
+    let dir = new DirectoryInfo(name, parent, []);
+
+    for(let key in obj){
+        if(!Object.prototype.hasOwnProperty.call(obj, key)) continue;
+        let contents = obj[key];
+           let iFileInfo:IFileInfo;
+           if(typeof contents == "string") {
+                try {
+                    iFileInfo = new FileInfo(key, dir, (contents)?JSON.parse(contents):null);
+                }
+                catch {
+                    console.warn("File "+contents+" from file "+key+" is invalid.")
+                    iFileInfo = new FileInfo(key, dir);
+                }
+           }
+           else {
+                iFileInfo = toDirectoryInfo(key, contents, dir)
+           }
+           dir.files.push(iFileInfo);
+    }
+    return dir;
+}
+
+export let fileSystemObject = {
+    "C:":{
+        "Users":{
+            "Images": toFileSystem(require.context("@/assets/images", true, /\.(jpe?g|png|gif|bmp)$/i).keys()),
+            "Musics": toFileSystem(require.context("@/assets/musics", true, /\.(mp3|ogg|wav)$/i).keys())
+        },
+        "Program":toFileSystem(require.context("@/softwares/", true, /^((?!core).)*\.vue$/).keys().filter(value=>isMainExecutable(value))),
+        "System": toFileSystem(require.context("@/softwares/core", true, /\.vue$/).keys().filter(value=>isMainExecutable(value)))
     }
 }
+
+export default toDirectoryInfo("C:", fileSystemObject["C:"], RootFileInfo);

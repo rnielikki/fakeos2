@@ -26,8 +26,7 @@ import FileSystem from '@/system/filesystem/filesystem'
       errorInfo: undefined,
       info: undefined
     }
-  },
-  mounted:function(){ console.log(FileSystem) }
+  }
 })
 export default class App extends Vue {}
 </script>
