@@ -33,7 +33,11 @@ export default Vue.extend({
         direction:{
             type:Number as PropType<IconDirection>,
             default:()=>IconDirection.row
-        }
+        },/*
+        path:{
+            type:String,
+            required:true
+        }*/
     },
     computed:{
         gridFlow:function(){

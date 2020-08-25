@@ -9,6 +9,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Desktop from './components/desktop.vue';
 import BlueScreen from './components/bluescreen.vue'
+import FileSystem from '@/system/filesystem/filesystem'
 
 @Component({
   components: {
@@ -25,7 +26,8 @@ import BlueScreen from './components/bluescreen.vue'
       errorInfo: undefined,
       info: undefined
     }
-  }
+  },
+  mounted:function(){ console.log(FileSystem) }
 })
 export default class App extends Vue {}
 </script>

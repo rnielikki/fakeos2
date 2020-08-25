@@ -1,27 +1,29 @@
 export default interface IFileInfo {
     name:string;
-    path:string;
+    parent:IFileInfo | null
     mutable:boolean;
 }
 export class FileInfo implements IFileInfo {
     name:string;
-    path:string;
+    parent:IFileInfo;
+    data:object | null;
     mutable:boolean;
-    constructor(name:string, path:string, mutable:boolean = true){
+    constructor(name:string, parent:IFileInfo, data:object | null = null, mutable:boolean = true){
         this.name = name;
-        this.path = path;
+        this.parent = parent;
+        this.data = data;
         this.mutable = mutable;
     }
 }
 
 export class ShortcutInfo implements IFileInfo {
     name:string;
-    path:string;
+    parent:IFileInfo
     originalPath:string;
     mutable:boolean;
-    constructor(name:string, path:string, originalPath:string, mutable:boolean = true){
+    constructor(name:string, parent:IFileInfo, originalPath:string, mutable:boolean = true){
         this.name = name;
-        this.path = path;
+        this.parent = parent;
         this.originalPath = originalPath;
         this.mutable = mutable;
     }
@@ -29,12 +31,12 @@ export class ShortcutInfo implements IFileInfo {
 
 export class DirectoryInfo implements IFileInfo {
     name:string;
-    path:string;
+    parent:IFileInfo
     files:IFileInfo[];
     mutable:boolean;
-    constructor(name:string, path:string, files:IFileInfo[] = [], mutable:boolean = true){
+    constructor(name:string, parent:IFileInfo, files:IFileInfo[] = [], mutable:boolean = true){
         this.name = name;
-        this.path = path;
+        this.parent = parent;
         this.files = files;
         this.mutable = mutable;
     }

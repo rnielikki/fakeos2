@@ -1,5 +1,6 @@
 import IconLoader from '../icon-loader'
 import WindowFactory from '../../window/window-factory'
+import IFileInfo, { FileInfo } from '@/system/filesystem/fileinfo'
 
 let id_current = 0;
 
@@ -9,23 +10,19 @@ export default class IconModel {
     private _id:number
     public get id(){ return this._id; }
     action:Function;
-    appName:string|null = null
     data:object|null = null
-    constructor(label:string, icon:string, action:Function, appName?:string, data?:object){
-        this.label = label;
-        this.icon = icon;
-        this.action = action;
+    fileInfo:IFileInfo;
+    constructor(fileInfo:IFileInfo){
+        this.fileInfo = fileInfo;
+        this.label = fileInfo.name;
+        this.icon = IconLoader.getIcon(fileInfo.name);
+        this.action = getAction(fileInfo)
         this._id=id_current++;
-        if(appName) this.appName = appName;
-        if(data) this.data = data;
     }
-    static FromAppName(appName:string, options?:object):IconModel{
-        let _index = appName.lastIndexOf('/');
-        let label = (_index < 0)?appName:appName.substring(_index+1);
-        let icon = IconLoader.getIcon(appName);
-        let action = (op?:object)=>{
-            WindowFactory.OpenProgram(appName, {...(options ?? {}), ...(op ?? {})})
-        }
-        return new IconModel(label, icon, action, appName, options)
+}
+
+function getAction(fileInfo:IFileInfo){
+    return (op?:object)=>{
+        WindowFactory.OpenProgram(fileInfo.name, {...((fileInfo as FileInfo)?.data ?? {}), ...(op ?? {})})
     }
 }

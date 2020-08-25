@@ -1,6 +1,6 @@
-import IconModel from '../icon/models/icon-model';
+//import IconModel from '../icon/models/icon-model';
 
-export default [
+export default [/*
     IconModel.FromAppName("hello-world"),
     IconModel.FromAppName("core/player"),
     IconModel.FromAppName("core/player"),
@@ -17,5 +17,5 @@ export default [
     IconModel.FromAppName("core/player"),
     IconModel.FromAppName("core/player"),
     IconModel.FromAppName("core/player"),
-    IconModel.FromAppName("hello-world")
+    IconModel.FromAppName("hello-world")*/
 ]
