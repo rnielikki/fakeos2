@@ -16,28 +16,26 @@ import IconModel from './models/icon-model'
 import { IconDirection } from './models/icon-collection-model'
 import DraggableCollection from '@/system/core/draggable/draggable-collection.vue'
 import DropTarget from '@/system/core/draggable/drop-target.vue'
+import IFileInfo, { DirectoryInfo } from '@/system/filesystem/fileinfo'
 
 export default Vue.extend({
     name:"IconCollection",
     components:{ Icon, DraggableCollection },
     data:function(){
         return {
-            selected:-1
+            selected:-1,
+            icons:new Array<IconModel>()
         }
     },
     props:{
-        icons:{
-            type:Array as PropType<IconModel[]>,
-            default:()=>[]
-        },
         direction:{
             type:Number as PropType<IconDirection>,
             default:()=>IconDirection.row
-        },/*
+        },
         path:{
-            type:String,
+            type:Object as PropType<DirectoryInfo>,
             required:true
-        }*/
+        }
     },
     computed:{
         gridFlow:function(){
@@ -48,6 +46,9 @@ export default Vue.extend({
                 return { flexDirection: "column" }
             }
         }
+    },
+    created:function(){
+        this.icons = this.path.files.map(file => new IconModel(file));
     },
     mounted:function(){
         document.addEventListener("mousedown", this.deselect, true)

@@ -33,4 +33,5 @@ export class DirectoryInfo implements IFileInfo {
         this.parent = parent;
         this.files = files;
     }
+    getFile = (fileName:string):IFileInfo | null => this.files.find(file=>file.name === fileName) ?? null;
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="f_background" id="f_background" v-contextmenu="{ value: menu }">
-        <IconCollection :icons="icons" :direction="direction" />
+        <IconCollection :path="path" :direction="direction" />
     </div>
 </template>
 <script lang="ts">
@@ -10,8 +10,9 @@ import ContextMenu from '../menu/contextmenu'
 import WindowFactory from '../window/window-factory'
 import IconCollection from '@/components/icon/icon-collection.vue'
 import BackgroundMenu from './background-menu'
-import BackgroundIcons from './background-icons'
+import { Path } from '@/system/filesystem/filesystem'
 import { IconDirection } from '../icon/models/icon-collection-model'
+import { DirectoryInfo } from '@/system/filesystem/fileinfo';
 
 @Component({
     directives:{
@@ -21,7 +22,7 @@ import { IconDirection } from '../icon/models/icon-collection-model'
     data:function(){
         return {
             menu:BackgroundMenu,
-            icons:BackgroundIcons,
+            path:Path.getAbsolutePath("C:/User/Desktop") as DirectoryInfo,
             direction:IconDirection.column
         }
     }

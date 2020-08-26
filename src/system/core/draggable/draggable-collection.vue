@@ -1,8 +1,8 @@
 <template>
     <div style="position:relative;">
-        <div class="draggable-background" @dragover.prevent @drop="()=>drop(collection.length-1)"></div>
+        <div class="draggable-background" @dragover.prevent @drop="(e)=>drop(e, collection.length-1)"></div>
         <div v-for="(item, index) in collection" :key="index" :style="computedCss">
-            <drop-target :horizontal="horizontal" :gap="gap" v-on:drop.native="()=>drop(index)" :size="size" />
+            <drop-target :horizontal="horizontal" :gap="gap" v-on:drop.native="(e)=>drop(e, index)" :size="size" />
             <slot v-bind:model="item" v-bind:dragend="(e)=>endDrag(e, item, collection)"></slot>
         </div>
     </div>
@@ -50,21 +50,22 @@ export default Vue.extend({
                 dropInfo = { ...EmptyDropInfo };
             }
         },
-        drop:function(index:number) {
+        drop:function(e:Event, index:number) {
             dropInfo = {
                 targetIndex:index,
                 collection:this.collection,
                 item: this.collection[index] as object
             }
+            e.stopPropagation();
         }
     },
     computed:{
         computedCss:function(){
             if(this.horizontal){
-                return { display: "inline-block" }
+                return { display: "inline-block", zIndex:1 }
             }
             else{
-                return { }
+                return { zIndex:1 }
             }
         }
     }
