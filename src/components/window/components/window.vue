@@ -15,7 +15,7 @@
                 :iconPath="iconPath"
                 v-contextMenu="{ value: rightClickMenu }"
             />
-            <div class="window-content">
+            <div class="window-content" @contextmenu.stop>
                 <WindowMenu v-if="windowMenu" :menu="windowMenu" />
                 <slot></slot>
             </div>

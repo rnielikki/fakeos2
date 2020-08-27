@@ -86,9 +86,8 @@ export default Vue.extend({
     @import 'src/scss/colorset.scss';
     position:relative;
     display:inline-block;
+    text-align:center;
     &-label {
-        text-shadow:2px 0px 0px #000, -2px 0px 0px #000, 0px -2px 0px #000, 0px 2px 0px #000;
-        color:#fff;
         overflow-wrap: break-word;
         width: 75px;
         height:1rem;

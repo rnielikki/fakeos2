@@ -1,6 +1,6 @@
 <template>
     <div class="f_background" id="f_background" v-contextmenu="{ value: menu }">
-        <IconCollection :path="path" :direction="direction" />
+        <IconCollection :path="path" :direction="direction" style="z-index:-1" />
     </div>
 </template>
 <script lang="ts">
@@ -22,7 +22,7 @@ import { DirectoryInfo } from '@/system/filesystem/fileinfo';
     data:function(){
         return {
             menu:BackgroundMenu,
-            path:Path.getAbsolutePath("C:/User/Desktop") as DirectoryInfo,
+            path:Path.getAbsolutePath("C:/System") as DirectoryInfo,
             direction:IconDirection.column
         }
     }
@@ -38,5 +38,11 @@ export default class Background extends Vue {}
         background:#008080/* url('../../assets/logo.png') repeat*/;
         position:relative;
         overflow: hidden;
+    }
+</style>
+<style>
+    .f_background > .iconCollection .f_collection-icon-label {
+        text-shadow:2px 0px 0px #000, -2px 0px 0px #000, 0px -2px 0px #000, 0px 2px 0px #000;
+        color:#fff;
     }
 </style>

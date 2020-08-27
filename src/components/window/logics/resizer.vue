@@ -46,6 +46,7 @@ $corner-size: 10px;
     width: 0;
     height: 0;
     overflow:visible;
+    z-index:50;
     div{
         position:absolute;
         /* make temp visible */

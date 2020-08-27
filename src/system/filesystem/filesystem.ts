@@ -38,9 +38,9 @@ function toFileSystem(input:Array<string>, contentResolver:(path:string)=>string
 }
 
 function toDirectoryInfo(name:string, fileSystem:object, parent:IFileInfo):any {
-    console.log(fileSystemObject)
     let obj = Object(fileSystem);
-    let dir = new DirectoryInfo(name, parent, []);
+    let parentPath = (parent as DirectoryInfo)?.currentDirectory;
+    let dir = new DirectoryInfo(name, parent, [], (parentPath?(parentPath + "/" + name):name));
 
     for(let key in obj){
         if(!Object.prototype.hasOwnProperty.call(obj, key)) continue;
@@ -51,7 +51,7 @@ function toDirectoryInfo(name:string, fileSystem:object, parent:IFileInfo):any {
                     iFileInfo = new FileInfo(key, dir, (contents)?JSON.parse(contents):null);
                 }
                 catch {
-                    console.warn("File "+contents+" from file "+key+" is invalid.")
+                    console.warn("Warning: File "+key+" has corrupted contents.")
                     iFileInfo = new FileInfo(key, dir);
                 }
            }
