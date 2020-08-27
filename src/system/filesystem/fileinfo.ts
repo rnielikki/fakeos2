@@ -1,3 +1,5 @@
+import MimeType from "./mime"
+
 export default interface IFileInfo {
     name:string;
     parent:IFileInfo | null
@@ -5,11 +7,13 @@ export default interface IFileInfo {
 export class FileInfo implements IFileInfo {
     name:string;
     parent:IFileInfo;
+    app:string;
     data:object | null;
     constructor(name:string, parent:IFileInfo, data:object | null = null){
         this.name = name;
         this.parent = parent;
         this.data = data;
+        this.app = MimeType.getType(name, data) ?? "";
     }
 }
 
