@@ -1,8 +1,9 @@
 <template>
-    <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="false">
-             <template v-slot:default="model">
+    <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="false" ref="collection" collectionKeyName="id">
+             <template v-slot:default="model" v-on:icon-open="(item)=>log(item)">
                  <icon :model="model.model"
                  v-on:dragend.native="model.dragend"
+                 @open-icon="(mod)=>$emit('open-icon', mod)"
                  @selected="()=>select(model.model.id)"
                 :isSelected ="selected===model.model.id"
                 draggable="true" />
@@ -16,7 +17,8 @@ import IconModel from './models/icon-model'
 import { IconDirection } from './models/icon-collection-model'
 import DraggableCollection from '@/system/core/draggable/draggable-collection.vue'
 import DropTarget from '@/system/core/draggable/drop-target.vue'
-import IFileInfo, { DirectoryInfo } from '@/system/filesystem/fileinfo'
+import IFileInfo, { FileInfo, DirectoryInfo } from '@/system/filesystem/fileinfo'
+import windowFactory from '../window/window-factory'
 
 export default Vue.extend({
     name:"IconCollection",
@@ -48,7 +50,7 @@ export default Vue.extend({
         }
     },
     created:function(){
-        this.icons = this.path.files.map(file => new IconModel(file));
+        this.generateIcons();
     },
     mounted:function(){
         document.addEventListener("mousedown", this.deselect, true)
@@ -59,6 +61,19 @@ export default Vue.extend({
         },
         deselect:function(){
             this.select(-1);
+        },
+        generateIcons: function() {
+            this.$data.icons = [];
+            this.$set(this.$data, "icons", this.path.files.map(file => new IconModel(file)))
+        }
+    },
+    watch: {
+        path:{
+            handler:function() {
+                this.generateIcons();
+            },
+            immediate: true,
+            deep: true
         }
     }
 })

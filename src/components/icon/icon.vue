@@ -1,6 +1,6 @@
 <template>
     <div v-contextMenu="{ value: value }" class="f_collection-icon"
-    @mousedown="$emit('selected')" @dblclick="model.action" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent  @dragover="dragToApp"
+    @mousedown="$emit('selected')" @dblclick="$emit('open-icon', model)" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent  @dragover="dragToApp"
     :class="{ selected:isSelected }">
         <img :src="this.model.icon" draggable="false" />
         <div class="f_collection-icon-label" :contenteditable="editable" @mousedown.stop ref="label">{{ model.label }}</div>
@@ -23,7 +23,7 @@ export default Vue.extend({
             value:[
                 {
                     label:"Open",
-                    action:this.model.action
+                    action:()=>this.$emit('open-icon', this.model)
                 },
                 {
                     label: "Rename",

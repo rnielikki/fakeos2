@@ -1,5 +1,5 @@
 <template>
-    <draggable-collection class="iconCollection" :collection="allWindows" :horizontal="true" size="2.1rem" gap="0.9rem">
+    <draggable-collection class="iconCollection" :collection="allWindows" :horizontal="true" size="2.1rem" gap="0.9rem" collectionKeyName="_uid">
         <template v-slot:default="model">
             <window-icon :targetApp="model.model" v-on:dragend.native="model.dragend" />
         </template>

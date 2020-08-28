@@ -1,6 +1,6 @@
 <template>
     <div class="f_background" id="f_background" v-contextmenu="{ value: menu }">
-        <IconCollection :path="path" :direction="direction" style="z-index:-1" />
+        <IconCollection :path="path" :direction="direction" style="z-index:-1"  @open-icon="(item)=>openIcon(item)"  />
     </div>
 </template>
 <script lang="ts">
@@ -12,17 +12,20 @@ import IconCollection from '@/components/icon/icon-collection.vue'
 import BackgroundMenu from './background-menu'
 import { Path } from '@/system/filesystem/filesystem'
 import { IconDirection } from '../icon/models/icon-collection-model'
-import { DirectoryInfo } from '@/system/filesystem/fileinfo';
+import IFileInfo, { FileInfo, DirectoryInfo } from '@/system/filesystem/fileinfo';
+import { backgroundIconSet } from '@/components/icon/icon-mixins'
+import IconModel from '../icon/models/icon-model';
 
 @Component({
     directives:{
         contextmenu: ContextMenu
     },
     components:{ IconCollection },
+    mixins: [ backgroundIconSet ],
     data:function(){
         return {
             menu:BackgroundMenu,
-            path:Path.getAbsolutePath("C:/System") as DirectoryInfo,
+            path:Path.getAbsolutePath("C:/") as DirectoryInfo,
             direction:IconDirection.column
         }
     }
