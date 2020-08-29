@@ -9,8 +9,8 @@ export default class Popup {
     child:Vue | null = null;
     callback:((e:MouseEvent)=>void) | null = null
     contentFactory:(()=>Vue);
-    constructor(button:HTMLElement, contentFactory:()=>Vue, bindingType:string, popupInfo?:PopupInfo){
-        this.parentElement = button;
+    constructor(button:HTMLElement, contentFactory:()=>Vue, bindingType:string, popupInfo?:PopupInfo, parent?:HTMLElement){
+        this.parentElement = parent ?? button;
         this.contentFactory = contentFactory;
         this.bindingType = bindingType;
         this.popupInfo = popupInfo ?? new PopupInfo();

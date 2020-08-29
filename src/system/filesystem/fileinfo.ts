@@ -2,13 +2,15 @@ import Mime, { MimeType } from "./mime"
 
 export default interface IFileInfo {
     name:string;
-    parent:IFileInfo | null
+    parent:IFileInfo | null;
+    mutable:boolean;
 }
 export class FileInfo implements IFileInfo {
     name:string;
     parent:IFileInfo;
     appType:MimeType;
     data:object | null;
+    mutable:boolean = true;
     constructor(name:string, parent:IFileInfo, data:object | null = null){
         this.name = name;
         this.parent = parent;
@@ -21,6 +23,7 @@ export class ShortcutInfo implements IFileInfo {
     name:string;
     parent:IFileInfo
     originalPath:string;
+    mutable:boolean = true;
     constructor(name:string, parent:IFileInfo, originalPath:string){
         this.name = name;
         this.parent = parent;
@@ -36,6 +39,7 @@ export class DirectoryInfo implements IFileInfo {
     get currentDirectory() {
         return this._currentDirectory;
     }
+    mutable:boolean = true;
     constructor(name:string, parent:IFileInfo, files:IFileInfo[] = [], currentDirectory:string){
         this.name = name;
         this.parent = parent;

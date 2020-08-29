@@ -1,6 +1,5 @@
 <template>
-    <div style="position:relative;">
-        <div class="draggable-background" @dragover.prevent @drop="(e)=>drop(e, collection.length-1)"></div>
+    <div style="position:relative;z-index:0;" @dragover.prevent @drop="(e)=>drop(e, collection.length-1)">
         <div v-for="(item, index) in collection" :key="item[collectionKeyName]" :style="computedCss">
             <drop-target :horizontal="horizontal" :gap="gap" v-on:drop.native="(e)=>{ drop(e, index); }" :size="size" />
             <slot v-bind:model="item" v-bind:dragend="(e)=>endDrag(e, item, collection)"></slot>
@@ -75,9 +74,3 @@ export default Vue.extend({
     }
 })
 </script>
-<style scoped>
-.draggable-background {
-    position:absolute;
-    top:0;left:0;right:0;bottom:0;
-}
-</style>

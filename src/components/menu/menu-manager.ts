@@ -8,9 +8,9 @@ export default class MenuManager{
     value:IMenuComponent[];
     popup:Popup;
     callback:((e:MouseEvent)=>void) | null = null
-    constructor(el:HTMLElement,  value:IMenuComponent[], bindingType:string, popupInfo?:PopupInfo){
+    constructor(el:HTMLElement,  value:IMenuComponent[], bindingType:string, popupInfo?:PopupInfo, parent?:HTMLElement){
         this.value = value;
-        this.popup = new Popup(el, this.menuFactory, bindingType, popupInfo ?? createDefaultMenuInfo());
+        this.popup = new Popup(el, this.menuFactory, bindingType, popupInfo ?? createDefaultMenuInfo(), parent);
     }
     setCallback(callback:((e:MouseEvent)=>void)){
         this.popup.callback = callback

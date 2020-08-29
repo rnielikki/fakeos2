@@ -1,5 +1,5 @@
 <template>
-    <div class="f_popup-anchor" :style="{ left: popupInfo.x, top:popupInfo.y }">
+    <div class="f_popup-anchor" :style="{ left: popupInfo.x, top:popupInfo.y, zIndex:9999 }">
         <div class="f_popup-wrapper" :style="this.directionStyle">
             <slot></slot>
         </div>
