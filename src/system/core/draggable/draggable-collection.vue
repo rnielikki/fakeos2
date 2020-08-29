@@ -72,11 +72,6 @@ export default Vue.extend({
                 return { zIndex:1 }
             }
         }
-    },
-    watch:{
-        collection:function(){
-            this.$forceUpdate();
-        }
     }
 })
 </script>

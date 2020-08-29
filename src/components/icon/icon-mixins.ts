@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { DirectoryInfo, FileInfo } from '@/system/filesystem/fileinfo'
+import IFileInfo, { DirectoryInfo, FileInfo } from '@/system/filesystem/fileinfo'
 import WindowFactory from '../window/window-factory'
 import { Path } from '@/system/filesystem/filesystem'
 import IconModel from './models/icon-model'
@@ -50,6 +50,10 @@ export let explorerIconSet = Vue.extend({
     methods:{
         openIcon:function(model:IconModel) {
             model.isDirectory?(this as any).openDirectory(model.fileInfo):(this as any).openFile(model.fileInfo);
+        },
+        goToParent:function(dirInfo:DirectoryInfo){
+            if(!(dirInfo instanceof DirectoryInfo)) return;
+            (this as any).openDirectory(dirInfo);
         }
     }
 })

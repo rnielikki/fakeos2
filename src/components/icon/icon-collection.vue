@@ -1,9 +1,9 @@
 <template>
     <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="false" ref="collection" collectionKeyName="id">
-             <template v-slot:default="model" v-on:icon-open="(item)=>log(item)">
+             <template v-slot:default="model">
                  <icon :model="model.model"
                  v-on:dragend.native="model.dragend"
-                 @open-icon="(mod)=>$emit('open-icon', mod)"
+                 @dblclick.native="$emit('open-icon', model.model)"
                  @selected="()=>select(model.model.id)"
                 :isSelected ="selected===model.model.id"
                 draggable="true" />
@@ -26,7 +26,8 @@ export default Vue.extend({
     data:function(){
         return {
             selected:-1,
-            icons:new Array<IconModel>()
+            icons:new Array<IconModel>(),
+            f_path:this.path
         }
     },
     props:{
@@ -50,7 +51,7 @@ export default Vue.extend({
         }
     },
     created:function(){
-        this.generateIcons();
+        this.generateIcons(this.f_path);
     },
     mounted:function(){
         document.addEventListener("mousedown", this.deselect, true)
@@ -62,18 +63,14 @@ export default Vue.extend({
         deselect:function(){
             this.select(-1);
         },
-        generateIcons: function() {
-            this.$data.icons = [];
-            this.$set(this.$data, "icons", this.path.files.map(file => new IconModel(file)))
+        generateIcons: function(f_path:DirectoryInfo) {
+            this.icons = f_path.files.map(file => new IconModel(file))
         }
     },
-    watch: {
-        path:{
-            handler:function() {
-                this.generateIcons();
-            },
-            immediate: true,
-            deep: true
+    watch:{
+        path:function(value) {
+            this.f_path = value;
+            this.$set(this.$data, "f_path", value as DirectoryInfo);
         }
     }
 })
