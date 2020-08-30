@@ -1,4 +1,5 @@
 import Mime, { MimeType } from "./mime"
+import Root from './filesystem'
 
 export default interface IFileInfo {
     name:string;
@@ -40,11 +41,27 @@ export class DirectoryInfo implements IFileInfo {
         return this._currentDirectory;
     }
     mutable:boolean = true;
-    constructor(name:string, parent:IFileInfo, files:IFileInfo[] = [], currentDirectory:string){
+    constructor(name:string, parent:IFileInfo, files:IFileInfo[] = [], currentDirectory?:string){
         this.name = name;
         this.parent = parent;
         this.files = files;
-        this._currentDirectory = currentDirectory;
+        this._currentDirectory = currentDirectory ?? this.getCurrentDirectory();
     }
     getFile = (fileName:string):IFileInfo | null => this.files.find(file=>file.name === fileName) ?? null;
+    private getCurrentDirectory(){
+        return getCurrentDirRecursive(this, "");
+        function getCurrentDirRecursive(dir:DirectoryInfo, currentPath:string):string{
+            if(!(dir instanceof DirectoryInfo)) throw "Error while getting current directory: directory did not reach the root. Looks like invalid directory?";
+            let path = dir.name + "/" + currentPath;
+            if(dir === Root) {
+                return currentPath;
+            }
+            else {
+                return getCurrentDirRecursive(dir.parent as DirectoryInfo, path);
+            }
+        }
+    }
+    setCurrentDirectory(){
+        this._currentDirectory = this.getCurrentDirectory();
+    }
 }

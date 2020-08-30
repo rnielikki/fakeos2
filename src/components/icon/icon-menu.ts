@@ -33,6 +33,17 @@ export default Vue.extend({
                     this.editable=false;
             }, { once: true })
         },
+        add:function(fileInfo:IFileInfo, parent:DirectoryInfo){
+            if(!parent.mutable) {
+                this.showEditErrorDialog(fileInfo.name);
+                return false;
+            }
+            if(!this.validNameCheck(fileInfo.name, parent)) {
+                return false;
+            }
+            parent.files.push(fileInfo);
+            return true;
+        },
         delete:function(info?:IFileInfo){
             let fileInfo = info ?? this.$props.model.fileInfo;
             if(fileInfo.mutable) {
@@ -58,11 +69,52 @@ export default Vue.extend({
             this.$destroy();
             return true;
         },
+        move:function(file:IFileInfo, target:DirectoryInfo){
+            if(!file.mutable || !target.mutable){
+                (file.mutable)?this.showEditErrorDialog(target.name):this.showEditErrorDialog(file.name);
+                return false;
+            }
+            if(!this.validNameCheck(file.name, target)){
+                return false;
+            }
+            let files = (file.parent as DirectoryInfo)?.files;
+            let index = files?.indexOf(file);
+            if(files == null || index < 0){
+                this.showNotFoundErrorDialog(file.name);
+                return false;
+            }
+            files.splice(index, 1);
+            target.files.push(file);
+            file.parent = target;
+            if(file instanceof DirectoryInfo){
+                file.setCurrentDirectory();
+            }
+            return true;
+        },
+        validNameCheck(name:string, parent:DirectoryInfo){
+            if(name.indexOf('/') > -1) {
+                this.showInvalidNameDialog(name);
+                return false;
+            }
+            if(parent.getFile(name)) {
+                this.showDuplicatedNameDialog(name);
+                return false;
+            }
+            else {
+                return true;
+            }
+        },
         showEditErrorDialog(fileName:string) {
             windowFactory.OpenDialog(null, "LOCKED File", `File ${fileName} is not edible.\nI mean, not editable.`);
         },
         showNotFoundErrorDialog(fileName:string) {
             windowFactory.OpenDialog(null, "REMOVED File", `File ${fileName} is 404.\nWe cannot find the file. Where are you?`);
+        },
+        showInvalidNameDialog(fileName:string) {
+            windowFactory.OpenDialog(null, "INVALID Name", `${fileName} should not contain slash(/).`)
+        },
+        showDuplicatedNameDialog(fileName:string) {
+            windowFactory.OpenDialog(null, "DUPLICATED Name", `${fileName} should not contain slash(/).`)
         }
     }
 })

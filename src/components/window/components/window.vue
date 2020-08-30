@@ -19,7 +19,7 @@
                 <WindowMenu v-if="windowMenu" :menu="windowMenu" />
                 <slot></slot>
             </div>
-            <div v-if="modal!==null" class="modal-background" ref="modalBackground"></div>
+            <div v-if="modal!==null" class="modal-background" ref="modalBackground" @contextmenu.prevent.stop></div>
         </div>
 </template>
 <script lang="ts">
