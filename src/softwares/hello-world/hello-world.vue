@@ -1,8 +1,7 @@
 <template>
     <div>
         <h1 @click="GetSomeMessage">Click to change the result!</h1>
-        <h2> {{ testText }}</h2>
-        <h2 ref="asdf"></h2>
+        <h2 ref="wtf">{{ testText }}</h2>
     </div>
 </template>
 <script lang="ts">
@@ -16,13 +15,8 @@ export default Vue.extend({
         return {
             f_targetWindow:null,
             title: "hello world?",
-            menu:AppMenu(this)
-        }
-    },
-    props:{
-        testText:{
-            type:String,
-            default:":P"
+            menu:AppMenu(this),
+            testText:"nothing---"
         }
     },
     methods:{
@@ -44,15 +38,10 @@ export default Vue.extend({
                     text:"Quack",
                     value:"Duck"
                 }
-            ], (res:any) =>{
-                Vue.set(this.$props, "testText", res?.toString());
-            })
-        }
-    },
-    watch:{
-        testText:function(val){
-            (this.$refs.asdf as HTMLElement).innerText = val; //this works but testText never updated
-            //this.$forceUpdate() //doesn't work.
+            ], "setText")
+        },
+        setText:function(result:string){
+            (this.$refs.wtf as HTMLElement).innerText = result
         }
     }
 })

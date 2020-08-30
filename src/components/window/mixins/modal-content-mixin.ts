@@ -1,18 +1,19 @@
 import Vue from 'vue'
 export default Vue.extend({
+    data:function(){
+        return {
+            result:false as any
+        }
+    },
     props:{
-        result:{},
-        callback:{
-            type:Function,
-            default:()=>{}
+        functionName:{
+            type:String,
+            required:false
         }
     },
     methods:{
-        SetResult:function(value:any){
-            this.$props.result = value
+        setResult:function(res:any){
+            this.result = res;
         }
-    },
-    beforeDestroy:function(){
-        this.$props.callback?.call(this, this.$props?.result ?? null)
     }
 });

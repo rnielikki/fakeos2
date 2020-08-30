@@ -16,6 +16,7 @@ import DialogButton, { OKButton } from './dialog-model'
 export default Vue.extend({
     name:'DialogTemplate',
     components:{ UiButton },
+    mixins:[ ModalContentMixin ],
     data:function(){
         return {
             hasMinimizer:false
@@ -31,10 +32,12 @@ export default Vue.extend({
             default:()=>OKButton
         }
     },
-    mixins:[ ModalContentMixin ],
     methods:{
         setAction:function(value:any){
-            return ()=>{ (this as any).SetResult(value); this.$data.f_targetWindow.close() };
+            return ()=>{
+                (this as any).setResult(value);
+                this.$data.f_targetWindow.close()
+            };
         }
     }
 })
@@ -45,7 +48,8 @@ export default Vue.extend({
         padding:1.15rem;
     }
     .message {
-        margin:0 .6rem
+        margin:0 .6rem;
+        white-space:pre;
     }
     .buttons {
         margin-top:.97rem

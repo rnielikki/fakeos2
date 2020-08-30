@@ -78,10 +78,6 @@ import ContextMenu from '../../menu/contextmenu'
                 type:Element,
                 required:true
             },
-            parentVue:{
-                type:VueType,
-                required:false
-            },
             modal:{
                 type:Object as PropType<Window | null>,
                 default:null
@@ -189,6 +185,9 @@ import ContextMenu from '../../menu/contextmenu'
                     return;
                 }
                 this.$destroy();
+            },
+            getContent:function(){
+                return ((this.$slots.default)?this.$slots.default[0]:null)?.context;
             }
         },
         beforeDestroy:function(){

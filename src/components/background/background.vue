@@ -25,7 +25,7 @@ import IconModel from '../icon/models/icon-model';
     data:function(){
         return {
             menu:BackgroundMenu,
-            path:Path.getAbsolutePath("C:/") as DirectoryInfo,
+            path:Path.getAbsolutePath("C:/User") as DirectoryInfo,
             direction:IconDirection.column
         }
     }

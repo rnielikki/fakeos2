@@ -13,31 +13,14 @@ import windowFactory from '../window/window-factory'
 import IconModel from './models/icon-model'
 import backgroundMenu from '../background/background-menu'
 import { DirectoryInfo } from '@/system/filesystem/fileinfo'
+import IconMenu from './icon-menu'
 
 let f_dragTarget:Vue | null = null
 
 export default Vue.extend({
     name:"Icon",
     directives:{ ContextMenu },
-    data:function(){
-        return {
-            value:[
-                {
-                    label:"Open",
-                    action:()=>this.$emit('open-icon', this.model)
-                },
-                {
-                    label: "Rename",
-                    action:()=>(this as any).editLabel()
-                },
-                {
-                   label: "Delete",
-                    action:()=>(this as any).delete()
-                },
-            ],
-            editable:false
-        }
-    },
+    mixins: [ IconMenu ],
     props:{
         model:{
             type:Object as PropType<IconModel>
@@ -48,27 +31,6 @@ export default Vue.extend({
         }
     },
     methods:{
-        editLabel:function(){
-            this.editable = true;
-            let labelElement = this.$refs.label as HTMLElement;
-            let stopPropagation = (e:Event)=>{ e.stopPropagation }
-            this.$nextTick(()=>{
-                labelElement.focus();
-            })
-            document.addEventListener("mousedown",()=>{
-                    this.editable=false;
-            }, { once: true })
-        },
-        delete:function(){
-            //if(!this.model.fileInfo.mutable) return;
-            let fileInfo = this.model.fileInfo;
-            let parent = (this.model.fileInfo.parent as DirectoryInfo).files;
-            let index = parent.indexOf(fileInfo);
-            if(index > -1){
-                (this.model.fileInfo.parent as DirectoryInfo).files.splice(index, 1)
-            }
-            this.$destroy();
-        },
         dragging:function(){
             (this.$el as HTMLElement).style.opacity = "0.5"
         },
