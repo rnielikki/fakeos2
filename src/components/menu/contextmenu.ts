@@ -17,6 +17,6 @@ export default {
                 menuInfo!.y = e.clientY + "px";
             }
             manager.setCallback(ChangePosition)
-        });
+        }).catch(error=>console.error(error));
     }
 }

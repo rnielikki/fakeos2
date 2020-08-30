@@ -65,10 +65,10 @@ export default Vue.extend({
     computed:{
         computedCss:function(){
             if(this.horizontal){
-                return { display: "inline-block", zIndex:1 }
+                return { display: "inline-block" }
             }
             else{
-                return { zIndex:1 }
+                return {}
             }
         }
     }

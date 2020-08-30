@@ -1,6 +1,6 @@
 <template>
     <div class="f_background" id="f_background" v-contextmenu="{ value: menu }">
-        <IconCollection :path="path" :direction="direction" style="z-index:-1"  @open-icon="(item)=>openIcon(item)"  />
+        <IconCollection :path="path" :direction="direction" @open-icon="(item)=>openIcon(item)"  />
     </div>
 </template>
 <script lang="ts">
@@ -44,7 +44,7 @@ export default class Background extends Vue {}
     }
 </style>
 <style>
-    .f_background > .iconCollection .f_collection-icon-label {
+    .f_background > .iconCollection .f_collection-icon-label:not([contenteditable=true]) {
         text-shadow:2px 0px 0px #000, -2px 0px 0px #000, 0px -2px 0px #000, 0px 2px 0px #000;
         color:#fff;
     }

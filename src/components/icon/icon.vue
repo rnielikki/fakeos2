@@ -12,6 +12,7 @@ import ContextMenu from '../menu/contextmenu'
 import windowFactory from '../window/window-factory'
 import IconModel from './models/icon-model'
 import backgroundMenu from '../background/background-menu'
+import { DirectoryInfo } from '@/system/filesystem/fileinfo'
 
 let f_dragTarget:Vue | null = null
 
@@ -30,8 +31,8 @@ export default Vue.extend({
                     action:()=>(this as any).editLabel()
                 },
                 {
-                    label: "Delete",
-                    action:()=>this.$destroy()
+                   label: "Delete",
+                    action:()=>(this as any).delete()
                 },
             ],
             editable:false
@@ -50,10 +51,23 @@ export default Vue.extend({
         editLabel:function(){
             this.editable = true;
             let labelElement = this.$refs.label as HTMLElement;
-            labelElement.focus();
+            let stopPropagation = (e:Event)=>{ e.stopPropagation }
+            this.$nextTick(()=>{
+                labelElement.focus();
+            })
             document.addEventListener("mousedown",()=>{
                     this.editable=false;
-                })
+            }, { once: true })
+        },
+        delete:function(){
+            //if(!this.model.fileInfo.mutable) return;
+            let fileInfo = this.model.fileInfo;
+            let parent = (this.model.fileInfo.parent as DirectoryInfo).files;
+            let index = parent.indexOf(fileInfo);
+            if(index > -1){
+                (this.model.fileInfo.parent as DirectoryInfo).files.splice(index, 1)
+            }
+            this.$destroy();
         },
         dragging:function(){
             (this.$el as HTMLElement).style.opacity = "0.5"
@@ -75,10 +89,10 @@ export default Vue.extend({
             }
 
         }
-    },
+    }/*,
     destroyed:function(){
         this.$el?.parentElement?.removeChild(this.$el)
-    }
+    }*/
 })
 </script>
 <style lang="scss">
@@ -93,8 +107,9 @@ export default Vue.extend({
         height:1rem;
         overflow-y:hidden;
         &[contenteditable=true]{
-            background-color:#fff;
-            color:#000;
+            background-color:$content-background;
+            color:$content-foreground;
+            border:1px solid $content-foreground;
             text-shadow:none;
         }
     }

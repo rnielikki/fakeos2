@@ -14,7 +14,7 @@ export default class Popup {
         this.contentFactory = contentFactory;
         this.bindingType = bindingType;
         this.popupInfo = popupInfo ?? new PopupInfo();
-        button.addEventListener(bindingType, this.show);
+        button.addEventListener(bindingType, this.show, false);
     }
     //1. v-if attaches too many <!-- --> damn
     //2. option can be changed depending on the state (any state - system or software)

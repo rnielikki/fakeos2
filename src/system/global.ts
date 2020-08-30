@@ -15,7 +15,7 @@ let _globals:{
     getDesktop:function(){
         return new Promise((resolve, reject)=>{
             if(_desktop==null){
-                window.onload = ()=>{
+                window.addEventListener("load", ()=>{
                     _desktop = document.querySelector("#f_desktop");
                     if( _desktop==null){
                         reject("Error : Looks like explorer.exe has been stopped! Make sure if the #f_desktop exists!");
@@ -23,7 +23,7 @@ let _globals:{
                     else{
                         resolve(_desktop);
                     }
-                }
+                }, { once: true });
             }
             else{
                 resolve(_desktop);
@@ -33,7 +33,7 @@ let _globals:{
     getBackground:function(){
         return new Promise((resolve, reject)=>{
             if(_background==null){
-                window.onload = ()=>{
+                window.addEventListener("load", ()=>{
                     _background = document.querySelector("#f_background");
                     if( _background==null){
                         reject("Error : Looks like explorer.exe has been stopped! Make sure if the #f_background exists!");
@@ -41,7 +41,7 @@ let _globals:{
                     else{
                         resolve(_background);
                     }
-                }
+                }, { once:true })
             }
             else{
                 resolve(_background);

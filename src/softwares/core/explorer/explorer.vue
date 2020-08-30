@@ -43,7 +43,7 @@ export default Vue.extend({
         f_path:function(){
             //NOTE: Won't work if it doesn't updated via "ref"
             if(!this.$refs.collection) return;
-            (this.$refs.collection as any).generateIcons(this.f_path);
+            (this.$refs.collection as any).f_path = this.f_path;
             (this.$refs.label as HTMLElement).innerText = this.f_path.currentDirectory;
         }
     }

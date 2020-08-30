@@ -27,7 +27,8 @@ export default Vue.extend({
         return {
             selected:-1,
             icons:new Array<IconModel>(),
-            f_path:this.path
+            f_path:this.path,
+            files:this.path.files
         }
     },
     props:{
@@ -68,11 +69,14 @@ export default Vue.extend({
         }
     },
     watch:{
-        path:function(value) {
-            this.f_path = value;
+        f_path:function(value) {
+            this.files = value.files;
             this.$set(this.$data, "f_path", value as DirectoryInfo);
+        },
+        files:function(newValue, oldValue){
+            this.generateIcons(this.f_path);
         }
-    }
+    },
 })
 </script>
 <style lang="scss" scoped>
