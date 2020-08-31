@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { DirectoryInfo } from '@/system/filesystem/fileinfo'
+import { DirectoryInfo, ShortcutInfo } from '@/system/filesystem/fileinfo'
 import FilesystemEditor from '@/system/filesystem/filesystem-editor';
 import FileEditResult, { showDialogIfError } from '@/system/filesystem/file-edit-result'
 
@@ -14,6 +14,10 @@ export default Vue.extend({
                 {
                     label: "Rename",
                     action:()=>(this as any).editLabel()
+                },
+                {
+                    label:"Create Shortcut",
+                    action:()=>(this as any).addShortcut()
                 },
                 {
                    label: "Delete",
@@ -47,6 +51,10 @@ export default Vue.extend({
         move:function(target:DirectoryInfo){
             let _info = this.$props.model.fileInfo;
             showDialogIfError(FilesystemEditor.move(_info, target), _info.name, target.name);
+        },
+        addShortcut:function(){
+            let _fileInfo = this.$props.model.fileInfo;
+            showDialogIfError(FilesystemEditor.addShortcut(_fileInfo), _fileInfo.name);
         }
     }
 })

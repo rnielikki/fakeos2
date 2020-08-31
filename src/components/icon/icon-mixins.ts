@@ -1,13 +1,12 @@
 import Vue from 'vue'
-import IFileInfo, { DirectoryInfo, FileInfo } from '@/system/filesystem/fileinfo'
+import { DirectoryInfo, FileInfo, ShortcutInfo } from '@/system/filesystem/fileinfo'
 import WindowFactory from '../window/window-factory'
-import { Path } from '@/system/filesystem/filesystem'
 import IconModel from './models/icon-model'
 
 export let defaultDirectoryAction = Vue.extend({
     methods:{
         openDirectory:function(dirInfo:DirectoryInfo) {
-            WindowFactory.OpenProgram("core/explorer", { path:Path.getAbsolutePath(dirInfo.currentDirectory) });
+            WindowFactory.OpenProgram("core/explorer", { path:dirInfo });
         }
     }
 })
@@ -36,21 +35,22 @@ export let openDirectoryOnExplorer = Vue.extend({
          }
     }
 })
-//
-export let backgroundIconSet = Vue.extend({
-    mixins:[ defaultDirectoryAction, defaultFileAction ],
+
+let openAny = Vue.extend({
     methods:{
         openIcon:function(model:IconModel) {
-            model.isDirectory?(this as any).openDirectory(model.fileInfo):(this as any).openFile(model.fileInfo);
+            let fileInfo = (model.isShortcut)?(model.fileInfo as ShortcutInfo).originalFile:model.fileInfo;
+            (fileInfo instanceof DirectoryInfo)?(this as any).openDirectory(fileInfo):(this as any).openFile(fileInfo);
         }
     }
+});
+//
+export let backgroundIconSet = Vue.extend({
+    mixins:[ defaultDirectoryAction, defaultFileAction, openAny ],
 })
 export let explorerIconSet = Vue.extend({
-    mixins:[ openDirectoryOnExplorer, defaultFileAction ],
+    mixins:[ openDirectoryOnExplorer, defaultFileAction, openAny ],
     methods:{
-        openIcon:function(model:IconModel) {
-            model.isDirectory?(this as any).openDirectory(model.fileInfo):(this as any).openFile(model.fileInfo);
-        },
         goToParent:function(dirInfo:DirectoryInfo){
             if(!(dirInfo instanceof DirectoryInfo)) return;
             (this as any).openDirectory(dirInfo);

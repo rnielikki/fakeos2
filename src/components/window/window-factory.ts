@@ -69,6 +69,14 @@ export default {
         });
         _message.$data.title = title;
         (parent == null)?OpenWindow(_message, undefined, undefined, undefined, true):this.OpenModal(parent, _message, functionName);
+    },
+    OpenSetting:function(settingName:string="main"){
+        import(`@/system/app/settings/${settingName}/${settingName}.vue`).then((component)=>{
+            OpenWindow(new component.default(), undefined, require("@/system/app/settings/icon.png"));
+        }).catch((err)=>{
+            this.OpenDialog(null, "Load Failed", `Setting ${settingName} does not exist!`)
+            console.warn(err);
+        })
     }
 }
 function OpenWindow(content:Vue, appName?:string, iconPath?:string, menu?:{content?:IMenuComponent[], rightClick?:IMenuComponent[]}, center:boolean = false) {

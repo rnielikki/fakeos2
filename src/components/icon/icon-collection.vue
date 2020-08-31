@@ -4,6 +4,7 @@
                  <icon :model="model.model"
                  v-on:dragend.native="model.dragend"
                  @dblclick.native="$emit('open-icon', model.model)"
+                 @open-icon="$emit('open-icon', model.model)"
                  @selected="()=>select(model.model.id)"
                 :isSelected ="selected===model.model.id"
                 draggable="true" />
@@ -71,8 +72,7 @@ export default Vue.extend({
             this.icons = f_path.files.map(file => new IconModel(file))
         },
         test:function(){
-            //@ts-ignore
-            IconGlobal.dragTarget = this.f_path
+            IconGlobal.dropTarget = this.f_path
         }
     },
     watch:{

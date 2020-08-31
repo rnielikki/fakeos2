@@ -6,7 +6,8 @@ enum FileEditResult {
     Immutable,
     DuplicatedName,
     InvalindName,
-    Recursive
+    Recursive,
+    DoubleShortcut
 }
 
 export default FileEditResult;
@@ -26,7 +27,10 @@ export let showDialogIfError = function(message:FileEditResult, fileName:string,
             WindowFactory.OpenDialog(null, "INVALID Name", `${fileName} should not contain slash(/).`)
             break;
         case FileEditResult.Recursive:
-            WindowFactory.OpenDialog(null, "RECURSIVE File", `${targetFileName} is itself or parent of ${fileName}.\nNice try, though.`)
+            WindowFactory.OpenDialog(null, "RECURSIVE File", `${fileName} is itself or parent of ${targetFileName}.\nNice try, though.`)
+            break;
+        case FileEditResult.DoubleShortcut:
+            WindowFactory.OpenDialog(null, "DOUBLE Shortcut", `${fileName} itself is also shortcut.\nSorry, we don't allow shortcut shortcut.`)
             break;
     }
 }

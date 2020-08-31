@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import IFileInfo, { DirectoryInfo } from '@/system/filesystem/fileinfo'
+import IFileInfo, { DirectoryInfo, ShortcutInfo } from '@/system/filesystem/fileinfo'
 import FileEditResult from './file-edit-result'
 
 export default {
@@ -28,11 +28,20 @@ export default {
         if(!parent.mutable) {
             return FileEditResult.Immutable;
         }
-        let nameCheck = validNameCheck(fileInfo.name, parent)
-        if(nameCheck !== FileEditResult.Success) {
-            return nameCheck;
-        }
+        fileInfo.name = getUniqueName(fileInfo, parent);
         parent.files.push(fileInfo);
+        return FileEditResult.Success;
+    },
+    addShortcut(fileInfo:IFileInfo, destination?:DirectoryInfo){
+        if(fileInfo instanceof ShortcutInfo) {
+            return FileEditResult.DoubleShortcut;
+        }
+        let dest = destination ?? (fileInfo.parent as DirectoryInfo);
+        if(!dest.mutable) {
+            return FileEditResult.Immutable;
+        }
+        let shortcut = new ShortcutInfo(getUniqueName(fileInfo, dest), dest, fileInfo);
+        dest.files.push(shortcut);
         return FileEditResult.Success;
     },
     delete:function(fileInfo:IFileInfo):FileEditResult{
@@ -58,6 +67,9 @@ export default {
         return FileEditResult.Success;
     },
     move:function(file:IFileInfo, target:DirectoryInfo):FileEditResult{
+        if(file.parent == target){
+            return FileEditResult.Success;
+        }
         if(isParent(target, file as DirectoryInfo)) {
             return FileEditResult.Recursive;
         }
@@ -92,6 +104,26 @@ function validNameCheck(name:string, parent:DirectoryInfo):FileEditResult{
     else {
         return FileEditResult.Success;
     }
+}
+function getUniqueName(fileInfo:IFileInfo, parent:DirectoryInfo){
+    let splitIndex = fileInfo.name.lastIndexOf(".")
+    let originalName = "";
+    let ext = "";
+    if(fileInfo instanceof DirectoryInfo || splitIndex == -1){
+        originalName = fileInfo.name;
+    }
+    else {
+        originalName = fileInfo.name.substring(0, splitIndex);
+        ext = fileInfo.name.substring(splitIndex);
+    }
+    let name = fileInfo.name;
+    let nameCheck = validNameCheck(name, parent);
+    let count = 1;
+    while(nameCheck == FileEditResult.DuplicatedName) {
+        name = `${originalName} (${++count})${ext}`;
+        nameCheck = validNameCheck(name, parent)
+    }
+    return name;
 }
 function isParent(file:IFileInfo, parent:DirectoryInfo):boolean{
     if(file.parent == null){

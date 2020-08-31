@@ -12,10 +12,9 @@ import ContextMenu from '../menu/contextmenu'
 import WindowFactory from '../window/window-factory'
 import IconModel from './models/icon-model'
 import backgroundMenu from '../background/background-menu'
-import { DirectoryInfo, FileInfo } from '@/system/filesystem/fileinfo'
+import { DirectoryInfo, FileInfo, ShortcutInfo } from '@/system/filesystem/fileinfo'
 import IconMenu from './icon-menu'
 import IconGlobal from './models/icon-global'
-import iconGlobal from './models/icon-global'
 
 export default Vue.extend({
     name:"Icon",
@@ -37,27 +36,34 @@ export default Vue.extend({
         dragged:function(e:Event){
             (this.$el as HTMLElement).style.opacity = "1"
             this.dragToApp(e);
-            if(IconGlobal.dragTarget){
-                IconGlobal.dragTarget = null;
+            if(IconGlobal.dropTarget){
+                IconGlobal.dropTarget = null;
             }
         },
         dropped:function(e:Event){
-            IconGlobal.dragTarget = this.model.fileInfo;
+            IconGlobal.dropTarget = this.model.fileInfo;
         },
         dragToApp:function(e:Event){
-            if(iconGlobal.dragTarget instanceof DirectoryInfo) {
-                let dir = iconGlobal.dragTarget as DirectoryInfo;
-                if(this.$props.model.fileInfo.parent !== iconGlobal.dragTarget) {
-                    (this as any).move(iconGlobal.dragTarget);
+            let _target = (IconGlobal.dropTarget instanceof ShortcutInfo)?
+                IconGlobal.dropTarget.originalFile
+                :IconGlobal.dropTarget;
+            let _fileInfo = (this.$props.model.fileInfo instanceof ShortcutInfo)?
+                this.$props.model.fileInfo.originalFile
+                :this.$props.model.fileInfo;
+                
+            if(_target instanceof DirectoryInfo) {
+                let dir = _target as DirectoryInfo;
+                if(this.$props.model.fileInfo !== _target) {
+                    (this as any).move(_target);
                 }
             }
-            else if(iconGlobal.dragTarget instanceof FileInfo) {
-                let data = this.$props.model.fileInfo.data;
-                let appName = ((iconGlobal.dragTarget as FileInfo)?.data as any)?.app;
+            else if(_target instanceof FileInfo) {
+                let data = _fileInfo.data;
+                let appName = ((_target as FileInfo)?.data as any)?.app;
                 if(!appName
                 || !data
-                || (IconGlobal.dragTarget as FileInfo)?.appType.typeName !== "application/vue"
-                || appName !== this.$props.model?.fileInfo?.appType?.app) {
+                || (_target as FileInfo)?.appType.typeName !== "application/vue"
+                || appName !== _fileInfo?.appType?.app) {
                     return;
                 }
                 WindowFactory.OpenProgram(appName, data);

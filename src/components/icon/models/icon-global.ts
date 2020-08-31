@@ -1,11 +1,11 @@
 import IFileInfo from '@/system/filesystem/fileinfo';
 
 interface IconGlobalType {
-    dragTarget:IFileInfo | null;
+    dropTarget:IFileInfo | null;
 }
 
 let IconGlobal:IconGlobalType = {
-    dragTarget:null
+    dropTarget:null
 }
 
 export default IconGlobal;
