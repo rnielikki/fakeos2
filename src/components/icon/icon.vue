@@ -9,13 +9,13 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import ContextMenu from '../menu/contextmenu'
-import windowFactory from '../window/window-factory'
+import WindowFactory from '../window/window-factory'
 import IconModel from './models/icon-model'
 import backgroundMenu from '../background/background-menu'
-import { DirectoryInfo } from '@/system/filesystem/fileinfo'
+import { DirectoryInfo, FileInfo } from '@/system/filesystem/fileinfo'
 import IconMenu from './icon-menu'
-
-let f_dragTarget:Vue | null = null
+import IconGlobal from './models/icon-global'
+import iconGlobal from './models/icon-global'
 
 export default Vue.extend({
     name:"Icon",
@@ -34,23 +34,35 @@ export default Vue.extend({
         dragging:function(){
             (this.$el as HTMLElement).style.opacity = "0.5"
         },
-        dragged:function(){
+        dragged:function(e:Event){
             (this.$el as HTMLElement).style.opacity = "1"
-            this.dragToApp();
-            if(f_dragTarget){
-                f_dragTarget = null;
+            this.dragToApp(e);
+            if(IconGlobal.dragTarget){
+                IconGlobal.dragTarget = null;
             }
         },
         dropped:function(e:Event){
-            f_dragTarget = this;
+            IconGlobal.dragTarget = this.model.fileInfo;
         },
-        dragToApp:function(){
-            console.log(f_dragTarget)
-            //@ts-ignore
-            if(this.model.data && f_dragTarget?.model?.appName === this.model.appName !== null) {
-                //@ts-ignore
-                f_dragTarget.model.action(this.model.data);
+        dragToApp:function(e:Event){
+            if(iconGlobal.dragTarget instanceof DirectoryInfo) {
+                let dir = iconGlobal.dragTarget as DirectoryInfo;
+                if(this.$props.model.fileInfo.parent !== iconGlobal.dragTarget) {
+                    (this as any).move(iconGlobal.dragTarget);
+                }
             }
+            else if(iconGlobal.dragTarget instanceof FileInfo) {
+                let data = this.$props.model.fileInfo.data;
+                let appName = ((iconGlobal.dragTarget as FileInfo)?.data as any)?.app;
+                if(!appName
+                || !data
+                || (IconGlobal.dragTarget as FileInfo)?.appType.typeName !== "application/vue"
+                || appName !== this.$props.model?.fileInfo?.appType?.app) {
+                    return;
+                }
+                WindowFactory.OpenProgram(appName, data);
+            }
+            e.stopPropagation();
         }
     }
 })

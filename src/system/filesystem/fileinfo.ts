@@ -50,14 +50,11 @@ export class DirectoryInfo implements IFileInfo {
     private getCurrentDirectory(){
         return getCurrentDirRecursive(this, "");
         function getCurrentDirRecursive(dir:DirectoryInfo, currentPath:string):string{
-            if(!(dir instanceof DirectoryInfo)) throw "Error while getting current directory: directory did not reach the root. Looks like invalid directory?";
-            let path = dir.name + "/" + currentPath;
-            if(dir.parent.parent == null) {
+            if(dir.parent == null) {
                 return currentPath;
             }
-            else {
-                return getCurrentDirRecursive(dir.parent as DirectoryInfo, path);
-            }
+            if(!(dir instanceof DirectoryInfo)) throw "Error while getting current directory: directory did not reach the root. Looks like invalid directory?";
+            return getCurrentDirRecursive(dir.parent as DirectoryInfo, dir.name + "/" + currentPath);
         }
     }
     setCurrentDirectory(){

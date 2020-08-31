@@ -1,5 +1,5 @@
 <template>
-    <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="horizontal" ref="collection" collectionKeyName="id">
+    <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="horizontal" ref="collection" collectionKeyName="id" @drop.native="test">
              <template v-slot:default="model">
                  <icon :model="model.model"
                  v-on:dragend.native="model.dragend"
@@ -19,6 +19,7 @@ import DraggableCollection from '@/system/core/draggable/draggable-collection.vu
 import DropTarget from '@/system/core/draggable/drop-target.vue'
 import IFileInfo, { FileInfo, DirectoryInfo } from '@/system/filesystem/fileinfo'
 import windowFactory from '../window/window-factory'
+import IconGlobal from './models/icon-global'
 
 export default Vue.extend({
     name:"IconCollection",
@@ -68,6 +69,10 @@ export default Vue.extend({
         },
         generateIcons: function(f_path:DirectoryInfo) {
             this.icons = f_path.files.map(file => new IconModel(file))
+        },
+        test:function(){
+            //@ts-ignore
+            IconGlobal.dragTarget = this.f_path
         }
     },
     watch:{

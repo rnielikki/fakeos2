@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { DirectoryInfo } from '@/system/filesystem/fileinfo'
 import FilesystemEditor from '@/system/filesystem/filesystem-editor';
-import { showDialogIfError } from '@/system/filesystem/file-edit-result'
+import FileEditResult, { showDialogIfError } from '@/system/filesystem/file-edit-result'
 
 export default Vue.extend({
     data:function(){
@@ -27,20 +27,26 @@ export default Vue.extend({
         editLabel:function(){
             this.editable = true;
             let labelElement = this.$refs.label as HTMLElement;
+            let oldText = labelElement.textContent;
             this.$nextTick(()=>{
                 labelElement.focus();
             })
             document.addEventListener("mousedown",()=>{
-                    this.editable=false;
+                let editResult = FilesystemEditor.editFileName(this.$props.model.fileInfo, labelElement.textContent ?? "");
+                if(editResult !== FileEditResult.Success) {
+                    showDialogIfError(editResult, labelElement.textContent??"");
+                    labelElement.textContent = oldText;
+                }
+                this.editable=false;
             }, { once: true })
         },
         delete:function(){
             let _info = this.$props.model.fileInfo;
-            showDialogIfError(_info.name, FilesystemEditor.delete(_info));
+            showDialogIfError(FilesystemEditor.delete(_info), _info.name);
         },
         move:function(target:DirectoryInfo){
             let _info = this.$props.model.fileInfo;
-            showDialogIfError(_info.name, FilesystemEditor.move(_info, target));
+            showDialogIfError(FilesystemEditor.move(_info, target), _info.name, target.name);
         }
     }
 })

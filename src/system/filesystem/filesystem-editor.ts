@@ -3,6 +3,18 @@ import IFileInfo, { DirectoryInfo } from '@/system/filesystem/fileinfo'
 import FileEditResult from './file-edit-result'
 
 export default {
+    editFileName:function(fileInfo:IFileInfo, name:string){
+        if(!fileInfo.mutable) {
+            return FileEditResult.Immutable;
+        }
+        if(fileInfo.name === name) return FileEditResult.Success;
+        let nameCheck = validNameCheck(name, fileInfo.parent as DirectoryInfo)
+        if(nameCheck !== FileEditResult.Success) {
+            return nameCheck;
+        }
+        fileInfo.name = name;
+        return this.editFile(fileInfo, fileInfo);
+    },
     editFile:function(oldFile:IFileInfo, newFile:IFileInfo):FileEditResult{
         if(!oldFile.mutable) {
             return FileEditResult.Immutable;
@@ -16,7 +28,7 @@ export default {
         if(!parent.mutable) {
             return FileEditResult.Immutable;
         }
-        let nameCheck = this.validNameCheck(fileInfo.name, parent)
+        let nameCheck = validNameCheck(fileInfo.name, parent)
         if(nameCheck !== FileEditResult.Success) {
             return nameCheck;
         }
@@ -46,10 +58,13 @@ export default {
         return FileEditResult.Success;
     },
     move:function(file:IFileInfo, target:DirectoryInfo):FileEditResult{
+        if(isParent(target, file as DirectoryInfo)) {
+            return FileEditResult.Recursive;
+        }
         if(!file.mutable || !target.mutable){
             return FileEditResult.Immutable;
         }
-        let nameCheck = this.validNameCheck(file.name, target)
+        let nameCheck = validNameCheck(file.name, target)
         if(nameCheck !== FileEditResult.Success) {
             return nameCheck;
         }
@@ -65,16 +80,27 @@ export default {
             file.setCurrentDirectory();
         }
         return FileEditResult.Success;
-    },
-    validNameCheck(name:string, parent:DirectoryInfo):FileEditResult{
-        if(name.indexOf('/') > -1) {
-            return FileEditResult.InvalindName;
-        }
-        if(parent.getFile(name)) {
-            return FileEditResult.DuplicatedName;
-        }
-        else {
-            return FileEditResult.Success;
-        }
-    },
+    }
+}
+function validNameCheck(name:string, parent:DirectoryInfo):FileEditResult{
+    if(name.indexOf('/') > -1) {
+        return FileEditResult.InvalindName;
+    }
+    if(parent.getFile(name)) {
+        return FileEditResult.DuplicatedName;
+    }
+    else {
+        return FileEditResult.Success;
+    }
+}
+function isParent(file:IFileInfo, parent:DirectoryInfo):boolean{
+    if(file.parent == null){
+        return false;
+    }
+    else if(file == parent){
+        return true;
+    }
+    else{
+        return isParent(file.parent, parent);
+    }
 }
