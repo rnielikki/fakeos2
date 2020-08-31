@@ -1,5 +1,5 @@
 <template>
-    <div style="position:relative;z-index:0;" @dragover.prevent @drop="(e)=>drop(e, collection.length-1)">
+    <div style="position:relative;z-index:0;align-items:stretch" @dragover.prevent @drop="(e)=>drop(e, collection.length-1)">
         <div v-for="(item, index) in collection" :key="item[collectionKeyName]" :style="computedCss">
             <drop-target :horizontal="horizontal" :gap="gap" v-on:drop.native="(e)=>{ drop(e, index); }" :size="size" />
             <slot v-bind:model="item" v-bind:dragend="(e)=>endDrag(e, item, collection)"></slot>
@@ -29,7 +29,7 @@ export default Vue.extend({
         },
         horizontal: {
             type:Boolean,
-            default:false
+            default:true
         },
         gap: {
             type:String,
@@ -46,7 +46,7 @@ export default Vue.extend({
             if(dropInfo.targetIndex > -1){
                 let itemIndex = collection.indexOf(item);
                 if(itemIndex == -1) return;
-                if(Object.prototype.isPrototypeOf.call(Object.getPrototypeOf(item), dropInfo?.item)) {
+                if(collection === dropInfo?.collection) {
                     let movingItem = collection.splice(itemIndex, 1)[0];
                     dropInfo.collection.splice(dropInfo.targetIndex, 0, item);
                 }

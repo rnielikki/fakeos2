@@ -1,10 +1,10 @@
 <template>
-    <div class="container">
-        <div class="index-wrapper">
+    <div class="container f_interactive">
+        <div class="index-wrapper f_non-interactive">
             <div class="index" ref="label" />
             <img :src="require('./up.png')" @click="()=>goToParent(f_path.parent)" />
         </div>
-        <icon-collection :path="f_path" class="content"
+        <icon-collection :path="f_path" class="content f_interactive"
         @open-icon="(item)=>openIcon(item)" ref="collection" />
     </div>
 </template>
@@ -58,7 +58,7 @@ export default Vue.extend({
 }
 .content {
     margin:.75rem;
-    padding:0 1.5rem;
+    padding:1.5rem 0;
     width:auto;
     flex-grow:1;
     box-sizing: border-box;

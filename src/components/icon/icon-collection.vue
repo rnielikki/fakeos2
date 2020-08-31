@@ -1,5 +1,5 @@
 <template>
-    <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="false" ref="collection" collectionKeyName="id">
+    <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="horizontal" ref="collection" collectionKeyName="id">
              <template v-slot:default="model">
                  <icon :model="model.model"
                  v-on:dragend.native="model.dragend"
@@ -28,7 +28,8 @@ export default Vue.extend({
             selected:-1,
             icons:new Array<IconModel>(),
             f_path:this.path,
-            files:this.path.files
+            files:this.path.files,
+            horizontal:true
         }
     },
     props:{
@@ -43,7 +44,7 @@ export default Vue.extend({
     },
     computed:{
         gridFlow:function(){
-            if(this.direction == IconDirection.row){
+            if(this.horizontal){
                 return { flexDirection: "row" }
             }
             else{
@@ -52,6 +53,7 @@ export default Vue.extend({
         }
     },
     created:function(){
+        this.horizontal = (this.direction == IconDirection.row);
         this.generateIcons(this.f_path);
     },
     mounted:function(){

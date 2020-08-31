@@ -1,6 +1,6 @@
 <template>
     <div v-contextMenu="{ value: value }" class="f_collection-icon"
-    @mousedown="$emit('selected')" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent  @dragover="dragToApp"
+    @mousedown="$emit('selected')" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent
     :class="{ selected:isSelected }">
         <img :src="this.model.icon" draggable="false" />
         <div class="f_collection-icon-label" :contenteditable="editable" @mousedown.stop ref="label">{{ model.label }}</div>
@@ -36,6 +36,7 @@ export default Vue.extend({
         },
         dragged:function(){
             (this.$el as HTMLElement).style.opacity = "1"
+            this.dragToApp();
             if(f_dragTarget){
                 f_dragTarget = null;
             }
@@ -44,17 +45,14 @@ export default Vue.extend({
             f_dragTarget = this;
         },
         dragToApp:function(){
+            console.log(f_dragTarget)
             //@ts-ignore
             if(this.model.data && f_dragTarget?.model?.appName === this.model.appName !== null) {
                 //@ts-ignore
                 f_dragTarget.model.action(this.model.data);
             }
-
         }
-    }/*,
-    destroyed:function(){
-        this.$el?.parentElement?.removeChild(this.$el)
-    }*/
+    }
 })
 </script>
 <style lang="scss">

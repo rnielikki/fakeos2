@@ -223,7 +223,13 @@ export default class Window extends Vue {}
             text-align:initial;
             flex-grow: 1;
         }
-        &:not(.selected) > .window-content {
+        &:not(.selected) > .window-content .f_interactive div{
+            pointer-events: auto;
+        }
+        &:not(.selected) > .window-content div,
+        &:not(.selected) > .window-content:not(.window-content+.f_interactive),
+        &:not(.selected) > .window-content div.f_non-interactive div,
+        &:not(.selected) > .window-content div.f_non-interactive{
             pointer-events: none;
         }
     }
