@@ -38,7 +38,7 @@ export default Vue.extend({
                     text:"Quack",
                     value:"Duck"
                 }
-            ], "setText")
+            ], this.setText)
         },
         setText:function(result:string){
             (this.$refs.wtf as HTMLElement).innerText = result

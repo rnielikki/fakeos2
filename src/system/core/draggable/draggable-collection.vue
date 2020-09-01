@@ -1,6 +1,6 @@
 <template>
-    <div style="position:relative;z-index:0;align-items:stretch" @dragover.prevent @drop="(e)=>drop(e, collection.length-1)">
-        <div v-for="(item, index) in collection" :key="item[collectionKeyName]" :style="computedCss">
+    <div class="f_draggable-collection" @dragover.prevent @drop="(e)=>drop(e, collection.length-1)">
+        <div v-for="(item, index) in collection" :key="item[collectionKeyName]" :style="computedCss" class="f_draggable-collection-item">
             <drop-target :horizontal="horizontal" :gap="gap" v-on:drop.native="(e)=>{ drop(e, index); }" :size="size" />
             <slot v-bind:model="item" v-bind:dragend="(e)=>endDrag(e, item, collection)"></slot>
         </div>
@@ -37,7 +37,7 @@ export default Vue.extend({
         },
         size: {
             type:String,
-            default:"100%"
+            default:"auto"
         }
     },
     methods:{
@@ -65,12 +65,24 @@ export default Vue.extend({
     computed:{
         computedCss:function(){
             if(this.horizontal){
-                return { display: "inline-block" }
+                return { flexDirection: "row" }
             }
             else{
-                return {}
+                return { flexDirection: "column" }
             }
         }
     }
 })
 </script>
+<style scoped>
+.f_draggable-collection {
+    display:flex;
+    position:relative;
+    z-index:0;
+    align-items:flex-start;
+}
+.f_draggable-collection-item {
+    display:flex;
+    align-items:stretch;
+}
+</style>

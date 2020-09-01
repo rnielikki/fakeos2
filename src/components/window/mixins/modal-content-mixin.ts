@@ -6,8 +6,8 @@ export default Vue.extend({
         }
     },
     props:{
-        functionName:{
-            type:String,
+        callback:{
+            type:Function,
             required:false
         }
     },

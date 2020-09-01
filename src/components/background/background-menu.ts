@@ -24,6 +24,10 @@ export default [
         WindowFactory.OpenProgram("core/player")
         }
     },
-    { label: 'Display settings' },
-    { label: 'Theme'}
+    {
+        label: 'Set Background',
+        action:function(){
+            WindowFactory.OpenSetting("background");
+        }
+    }
 ]

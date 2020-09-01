@@ -92,7 +92,6 @@ export default Vue.extend({
     .iconCollection {
         display:flex;
         justify-content: flex-start;
-        align-items: flex-start;
         align-content: flex-start;
         flex-wrap:wrap;
         width:100%;

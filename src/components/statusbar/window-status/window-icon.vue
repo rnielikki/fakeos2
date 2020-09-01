@@ -5,7 +5,7 @@
                 value: targetApp.rightClickMenu,
                 menuInfo: menuInfo
             }"
-            :style="{ backgroundImage: 'url('+targetApp.$props.iconPath+')', height:'2.1rem' }"
+            :style="{ backgroundImage: 'url('+targetApp.$props.iconPath+')' }"
             @click="selectOrMinimize"
             :data-window-id="this.targetApp._uid"
             @dragover.prevent>

@@ -29,7 +29,7 @@ export default {
             console.warn(err)
         })
     },
-    OpenModal:function(parent:Vue | null, content:Vue, functionName?:string){
+    OpenModal:function(parent:Vue | null, content:Vue, callback?:Function){
         if(parent === null){
             throw "Error: Parent cannot be null";
         }
@@ -44,8 +44,8 @@ export default {
             mixins:[ MixinFactory.CreateModalMixin() ],
             parent: parent
         })
-        if(functionName) {
-            _window.$data.functionName = functionName;
+        if(callback) {
+            _window.$data.callback = callback;
         }
         content.$mount()
         _window.$slots.default = [(content as any)._vnode];
@@ -54,7 +54,7 @@ export default {
         parent.$props.hasModal = true;
         parent.$el.appendChild(_window.$el);
     },
-    OpenDialog:function(parent:Vue | null, title:string, message:string, buttons:Array<DialogButton> = OKButton, functionName?:string, windowOptions?:IWindowOptions) {
+    OpenDialog:function(parent:Vue | null, title:string, message:string, buttons:Array<DialogButton> = OKButton, callback?:Function, windowOptions?:IWindowOptions) {
         let _message = new DialogTemplate({
             propsData: {
                 message: message,
@@ -68,7 +68,7 @@ export default {
             }
         });
         _message.$data.title = title;
-        (parent == null)?OpenWindow(_message, undefined, undefined, undefined, true):this.OpenModal(parent, _message, functionName);
+        (parent == null)?OpenWindow(_message, undefined, undefined, undefined, true):this.OpenModal(parent, _message, callback);
     },
     OpenSetting:function(settingName:string="main"){
         import(`@/system/app/settings/${settingName}/${settingName}.vue`).then((component)=>{

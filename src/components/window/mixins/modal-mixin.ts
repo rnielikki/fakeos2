@@ -12,17 +12,12 @@ export default Vue.extend({
         WindowManager.select(this.$parent)
         this.$parent.$props.modal = null;
 
-        if(this.$data.functionName){
+        if(this.$data.callback){
             let content = (this as any).getContent();
             let parentContent = (this.$parent as any).getContent();
-            let functionName = this.$data.functionName;
+            let callback = this.$data.callback;
             if(content?.$data){
-                if(Object.prototype.hasOwnProperty.call(parentContent, functionName)){
-                    parentContent[functionName](content.$data.result)
-                }
-                else{
-                    console.warn(functionName + " does not exist on the parent")
-                }
+                callback(content.$data.result)
             }
         }
     }

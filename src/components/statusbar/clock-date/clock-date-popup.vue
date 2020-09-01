@@ -1,40 +1,16 @@
 <template>
     <div class="f_clockdate-content">
-        <div class="f_clockdate-clock" ref="currentTime"></div>
+        <clock class="f_clockdate-clock" />
         <div>INSERT CALENDAR HERE!</div>
     </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import SystemClock from '@/system/time/current'
-import ClockFormatter from '@/system/time/formatter'
-import ClockObserver from '@/system/time/timer'
+import Clock from '@/system/time/clock.vue'
+
 export default Vue.extend({
     name:'ClockDatePopup',
-    data:function(){
-        return {
-            currentTime:""
-        };
-    },
-    mounted:function(){
-        this.clockChanger(SystemClock.currentDate)
-        ClockObserver.seconds.subscribe(this.clockChanger);
-    },
-    computed:{
-        clockChanger:function(){
-            return (date:Date)=>{
-                this.$set(this.$data, "currentTime", ClockFormatter.getTimeFormat(date))
-            }
-        }
-    },
-    watch:{
-        currentTime:function(val){
-            (this.$refs.currentTime as HTMLElement).innerText = val;
-        }
-    },
-    beforeDestroy:function(){
-        ClockObserver.seconds.unsubscribe(this.clockChanger)
-    }
+    components: { Clock }
 })
 </script>
 <style lang="scss" scoped>

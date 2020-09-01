@@ -2,7 +2,10 @@
     <div v-contextMenu="{ value: value }" class="f_collection-icon"
     @mousedown="$emit('selected')" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent
     :class="{ selected:isSelected }">
-        <img :src="this.model.icon" draggable="false" />
+        <div class="image-wrapper">
+            <img :src="model.icon" draggable="false" />
+            <img :src="shortcutImage" class="shortcut" v-if="model.isShortcut" />
+        </div>
         <div class="f_collection-icon-label" :contenteditable="editable" @mousedown.stop ref="label">{{ model.label }}</div>
     </div>
 </template>
@@ -27,6 +30,11 @@ export default Vue.extend({
         isSelected:{
             type:Boolean,
             default:false
+        }
+    },
+    computed:{
+        shortcutImage:function(){
+            return require('./shortcut.png');
         }
     },
     methods:{
@@ -73,7 +81,7 @@ export default Vue.extend({
     }
 })
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .f_collection-icon {
     @import 'src/scss/colorset.scss';
     position:relative;
@@ -99,11 +107,18 @@ export default Vue.extend({
         background-color:$selected-background;
         .f_collection-icon-label {
             color:$selected-foreground;
-            overflow-y:visible !important;
+            height:auto;
         }
     }
 }
-div {
-    vertical-align:middle;
+.image-wrapper {
+    position:relative;
+    .shortcut {
+        width:38.2%;
+        height:auto;
+        position:absolute;
+        bottom:0;
+        lefT:0;
+    }
 }
 </style>

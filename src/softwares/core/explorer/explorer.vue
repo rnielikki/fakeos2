@@ -5,7 +5,8 @@
             <img :src="require('./up.png')" @click="()=>goToParent(f_path.parent)" />
         </div>
         <icon-collection :path="f_path" class="content f_interactive"
-        @open-icon="(item)=>openIcon(item)" ref="collection" />
+        @open-icon="(item)=>openIcon(item)" ref="collection"
+        v-contextMenu="{ value: value }" />
     </div>
 </template>
 <script lang="ts">
@@ -15,14 +16,18 @@ import IFileInfo, { DirectoryInfo } from '@/system/filesystem/fileinfo'
 import DefaultDrive, { Path } from "@/system/filesystem/filesystem";
 import { explorerIconSet } from '@/components/icon/icon-mixins'
 import IconModel from '@/components/icon/models/icon-model'
+import ContextMenu from '@/components/menu/contextmenu'
+import explorerMenu from './menu'
+import Root from '@/system/filesystem/filesystem'
 
 export default Vue.extend({
     components:{ IconCollection},
+    directives:{ ContextMenu },
     data:function(){
         return {
             title:"Explorer",
             f_path:DefaultDrive,
-            currentDir:""
+            value: explorerMenu(this)
         }
     },
     mixins:[ explorerIconSet ],
@@ -36,8 +41,11 @@ export default Vue.extend({
         this.$set(this.$data, "f_path", this.path);
     },
     mounted:function(){
-        //no other way to make DOM updated.
-        (this.$refs.label as HTMLElement).innerText = this.path.currentDirectory;
+        //nexTick for default value update.
+        this.$nextTick(()=>{
+            //no other way to make DOM updated.
+            (this.$refs.label as HTMLElement).innerText = this.path.currentDirectory;
+        })
     },
     watch:{
         f_path:function(){
@@ -77,7 +85,7 @@ export default Vue.extend({
         height:3rem;
     }
 }
-.index, .content{
+.index, .content {
     background-color:$content-background;
     border:1px solid $window-button-border;
 }

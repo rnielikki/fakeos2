@@ -1,5 +1,6 @@
 import IFileInfo, { DirectoryInfo, FileInfo } from './fileinfo';
 import DefaultFileSystem from './filesystem-default'
+//import Initializer from './initializer';
 import Mutability from './mutability'
 
 const RootFileInfo:IFileInfo = {
@@ -10,8 +11,7 @@ const RootFileInfo:IFileInfo = {
 
 function toDirectoryInfo(name:string, fileSystem:object, parent:IFileInfo):any {
     let obj = Object(fileSystem);
-    let parentPath = (parent as DirectoryInfo)?.currentDirectory;
-    let dir = new DirectoryInfo(name, parent, [], (parentPath?(parentPath + "/" + name):name));
+    let dir = new DirectoryInfo(name, parent, []);
 
     for(let key in obj){
         if(!Object.prototype.hasOwnProperty.call(obj, key)) continue;
@@ -36,6 +36,7 @@ function toDirectoryInfo(name:string, fileSystem:object, parent:IFileInfo):any {
 
 const rootDrive:string = "C:";
 const root = toDirectoryInfo(rootDrive, DefaultFileSystem, RootFileInfo);
+root.mutable = false;
 
 export let Path = {
     getAbsolutePath: function(path:string) {
@@ -57,6 +58,7 @@ export let Path = {
         return currentDir;
     }
 }
+
 
 Mutability.makeImmutable(Path.getAbsolutePath("C:/Program"))
 Mutability.makeImmutable(Path.getAbsolutePath("C:/System"))

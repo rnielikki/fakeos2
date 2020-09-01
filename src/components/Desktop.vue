@@ -11,11 +11,15 @@ import Window from './window/components/window.vue'
 import StatusBar from './statusbar/statusbar.vue'
 import Menu from './menu/menu'
 import { DirectiveOptions } from 'vue';
+import DesktopIcons from './desktop-icons'
 
 @Component({
     components: { Window, StatusBar, Background },
     directives: {
         menu: Menu
+    },
+    created:function(){
+        DesktopIcons();
     }
 })
 export default class Desktop extends Vue {}

@@ -25,8 +25,7 @@ export default Vue.extend({
             if(this.horizontal) {
                 return {
                     width:this.gap,
-                    height:this.size,
-                    display:"inline-block"
+                    height:this.size
                 }
             }
             else {

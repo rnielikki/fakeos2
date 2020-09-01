@@ -95,7 +95,7 @@ export default {
     }
 }
 function validNameCheck(name:string, parent:DirectoryInfo):FileEditResult{
-    if(name.indexOf('/') > -1) {
+    if(!name || name.indexOf('/') > -1) {
         return FileEditResult.InvalindName;
     }
     if(parent.getFile(name)) {

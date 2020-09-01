@@ -29,6 +29,10 @@ export default Vue.extend({
     },
     methods:{
         editLabel:function(){
+            if(!this.$props.model.fileInfo.mutable){
+                showDialogIfError(FileEditResult.Immutable, this.$props.model.fileInfo.name)
+                return;
+            }
             this.editable = true;
             let labelElement = this.$refs.label as HTMLElement;
             let oldText = labelElement.textContent;

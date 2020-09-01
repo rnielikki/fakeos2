@@ -222,6 +222,7 @@ export default class Window extends Vue {}
             color:$content-foreground; /* window-foreground */
             text-align:initial;
             flex-grow: 1;
+            overflow:auto;
         }
         &:not(.selected) > .window-content .f_interactive div{
             pointer-events: auto;

@@ -48,11 +48,11 @@ export class DirectoryInfo implements IFileInfo {
         this.setCurrentDirectory();
     }
     mutable:boolean = true;
-    constructor(name:string, parent:IFileInfo, files:IFileInfo[] = [], currentDirectory?:string){
+    constructor(name:string, parent:IFileInfo, files:IFileInfo[] = []){
         this._name = name;
         this.parent = parent;
         this.files = files;
-        this._currentDirectory = currentDirectory ?? this.getCurrentDirectory();
+        this._currentDirectory = this.getCurrentDirectory();
     }
     getFile = (fileName:string):IFileInfo | null => this.files.find(file=>file.name === fileName) ?? null;
     private getCurrentDirectory(){
