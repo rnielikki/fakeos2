@@ -2,7 +2,8 @@
     <div class="root">
         <h1>Internet settings</h1>
         <p>You should be connected to internet to boot FakeOS.</p>
-        <ui-button text="Check Internet Status" :clicked="this.checkInternet" />
+        <h3 ref="status"></h3>
+        <ui-button text="Test internet Status" :clicked="this.checkInternet" />
     </div>
 </template>
 <script lang="ts">
@@ -14,13 +15,31 @@ export default Vue.extend({
     components:{ UiButton },
     data:function(){
         return {
-            title:"Internet settings"
+            title:"Internet settings",
+            status:""
         }
+    },
+    created:function(){
+        this.setStatus();
+        window.addEventListener("online", this.setStatus);
+        window.addEventListener("offline", this.setStatus);
     },
     methods:{
         checkInternet:function(){
             let ifOnline = (navigator.onLine)?"online":"offline"
             WindowFactory.OpenDialog(this.$data.f_targetWindow, "Connection check", "Now you're "+ifOnline+".");
+        },
+        setStatus:function(){
+            Vue.set(this.$data,"status",(navigator.onLine)?"Online":"Offline")
+        }
+    },
+    beforeDestroy:function(){
+        window.removeEventListener("online", this.setStatus);
+        window.removeEventListener("offline", this.setStatus);
+    },
+    watch:{
+        status:function(value){
+            (this.$refs.status as HTMLElement).innerText = value;
         }
     }
 })

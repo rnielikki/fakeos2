@@ -1,14 +1,14 @@
 <template>
     <div class="sound-icon">
-        <img  class="icon" :src=soundIcon />
+        <img  class="icon" :src="soundIcon" />
     </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
 import SoundIconPopup from './sound-icon-popup.vue'
 import SoundManager from '@/system/sound/sound-manager'
-import Popup from '../../popups/popup'
-import PopupInfo, { popupDirection } from '../../popups/popup-info'
+import Popup from '@/components/popups/popup'
+import PopupInfo, { popupDirection } from '@/components/popups/popup-info'
 
 export default Vue.extend({
     name:'SoundIcon',
@@ -55,11 +55,3 @@ export default Vue.extend({
     }
 })
 </script>
-<style scoped>
-    .sound-icon {
-        position: relative;
-    }
-    .icon{
-        width:2.1rem;
-    }
-</style>

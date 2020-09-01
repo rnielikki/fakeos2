@@ -9,7 +9,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import SystemName from '@/system/info/system-name'
+import SystemName from '@/system/system-name'
 export default Vue.extend({
     data:function(){
         return {

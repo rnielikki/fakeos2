@@ -31,16 +31,17 @@ Currently you can contribute by:
     * Calendar
     * Background iamge change
   * Currently doing:
-    * File hierarchy (Mutable global in system/filesystem/filesystem.ts)
-      * Copying file
-      * Moving file
-      * Deleting file
+    * Default settings
   * Done
     * Default clock observer
     * Popup (for example, status bar icons - menu uses popup too)
     * Double click to maximize / Click on the status bar to minimize
     * Status bar click window (popup window)
     * Background icon set
+    * File hierarchy (Mutable global in system/filesystem/filesystem.ts)
+      * Copying file
+      * Moving file
+      * Deleting file
 * **Bugs**: (Can be added:)
   * Currently a bug was found that callback doesn't update the binded component - even the watcher works, but force update doesn't work (You can see more about this on `softwares/hello-world/hello-world.vue`) and `src/components/window/components/dialog-template.vue`
     * So, some of Vue watching/updating works, but forceUpdate/updating DOM currently not working! (When use callback) For example, `components/statusbar/clcok-date-popup.vue`

@@ -20,7 +20,7 @@ import current from '@/system/time/current'
 import UiButton from '@/components/ui-components/button.vue'
 import WindowFactory from '@/components/window/window-factory'
 import { OkCancelButton } from '@/components/window/components/dialogs/dialog-model'
-import SystemName from '@/system/info/system-name'
+import SystemName from '@/system/system-name'
 export default Vue.extend({
     data:function(){
         return {

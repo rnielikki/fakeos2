@@ -9,7 +9,6 @@
 <script lang="ts">
 import Vue from 'vue'
 import SoundManager from '@/system/sound/sound-manager'
-import soundManager from '@/system/sound/sound-manager'
 
 export default Vue.extend({
     name:'SoundIconPopup',
