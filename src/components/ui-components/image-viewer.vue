@@ -1,13 +1,20 @@
 <template>
     <div class="image-collection">
-        <div class="image" v-for="file in path.files" :key="file.name" @click="$emit('image-selected', getPath(file))" :style="getBackgroundImage(file)">
+        <div class="image" v-for="file in files" :key="file.name" @click="$emit('image-selected', getPath(file))" :style="getBackgroundImage(file)">
         </div>
     </div>
 </template>
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import { DirectoryInfo, FileInfo } from '@/system/filesystem/fileinfo'
+import { checkType } from '@/system/filesystem/mime'
+import FileType from '@/system/filesystem/file-type'
 export default Vue.extend({
+    data:function(){
+        return {
+            files:this.path.files.filter(file=>(file.fileType == FileType.File) && checkType.ifImage(file as FileInfo))
+        }
+    },
     props:{
         path:{
             type:Object as PropType<DirectoryInfo>,

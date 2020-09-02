@@ -1,4 +1,5 @@
 import IconLoader from '@/components/ui-components/icon/icon-loader'
+import { FileInfo } from './fileinfo';
 
 export interface MimeType {
     typeName:string;
@@ -35,6 +36,31 @@ export default {
             typeName:"audio/wav",
             app: "core/player",
             icon: require("@/softwares/core/player/music-file.png")
+        },
+        ".jpg":{
+            typeName:"image/jpeg",
+            app: "core/image-viewer",
+            icon: require("@/softwares/core/player/music-file.png")
+        },
+        ".jpeg":{
+            typeName:"image/jpeg",
+            app: "core/image-viewer",
+            icon: require("@/softwares/core/player/music-file.png")
+        },
+        ".png":{
+            typeName:"image/png",
+            app: "core/image-viewer",
+            icon: require("@/softwares/core/player/music-file.png")
+        },
+        ".gif":{
+            typeName:"image/gif",
+            app: "core/image-viewer",
+            icon: require("@/softwares/core/player/music-file.png")
+        },
+        ".svg":{
+            typeName:"image/svg",
+            app: "core/image-viewer",
+            icon: require("@/softwares/core/player/music-file.png")
         }
     }
 }
@@ -47,5 +73,17 @@ function resolveExecutable(data:object){
         typeName:"application/vue",
         app:appName,
         icon:IconLoader.getIcon(appName)
+    }
+}
+
+function parseType(mimeName:string){
+    return mimeName.substring(0, mimeName.indexOf("/"));
+}
+export let checkType = {
+    ifImage:function(file:FileInfo){
+        return parseType(file.appType.typeName) === "image";
+    },
+    ifSound:function(file:FileInfo){
+        return parseType(file.appType.typeName) === "image";
     }
 }
