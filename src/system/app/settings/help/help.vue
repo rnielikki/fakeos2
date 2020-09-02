@@ -12,9 +12,6 @@
                 <li>
                     <a href="https://github.com/rnielikki/fakeos2/wiki">Documentation</a>
                 </li>
-                <li>
-                    <a href="https://github.com/rnielikki/fakeos2/pulls">Help us please &lt;3</a>
-                </li>
             </ul>
         </div>
     </div>

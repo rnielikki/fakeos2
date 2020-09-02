@@ -11,10 +11,10 @@
 </template>
 <script lang="ts">
 import Vue, { PropType } from 'vue'
-import ContextMenu from '../menu/contextmenu'
-import WindowFactory from '../window/window-factory'
+import ContextMenu from '@/components/menu/contextmenu'
+import WindowFactory from '@/components/window/window-factory'
 import IconModel from './models/icon-model'
-import backgroundMenu from '../background/background-menu'
+import backgroundMenu from '@/components/background/background-menu'
 import { DirectoryInfo, FileInfo, ShortcutInfo } from '@/system/filesystem/fileinfo'
 import IconMenu from './icon-menu'
 import IconGlobal from './models/icon-global'

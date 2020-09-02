@@ -35,8 +35,14 @@ export default Vue.extend({
     methods:{
         setAction:function(value:any){
             return ()=>{
-                (this as any).setResult(value);
-                this.$data.f_targetWindow.close()
+                let targetWnidow = this.$data.f_targetWindow;
+                if(!targetWnidow.$parent && this.$props.callback) {
+                    this.$props.callback(value);
+                }
+                else {
+                    (this as any).setResult(value);
+                }
+                targetWnidow.close()
             };
         }
     }

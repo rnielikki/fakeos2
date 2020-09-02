@@ -1,7 +1,7 @@
 export default {
     "User":{
-        "Images": toFileSystem(require.context("@/assets/images", true, /\.(jpe?g|png|gif|bmp)$/i).keys(), (name)=>"{\"name\":\""+name+"\"}"),
-        "Musics": toFileSystem(require.context("@/assets/musics", true, /\.(mp3|ogg|wav)$/i).keys(), (name)=>"{\"name\":\""+name+"\"}"),
+        "Images": toFileSystem(require.context("@/assets/images", true, /\.(jpe?g|png|gif|bmp)$/i).keys(), (name)=>"{\"name\":\""+require("@/assets/images/"+name)+"\"}"),
+        "Musics": toFileSystem(require.context("@/assets/musics", true, /\.(mp3|ogg|wav)$/i).keys(), (name)=>"{\"name\":\""+require("@/assets/musics/"+name)+"\"}"),
         "Documents": {},
         "Desktop": {}
     },

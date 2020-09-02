@@ -62,4 +62,5 @@ export let Path = {
 
 Mutability.makeImmutable(Path.getAbsolutePath("C:/Program"))
 Mutability.makeImmutable(Path.getAbsolutePath("C:/System"))
+Path.getAbsolutePath("C:/User")!.mutable = false;
 export default root;

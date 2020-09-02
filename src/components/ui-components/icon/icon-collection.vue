@@ -13,13 +13,13 @@
 </template>
 <script lang="ts">
 import Vue, { PropType } from 'vue'
-import Icon from '@/components/icon/icon.vue'
+import Icon from '@/components/ui-components/icon/icon.vue'
 import IconModel from './models/icon-model'
 import { IconDirection } from './models/icon-collection-model'
 import DraggableCollection from '@/system/core/draggable/draggable-collection.vue'
 import DropTarget from '@/system/core/draggable/drop-target.vue'
 import IFileInfo, { FileInfo, DirectoryInfo } from '@/system/filesystem/fileinfo'
-import windowFactory from '../window/window-factory'
+import windowFactory from '../../window/window-factory'
 import IconGlobal from './models/icon-global'
 
 export default Vue.extend({

@@ -3,7 +3,8 @@
         <h1>FakeOS Ver 2.</h1>
         <h3 clasS="normal">On <span class="highlight">Vue 2.6.11</span> Kernel: Written in <span class="highlight">TypeScript 3.9.6</span></h3>
         <p>{{ computerName }}</p>
-        <p>{{ UA }}</p>
+        <p>{{ computerInfo.cpu }} ({{ computerInfo.arc }})</p>
+        <p>{{ computerInfo.memory }} RAM</p>
         <p>This operating system is on since {{ uptime }}.</p>
         <p>Created by Mielikki, Owned by {{ userName }}</p>
         <ui-button text="check update" :clicked="checkUpdate" />
@@ -29,8 +30,8 @@ export default Vue.extend({
     },
     components:{ UiButton },
     computed:{
-        UA:function(){
-            return navigator.userAgent
+        computerInfo:function(){
+            return SystemName.computerInfo;
         },
         uptime:function(){
             return current.startDate;

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { DirectoryInfo, FileInfo, ShortcutInfo } from '@/system/filesystem/fileinfo'
-import WindowFactory from '../window/window-factory'
+import WindowFactory from '../../window/window-factory'
 import IconModel from './models/icon-model'
 
 export let defaultDirectoryAction = Vue.extend({

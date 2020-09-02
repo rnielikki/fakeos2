@@ -11,11 +11,11 @@
 </template>
 <script lang="ts">
 import Vue, { PropType } from 'vue'
-import IconCollection from "@/components/icon/icon-collection.vue";
+import IconCollection from "@/components/ui-components/icon/icon-collection.vue";
 import IFileInfo, { DirectoryInfo } from '@/system/filesystem/fileinfo'
 import DefaultDrive, { Path } from "@/system/filesystem/filesystem";
-import { explorerIconSet } from '@/components/icon/icon-mixins'
-import IconModel from '@/components/icon/models/icon-model'
+import { explorerIconSet } from '@/components/ui-components/icon/icon-mixins'
+import IconModel from '@/components/ui-components/icon/models/icon-model'
 import ContextMenu from '@/components/menu/contextmenu'
 import explorerMenu from './menu'
 import Root from '@/system/filesystem/filesystem'

@@ -1,4 +1,4 @@
-import IconLoader from '@/components/icon/icon-loader'
+import IconLoader from '@/components/ui-components/icon/icon-loader'
 
 export interface MimeType {
     typeName:string;

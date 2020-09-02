@@ -14,7 +14,6 @@ export default Vue.extend({
 
         if(this.$data.callback){
             let content = (this as any).getContent();
-            let parentContent = (this.$parent as any).getContent();
             let callback = this.$data.callback;
             if(content?.$data){
                 callback(content.$data.result)

@@ -8,13 +8,14 @@ import VueCopmonent from 'vue'
 import { Component, Vue } from 'vue-property-decorator';
 import ContextMenu from '../menu/contextmenu'
 import WindowFactory from '../window/window-factory'
-import IconCollection from '@/components/icon/icon-collection.vue'
+import IconCollection from '@/components/ui-components/icon/icon-collection.vue'
 import BackgroundMenu from './background-menu'
 import { Path } from '@/system/filesystem/filesystem'
-import { IconDirection } from '../icon/models/icon-collection-model'
+import { IconDirection } from '../ui-components/icon/models/icon-collection-model'
 import IFileInfo, { FileInfo, DirectoryInfo } from '@/system/filesystem/fileinfo';
-import { backgroundIconSet } from '@/components/icon/icon-mixins'
-import IconModel from '../icon/models/icon-model';
+import { backgroundIconSet } from '@/components/ui-components/icon/icon-mixins'
+import IconModel from '../ui-components/icon/models/icon-model';
+import GlobalPath from '@/system/filesystem/globalPath'
 
 @Component({
     directives:{
@@ -25,7 +26,7 @@ import IconModel from '../icon/models/icon-model';
     data:function(){
         return {
             menu:BackgroundMenu,
-            path:Path.getAbsolutePath("C:/User/Desktop") as DirectoryInfo,
+            path:GlobalPath.Desktop,
             direction:IconDirection.column
         }
     }

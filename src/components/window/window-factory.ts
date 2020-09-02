@@ -5,7 +5,7 @@ import MixinFactory from './mixins/window-mixin-factory'
 import SystemGlobal from '@/system/global'
 import DialogButton, { OKButton } from './components/dialogs/dialog-model'
 import { IMenuComponent } from '../menu/models/menu-model'
-import IconLoader from '../icon/icon-loader'
+import IconLoader from '../ui-components/icon/icon-loader'
 
 export default {
     //options are propsData
@@ -64,7 +64,8 @@ export default {
                     defaultHeight:-1,
                     minX:300,
                     minY:100
-                })
+                }),
+                callback:callback
             }
         });
         _message.$data.title = title;

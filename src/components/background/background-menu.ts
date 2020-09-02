@@ -1,28 +1,15 @@
 import WindowFactory from '../window/window-factory'
+import filesystemEditor from '@/system/filesystem/filesystem-editor';
+import { DirectoryInfo } from '@/system/filesystem/fileinfo';
+import GlobalPath from '@/system/filesystem/globalPath'
+
 export default [
     {
-    label: 'Open...',
-    submenu:[
-        {label:'sub1test'},
-        {label:'test2',
-        submenu:
-            [
-                { label:'lol' },
-                {
-                    label: 'Next...',
-                    action:function(){
-                        WindowFactory.OpenProgram("hello-world");
-                    }
-                }
-            ]
-        }
-    ]
-    },
-    {
-        label: 'Play for me',
-        action:function(){
-        WindowFactory.OpenProgram("core/player")
-        }
+        label: "New Folder",
+        action: ()=> filesystemEditor.add(
+            new DirectoryInfo("New Folder", GlobalPath.Desktop),
+            GlobalPath.Desktop
+        )
     },
     {
         label: 'Set Background',
