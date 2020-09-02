@@ -1,5 +1,5 @@
 <template>
-    <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="horizontal" ref="collection" collectionKeyName="id" @drop.native="test">
+    <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="horizontal" ref="collection" collectionKeyName="id" @drop.native="dropToCollection">
              <template v-slot:default="model">
                  <icon :model="model.model"
                  v-on:dragend.native="model.dragend"
@@ -41,7 +41,14 @@ export default Vue.extend({
         },
         path:{
             type:Object as PropType<DirectoryInfo>,
-            required:true
+            required:true,
+            validator:function(value){
+                return !value.disposed
+            }
+        },
+        defaultSelection:{
+            type:Object as PropType<IFileInfo>,
+            default:null
         }
     },
     computed:{
@@ -57,9 +64,11 @@ export default Vue.extend({
     created:function(){
         this.horizontal = (this.direction == IconDirection.row);
         this.generateIcons(this.f_path);
+        this.selected = (this.defaultSelection)?this.f_path.files.indexOf(this.defaultSelection):-1;
     },
     mounted:function(){
         document.addEventListener("mousedown", this.deselect, true)
+        this.$nextTick(()=>{this.select(this.selected)})
     },
     methods: {
         select:function(id:number) {
@@ -71,7 +80,7 @@ export default Vue.extend({
         generateIcons: function(f_path:DirectoryInfo) {
             this.icons = f_path.files.map(file => new IconModel(file))
         },
-        test:function(){
+        dropToCollection:function(){
             IconGlobal.dropTarget = this.f_path
         }
     },

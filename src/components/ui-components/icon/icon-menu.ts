@@ -1,7 +1,8 @@
 import Vue from 'vue'
-import { DirectoryInfo, ShortcutInfo } from '@/system/filesystem/fileinfo'
+import { DirectoryInfo } from '@/system/filesystem/fileinfo'
 import FilesystemEditor from '@/system/filesystem/filesystem-editor';
 import FileEditResult, { showDialogIfError } from '@/system/filesystem/file-edit-result'
+import WindowFactory from '@/components/window/window-factory';
 
 export default Vue.extend({
     data:function(){
@@ -23,6 +24,10 @@ export default Vue.extend({
                    label: "Delete",
                     action:()=>(this as any).delete()
                 },
+                {
+                    label: "Properties",
+                     action:()=>(this as any).openProperties()
+                }
             ],
             editable:false
         }
@@ -55,6 +60,11 @@ export default Vue.extend({
         move:function(target:DirectoryInfo){
             let _info = this.$props.model.fileInfo;
             showDialogIfError(FilesystemEditor.move(_info, target), _info.name, target.name);
+        },
+        openProperties:function(){
+            WindowFactory.OpenSetting("file-properties", {
+                icon:this.$props.model
+            });
         },
         addShortcut:function(){
             let _fileInfo = this.$props.model.fileInfo;

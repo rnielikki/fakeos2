@@ -19,17 +19,18 @@ export default Vue.extend({
     mixins:[ ModalContentMixin ],
     data:function(){
         return {
-            hasMinimizer:false
+            hasMinimizer:false,
+            windowOptions: this.windowOptionsProp
         }
     },
     props:{
         message:String,
-        windowOptions: {
-            type:Object as PropType<IWindowOptions>
-        },
         buttons:{
             type:Array as PropType<DialogButton[]>,
             default:()=>OKButton
+        },
+        windowOptionsProp: {
+            type:Object as PropType<IWindowOptions>
         }
     },
     methods:{

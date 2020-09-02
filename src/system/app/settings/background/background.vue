@@ -1,6 +1,6 @@
 <template>
     <div class="root">
-        <div class="index">{{ path.currentDirectory }}</div>
+        <div class="index">{{ path.currentPath }}</div>
         <image-viewer :path="path" class="content" @image-selected="(img)=>selectImage(img)" />
         <div class="selection-group">
             <select-button

@@ -2,11 +2,15 @@ import IFileInfo, { DirectoryInfo, FileInfo } from './fileinfo';
 import DefaultFileSystem from './filesystem-default'
 //import Initializer from './initializer';
 import Mutability from './mutability'
+import FileType from './file-type';
 
 const RootFileInfo:IFileInfo = {
     name:"",
     parent:null,
-    mutable:false
+    mutable:false,
+    fileType:FileType.Empty,
+    currentPath:"",
+    disposed:false
 }
 
 function toDirectoryInfo(name:string, fileSystem:object, parent:IFileInfo):any {
@@ -48,8 +52,8 @@ export let Path = {
         let currentDir = dir;
         for(let currentPath of pathArray) {
             let currentFile = currentDir.getFile(currentPath);
-            if(currentFile instanceof DirectoryInfo) {
-                currentDir = currentFile;
+            if(currentFile?.fileType == FileType.Directory) {
+                currentDir = (currentFile as DirectoryInfo);
             }
             else {
                 return currentFile;
@@ -62,5 +66,5 @@ export let Path = {
 
 Mutability.makeImmutable(Path.getAbsolutePath("C:/Program"))
 Mutability.makeImmutable(Path.getAbsolutePath("C:/System"))
-Path.getAbsolutePath("C:/User")!.mutable = false;
+Path.getAbsolutePath("C:/")!.mutable = false;
 export default root;

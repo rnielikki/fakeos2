@@ -13,15 +13,7 @@ export default {
         let _index = fullProgramName.lastIndexOf('/');
         let programName = (_index < 0)?fullProgramName:fullProgramName.substring(_index+1);
         import(`@/softwares/${fullProgramName}/${programName}.vue`).then((component)=>{
-            let comp:Vue;
-            if(options){
-                comp = new component.default({
-                    propsData: options
-                })
-            }
-            else{
-                comp = new component.default();
-            }
+            let comp = getComponentInPromise(component, options);
             OpenWindow(comp, programName, IconLoader.getIcon(programName), comp.$data.menu);
         })
         .catch((err)=>{
@@ -37,7 +29,7 @@ export default {
             propsData:{
                 title:content?.$data?.title ?? "Modal Window",
                 hasMinimizer: false,
-                windowOptions: content?.$props?.windowOptions ?? new ModalOptions(),
+                windowOptions: content?.$data?.windowOptions ?? new ModalOptions(),
                 parentElement:parent.$el,
                 initToCenter: true
             },
@@ -59,11 +51,11 @@ export default {
             propsData: {
                 message: message,
                 buttons:buttons,
-                windowOptions:windowOptions ?? new ModalOptions({
+                windowOptionsProp:windowOptions ?? new ModalOptions({
                     defaultWidth:-1,
                     defaultHeight:-1,
-                    minX:300,
-                    minY:100
+                    minWidth:300,
+                    minHeight:100
                 }),
                 callback:callback
             }
@@ -71,9 +63,9 @@ export default {
         _message.$data.title = title;
         (parent == null)?OpenWindow(_message, undefined, undefined, undefined, true):this.OpenModal(parent, _message, callback);
     },
-    OpenSetting:function(settingName:string="main"){
-        import(`@/system/app/settings/${settingName}/${settingName}.vue`).then((component)=>{
-            OpenWindow(new component.default(), undefined, require("@/system/app/settings/icon.png"));
+    OpenSetting:function(settingName:string="main", options?:object){
+        import(`@/system/app/settings/${settingName}/${settingName}.vue`).then((comp)=>{
+            OpenWindow(getComponentInPromise(comp, options), undefined, require("@/system/app/settings/icon.png"));
         }).catch((err)=>{
             this.OpenDialog(null, "Load Failed", `Setting ${settingName} does not exist!`)
             console.warn(err);
@@ -86,7 +78,7 @@ function OpenWindow(content:Vue, appName?:string, iconPath?:string, menu?:{conte
             appName: appName,
             title:content?.$data?.title,
             hasMinimizer:content?.$data?.hasMinimizer ?? true,
-            windowOptions:content?.$props?.windowOptions ?? new WindowOptions(),
+            windowOptions:content?.$data?.windowOptions ?? new WindowOptions(),
             parentElement:SystemGlobal.background,
             initToCenter: center,
             iconPath: iconPath,
@@ -109,6 +101,16 @@ function OpenWindow(content:Vue, appName?:string, iconPath?:string, menu?:{conte
     SystemGlobal.background!.appendChild(_window.$el)
 }
 
+function getComponentInPromise(component:any, options?:any){
+    if(options){
+        return new component.default({
+            propsData: options
+        })
+    }
+    else{
+        return new component.default();
+    }
+}
 
 function createRightClickMenu(_window:Window){
     let _anyWindow = _window as any;

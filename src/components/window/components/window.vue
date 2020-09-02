@@ -5,7 +5,7 @@
             :data-movable="windowOptions.movable"
             :style="{ zIndex: zIndex }"
             >
-            <resizer v-if="windowOptions.resizable" v-show="!maximized" :minX="windowOptions.minX" :minY="windowOptions.minY" ref="resizer" :target="currentElement" />
+            <resizer v-if="windowOptions.resizable" v-show="!maximized" :minWidth="windowOptions.minWidth" :minHeight="windowOptions.minHeight" ref="resizer" :target="currentElement" />
             <Window-title
                 v-if="title !== null"
                 :targetWindow="this"
@@ -122,8 +122,8 @@ import ContextMenu from '../../menu/contextmenu'
                 let winOptions = this.$props.windowOptions;
                 el.style.width = (winOptions.defaultWidth<=0)?"auto":winOptions.defaultWidth + "px",
                 el.style.height = (winOptions.defaultHeight<=0)?"auto":winOptions.defaultHeight + "px",
-                el.style.minWidth = this.$props.windowOptions.minX + "px",
-                el.style.minHeight = this.$props.windowOptions.minY + "px"
+                el.style.minWidth = this.$props.windowOptions.minWidth + "px",
+                el.style.minHeight = this.$props.windowOptions.minHeight + "px"
                 this.$nextTick(function(){
                     if(this.$props.initToCenter){
                         let parentBoundingBox = this.$props.parentElement.getBoundingClientRect();

@@ -11,7 +11,10 @@ export default Vue.extend({
     props:{
         path:{
             type:Object as PropType<DirectoryInfo>,
-            required:true
+            required:true,
+            validator:function(value){
+                return !value.disposed
+            }
         }
     },
     methods:{

@@ -18,6 +18,7 @@ import backgroundMenu from '@/components/background/background-menu'
 import { DirectoryInfo, FileInfo, ShortcutInfo } from '@/system/filesystem/fileinfo'
 import IconMenu from './icon-menu'
 import IconGlobal from './models/icon-global'
+import FileType from '@/system/filesystem/file-type'
 
 export default Vue.extend({
     name:"Icon",
@@ -50,31 +51,34 @@ export default Vue.extend({
         },
         dropped:function(e:Event){
             IconGlobal.dropTarget = this.model.fileInfo;
+            e.stopPropagation()
         },
         dragToApp:function(e:Event){
-            let _target = (IconGlobal.dropTarget instanceof ShortcutInfo)?
-                IconGlobal.dropTarget.originalFile
+            if(this.$props.model.fileInfo == IconGlobal.dropTarget) return;
+            let _target = (IconGlobal.dropTarget?.fileType == FileType.Shortcut)?
+                (IconGlobal.dropTarget as ShortcutInfo).originalFile
                 :IconGlobal.dropTarget;
-            let _fileInfo = (this.$props.model.fileInfo instanceof ShortcutInfo)?
+            let _fileInfo = (this.$props.model.fileInfo.fileType == FileType.Shortcut)?
                 this.$props.model.fileInfo.originalFile
                 :this.$props.model.fileInfo;
-                
-            if(_target instanceof DirectoryInfo) {
-                let dir = _target as DirectoryInfo;
-                if(this.$props.model.fileInfo !== _target) {
-                    (this as any).move(_target);
-                }
-            }
-            else if(_target instanceof FileInfo) {
-                let data = _fileInfo.data;
-                let appName = ((_target as FileInfo)?.data as any)?.app;
-                if(!appName
-                || !data
-                || (_target as FileInfo)?.appType.typeName !== "application/vue"
-                || appName !== _fileInfo?.appType?.app) {
-                    return;
-                }
-                WindowFactory.OpenProgram(appName, data);
+
+            switch(_target?.fileType) {
+                case FileType.Directory:
+                    if(this.$props.model.fileInfo !== _target) {
+                        (this as any).move(_target);
+                    }
+                    break;
+                case FileType.File:
+                    var data = _fileInfo.data;
+                    var appName = ((_target as FileInfo)?.data as any)?.app;
+                    if(!appName
+                    || !data
+                    || (_target as FileInfo)?.appType.typeName !== "application/vue"
+                    || appName !== _fileInfo?.appType?.app) {
+                        return;
+                    }
+                    WindowFactory.OpenProgram(appName, data);
+                    break;
             }
             e.stopPropagation();
         }

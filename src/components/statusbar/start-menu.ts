@@ -1,6 +1,6 @@
 import WindowFactory from '../window/window-factory'
 import { OkCancelButton } from '../window/components/dialogs/dialog-model'
-import { DirectoryInfo } from '@/system/filesystem/fileinfo'
+import { DirectoryInfo, FileInfo } from '@/system/filesystem/fileinfo'
 import globalPath from '@/system/filesystem/globalPath'
 export default [
     {
@@ -37,9 +37,11 @@ export default [
 
 function getPrograms(pathDir:DirectoryInfo){
     return pathDir.files.map(item=>{
+        let realFileName = Object(((item as DirectoryInfo).getFile(item.name+".vue") as FileInfo)?.data)?.app;
+        if(!realFileName) return { label:"Error" }
         return {
             label:item.name,
-            action:()=>WindowFactory.OpenProgram(item.name)
+            action:()=>WindowFactory.OpenProgram(realFileName)
         };
     })
 }

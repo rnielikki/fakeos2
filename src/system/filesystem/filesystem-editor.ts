@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import IFileInfo, { DirectoryInfo, ShortcutInfo } from '@/system/filesystem/fileinfo'
 import FileEditResult from './file-edit-result'
+import FileType from './file-type';
 
 export default {
     editFileName:function(fileInfo:IFileInfo, name:string){
@@ -33,7 +34,7 @@ export default {
         return FileEditResult.Success;
     },
     addShortcut(fileInfo:IFileInfo, destination?:DirectoryInfo){
-        if(fileInfo instanceof ShortcutInfo) {
+        if(fileInfo.fileType == FileType.Shortcut) {
             return FileEditResult.DoubleShortcut;
         }
         let dest = destination ?? (fileInfo.parent as DirectoryInfo);
@@ -45,15 +46,14 @@ export default {
         return FileEditResult.Success;
     },
     delete:function(fileInfo:IFileInfo):FileEditResult{
-        if(!fileInfo.mutable) {
+        if(!fileInfo.mutable || !fileInfo.parent?.mutable) {
             return FileEditResult.Immutable;
         }
-        if(fileInfo instanceof DirectoryInfo){
-            let files = fileInfo.files
-            for(let file of files) {
-                let result = this.delete(file);
-                if(result !== FileEditResult.Success)
-                return result;
+        if(fileInfo.fileType == FileType.Directory){
+            let files = (fileInfo as DirectoryInfo).files;
+            while(files.length > 0){
+                let result = this.delete(files[0]);
+                if(result !== FileEditResult.Success) return result;
             }
         }
         let parent = (fileInfo.parent as DirectoryInfo).files;
@@ -64,6 +64,7 @@ export default {
         else {
             return FileEditResult.NotFound;
         }
+        fileInfo.disposed = true;
         return FileEditResult.Success;
     },
     move:function(file:IFileInfo, target:DirectoryInfo):FileEditResult{
@@ -88,8 +89,8 @@ export default {
         files.splice(index, 1);
         target.files.push(file);
         file.parent = target;
-        if(file instanceof DirectoryInfo){
-            file.setCurrentDirectory();
+        if(file.fileType == FileType.Directory){
+            (file as DirectoryInfo).setCurrentDirectory();
         }
         return FileEditResult.Success;
     }
@@ -109,7 +110,7 @@ function getUniqueName(fileInfo:IFileInfo, parent:DirectoryInfo){
     let splitIndex = fileInfo.name.lastIndexOf(".")
     let originalName = "";
     let ext = "";
-    if(fileInfo instanceof DirectoryInfo || splitIndex == -1){
+    if(fileInfo.fileType == FileType.Directory || splitIndex == -1){
         originalName = fileInfo.name;
     }
     else {

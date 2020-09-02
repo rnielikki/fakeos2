@@ -13,16 +13,15 @@ export default Vue.extend({
     data:function(){
         return {
             title:"Player 1",
-            soundRes:null
-        }
-    },
-    props:{
-        windowOptions:{
-            type:WindowOptions,
-            default:()=>new WindowOptions({
-                defaultHeight:-1,
-                resizable:false
-            })
+            soundRes:null,
+            windowOptions:
+                new WindowOptions({
+                    defaultWidth:-1,
+                    defaultHeight:-1,
+                    minWidth:300,
+                    minHeight:200,
+                    resizable:false
+                })
         }
     },
     mounted:function() {

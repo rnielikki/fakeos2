@@ -3,8 +3,8 @@
 export default interface IWindowOptions{
     movable:boolean;
     resizable:boolean,
-    minX:number,
-    minY:number,
+    minWidth:number,
+    minHeight:number,
     defaultWidth:number,
     defaultHeight:number
 }
@@ -12,8 +12,8 @@ export default interface IWindowOptions{
 export class WindowOptions implements IWindowOptions{
     movable:boolean = true;
     resizable:boolean = true;
-    minX:number = 640;
-    minY:number = 480;
+    minWidth:number = 640;
+    minHeight:number = 480;
     defaultWidth:number = 800;
     defaultHeight:number = 600;
     constructor(init?:Partial<WindowOptions>){
@@ -24,8 +24,8 @@ export class WindowOptions implements IWindowOptions{
 export class ModalOptions implements IWindowOptions{
     movable:boolean = true;
     resizable:boolean = false;
-    minX:number = 400;
-    minY:number = 300;
+    minWidth:number = 400;
+    minHeight:number = 300;
     defaultWidth:number = 400;
     defaultHeight:number = 300;
     constructor(init?:Partial<WindowOptions>){

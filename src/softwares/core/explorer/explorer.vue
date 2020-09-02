@@ -5,6 +5,7 @@
             <img :src="require('./up.png')" @click="()=>goToParent(f_path.parent)" />
         </div>
         <icon-collection :path="f_path" class="content f_interactive"
+        :defaultSelection="defaultSelection"
         @open-icon="(item)=>openIcon(item)" ref="collection"
         v-contextMenu="{ value: value }" />
     </div>
@@ -26,7 +27,7 @@ export default Vue.extend({
     data:function(){
         return {
             title:"Explorer",
-            f_path:DefaultDrive,
+            f_path:this.path,
             value: explorerMenu(this)
         }
     },
@@ -34,17 +35,21 @@ export default Vue.extend({
     props:{
         path:{
             type:Object as PropType<DirectoryInfo>,
-            default:()=>DefaultDrive
+            default:()=>DefaultDrive,
+            validator:function(value){
+                return !value.disposed
+            }
+        },
+        defaultSelection:{
+            type:Object as PropType<IFileInfo>,
+            default:null
         }
-    },
-    created:function(){
-        this.$set(this.$data, "f_path", this.path);
     },
     mounted:function(){
         //nexTick for default value update.
         this.$nextTick(()=>{
             //no other way to make DOM updated.
-            (this.$refs.label as HTMLElement).innerText = this.path.currentDirectory;
+            (this.$refs.label as HTMLElement).innerText = this.path.currentPath;
         })
     },
     watch:{
@@ -52,7 +57,7 @@ export default Vue.extend({
             //NOTE: Won't work if it doesn't updated via "ref"
             if(!this.$refs.collection) return;
             (this.$refs.collection as any).f_path = this.f_path;
-            (this.$refs.label as HTMLElement).innerText = this.f_path.currentDirectory;
+            (this.$refs.label as HTMLElement).innerText = this.f_path.currentPath;
         }
     }
 })

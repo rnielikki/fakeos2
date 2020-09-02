@@ -20,11 +20,11 @@ export default Vue.extend({
         target:{
             type: Element
         },
-        minX:{
+        minWidth:{
                 type:Number,
                 default:600
             },
-        minY:{
+        minHeight:{
                 type:Number,
                 default:400
             }
@@ -32,7 +32,7 @@ export default Vue.extend({
     watch:{
         target:function(el:Element){
             if(this.$data.ifInit == false) {
-                new ResizerCollection(this, this.$props.target, this.minX, this.minY);
+                new ResizerCollection(this, this.$props.target, this.minWidth, this.minHeight);
                 this.$data.ifInit = true;
             }
         }

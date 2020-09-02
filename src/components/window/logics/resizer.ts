@@ -2,14 +2,14 @@ import Position from "./position";
 import VueComponent from 'vue';
 
 export default class ResizerCollection {
-    constructor(resizer:any, target:HTMLElement, minX:number, minY:number) {
+    constructor(resizer:any, target:HTMLElement, minWidth:number, minHeight:number) {
         if(!(resizer instanceof VueComponent))
         {
             throw "The argument 'resizer' is not an instance of Vue component.";
         }
         target.style.position = "absolute";
         for(resizer of resizer._vnode.children){
-            new Resizer(resizer.elm as HTMLElement, target, resizer.data.class.toString(), minX, minY);
+            new Resizer(resizer.elm as HTMLElement, target, resizer.data.class.toString(), minWidth, minHeight);
         }
     }
 }
@@ -19,14 +19,14 @@ class Resizer {
     private resizeType: Function;
     mouseX: number = 0;
     mouseY: number = 0;
-    minX: number = 0;
-    minY: number = 0;
+    minWidth: number;
+    minHeight: number;
     private pos: Position | null = null;
-    constructor(self: HTMLElement, target: HTMLElement, type: string, minX:number, minY: number){
+    constructor(self: HTMLElement, target: HTMLElement, type: string, minWidth:number, minHeight: number){
         this._self = self;
         this.target = target;
-        this.minX = minX;
-        this.minY = minY;
+        this.minWidth = minWidth;
+        this.minHeight = minHeight;
         switch (type) {
             case "resizer-right":
                 this.resizeType = this.resizeE;
@@ -76,14 +76,14 @@ class Resizer {
     }
     private resizeN = (e: MouseEvent) => {
         let size: number = (this.pos!.height + (this.mouseY - e.clientY));
-        if (size >= this.minY && e.clientY >= 0) {
+        if (size >= this.minHeight && e.clientY >= 0) {
             this.target.style.height = size + "px";
             this.target.style.top = e.clientY + "px";
         }
     };
     private resizeW = (e: MouseEvent) => {
         let size: number = (this.pos!.width + (this.mouseX - e.clientX));
-        if (size >= this.minX) {
+        if (size >= this.minWidth) {
             this.target.style.width = size + "px";
             this.target.style.left = e.clientX + "px";
         }

@@ -1,4 +1,5 @@
 import IFileInfo, { DirectoryInfo } from "./fileinfo";
+import FileType from './file-type';
 
 export default {
     makeMutable:(fileInfo:IFileInfo | null)=>changeMutability(fileInfo, true),
@@ -8,8 +9,9 @@ export default {
 function changeMutability(fileInfo:IFileInfo | null, mutable:boolean){
     if(!fileInfo) return;
     fileInfo.mutable = mutable;
-    if(fileInfo instanceof DirectoryInfo) {
-        for (let file of fileInfo.files){
+    if(fileInfo.fileType == FileType.Directory) {
+        let files = (fileInfo as DirectoryInfo).files
+        for (let file of files){
             changeMutability(file, mutable);
         }
     }
