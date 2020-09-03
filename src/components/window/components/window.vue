@@ -115,6 +115,9 @@ import ContextMenu from '../../menu/contextmenu'
         mounted:function(){
             this.$data.currentElement = this.$el;
             (this as any).initWindowState();
+            if(this.$props.windowOptions.maximizeOnStart){
+                this.$nextTick(()=>(this as any).maximize())
+            }
         },
         methods:{
             initWindowState:function() {

@@ -27,7 +27,7 @@ export default Vue.extend({
     methods:{
         checkInternet:function(){
             let ifOnline = (navigator.onLine)?"online":"offline"
-            WindowFactory.OpenDialog(this.$data.f_targetWindow, "Connection check", "Now you're "+ifOnline+".");
+            WindowFactory.OpenDialog(this, "Connection check", "Now you're "+ifOnline+".");
         },
         setStatus:function(){
             Vue.set(this.$data,"status",(navigator.onLine)?"Online":"Offline")

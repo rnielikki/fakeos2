@@ -21,7 +21,7 @@ export default Vue.extend({
     },
     methods:{
         GetSomeMessage:function(){
-            WindowFactory.OpenDialog(this.f_targetWindow, "animal question?", "Which type are you?", [
+            WindowFactory.OpenDialog(this, "animal question?", "Which type are you?", [
                 {
                     text:"Moo",
                     value:"Cow"

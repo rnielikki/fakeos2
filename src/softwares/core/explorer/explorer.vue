@@ -1,13 +1,13 @@
 <template>
-    <div class="container f_interactive">
-        <div class="index-wrapper f_non-interactive">
+    <div :class="['container', 'f_interactive', {'small':isModal}]">
+        <div class="index-wrapper f_non-interactive isModal">
             <div class="index" ref="label" />
             <img :src="require('./up.png')" @click="()=>goToParent(f_path.parent)" />
         </div>
         <icon-collection :path="f_path" class="content f_interactive"
         :defaultSelection="defaultSelection"
         @open-icon="(item)=>openIcon(item)" ref="collection"
-        v-contextMenu="{ value: value }" />
+        v-contextMenu="{ value: value }" :small="isModal" />
     </div>
 </template>
 <script lang="ts">
@@ -15,20 +15,29 @@ import Vue, { PropType } from 'vue'
 import IconCollection from "@/components/ui-components/icon/icon-collection.vue";
 import IFileInfo, { DirectoryInfo } from '@/system/filesystem/fileinfo'
 import DefaultDrive, { Path } from "@/system/filesystem/filesystem";
-import { explorerIconSet } from '@/components/ui-components/icon/icon-mixins'
+import { explorerIconSet, defaultFileAction } from '@/components/ui-components/icon/icon-mixins'
 import IconModel from '@/components/ui-components/icon/models/icon-model'
 import ContextMenu from '@/components/menu/contextmenu'
 import explorerMenu from './menu'
 import Root from '@/system/filesystem/filesystem'
+import { WindowOptions } from '@/components/window/components/window-options'
 
 export default Vue.extend({
-    components:{ IconCollection},
+    components:{ IconCollection },
     directives:{ ContextMenu },
     data:function(){
+        let winOptions = (this.isModal)?new WindowOptions({
+                    defaultWidth:500,
+                    defaultHeight:350,
+                    minWidth:500,
+                    minHeight:350,
+                    resizable:false
+                }):new WindowOptions();
         return {
             title:"Explorer",
             f_path:this.path,
-            value: explorerMenu(this)
+            value: explorerMenu(this),
+            windowOptions:winOptions
         }
     },
     mixins:[ explorerIconSet ],
@@ -43,6 +52,10 @@ export default Vue.extend({
         defaultSelection:{
             type:Object as PropType<IFileInfo>,
             default:null
+        },
+        isModal:{
+            type:Boolean,
+            default:false
         }
     },
     mounted:function(){
@@ -70,24 +83,44 @@ export default Vue.extend({
     height:100%;
 }
 .content {
-    margin:.75rem;
-    padding:1.5rem 0;
     width:auto;
     flex-grow:1;
     box-sizing: border-box;
     color:$content-foreground;
 }
-.index-wrapper {
+.index-wrapper{
     display: grid;
     grid-template-columns: 1fr auto;
-    margin: .75rem .75rem .45rem 1.1rem;
     align-items:center;
+}
+.index-wrapper {
+    margin: .75rem .75rem .45rem 1.1rem;
     .index {
         padding: .6rem .4rem;;
     }
     img{
         width:3rem;
         height:3rem;
+    }
+}
+.content{
+    margin:.75rem;
+    padding:1.5rem 0;
+}
+.small {
+    .index-wrapper{
+        margin: .35rem .45rem;
+        .index {
+            padding: .35rem .45rem;;
+        }
+        img {
+            width:1.67rem;
+            height:1.67rem;
+        }
+    }
+    .content{
+        margin:.45rem;
+        padding:.75rem 0;
     }
 }
 .index, .content {

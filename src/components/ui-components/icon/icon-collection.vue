@@ -2,6 +2,7 @@
     <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="horizontal" ref="collection" collectionKeyName="id" @drop.native="dropToCollection">
              <template v-slot:default="model">
                  <icon :model="model.model"
+                 :small="small"
                  v-on:dragend.native="model.dragend"
                  @dblclick.native="$emit('open-icon', model.model)"
                  @open-icon="$emit('open-icon', model.model)"
@@ -49,6 +50,10 @@ export default Vue.extend({
         defaultSelection:{
             type:Object as PropType<IFileInfo>,
             default:null
+        },
+        small:{
+            type:Boolean,
+            default:false
         }
     },
     computed:{

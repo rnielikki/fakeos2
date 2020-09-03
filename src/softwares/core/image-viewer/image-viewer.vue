@@ -1,20 +1,45 @@
 <template>
-    <div>
-        <img :src="imagePath" />
+    <div class="viewer-root">
+        <div class="tools">
+            <div @click="openImage" class="tools-button">Open</div>
+            <div>
+                <input type="range" min="0.01" max="2" step="0.1" ref="scaleBar" @change="(e)=>changeSize(e.target.value)" />
+                <span ref="sizeLabel">100%</span>
+            </div>
+            <div class="tools-button" @click="()=>changeSize(1)">Original size</div>
+        </div>
+        <div class="image-wrapper">
+            <img :src="imagePath" ref="image" />
+        </div>
     </div>
 </template>
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import { FileInfo } from '@/system/filesystem/fileinfo'
 import { checkType } from '@/system/filesystem/mime';
+import { WindowOptions } from '@/components/window/components/window-options';
+import explorerModal from '@/softwares/core/explorer/explorer-modal'
+
 export default Vue.extend({
     data:function(){
         return {
-            imagePath: Object(this.image.data)?.name
+            title:`Image Viewer: (${this.sender.name})`,
+            f_image:this.sender,
+            imagePath: Object(this.sender.data)?.name,
+            windowOptions:new WindowOptions({
+                defaultWidth:640,
+                defaultHeight:480,
+                minWidth:300,
+                minHeight:300,
+                maximizeOnStart:true
+            }),
+            imageStatus:{
+                scale:1
+            }
         }
     },
     props:{
-        image:{
+        sender:{
             type:Object as PropType<FileInfo>,
             required:true,
             validator:function(value){
@@ -23,6 +48,51 @@ export default Vue.extend({
                 return checkType.ifImage(value);
             }
         }
+    },
+    methods:{
+        changeSize:function(scale:number){
+            this.$set(this.$data, "imageStatus", { scale: scale ?? 1});
+        },
+        openImage:function(){
+            explorerModal(this, this.f_image, (file:FileInfo)=>this.f_image = file)
+        }
+    },
+    watch:{
+        imageStatus:function(value){
+            (this.$refs.scaleBar as HTMLInputElement).value = value.scale;
+            (this.$refs.image as HTMLElement).style.transform=`scale(${value.scale})`;
+            (this.$refs.sizeLabel as HTMLElement).innerText=value.scale*100+"%";
+        },
+        f_image:function(value){
+            (this.$refs.image as HTMLImageElement).src=value.data.name;
+            this.changeSize(1);
+        }
     }
 })
 </script>
+<style scoped>
+.viewer-root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.tools {
+    min-width:15rem;
+}
+.tools > div {
+    display: inline-block;
+    min-width:5rem;
+    padding:.4rem .6rem;
+    margin:.4rem .6rem;
+    text-align: center;
+}
+.image-wrapper {
+    overflow:auto;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.tools-button:hover {
+    border:1px solid #666;
+}
+</style>

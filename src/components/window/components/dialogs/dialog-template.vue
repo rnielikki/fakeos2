@@ -36,14 +36,9 @@ export default Vue.extend({
     methods:{
         setAction:function(value:any){
             return ()=>{
-                let targetWnidow = this.$data.f_targetWindow;
-                if(!targetWnidow.$parent && this.$props.callback) {
-                    this.$props.callback(value);
-                }
-                else {
-                    (this as any).setResult(value);
-                }
-                targetWnidow.close()
+                let targetWindow = this.$data.f_targetWindow;
+                (this as any).setResult(value);
+                targetWindow.close()
             };
         }
     }

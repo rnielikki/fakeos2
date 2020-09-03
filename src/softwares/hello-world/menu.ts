@@ -26,7 +26,7 @@ export default function(target:Vue){
                     {
                         label: "versin info",
                         action:()=>{
-                            windowFactory.OpenDialog(target.$data.f_targetWindow, "Version Info", "FakeOS2\nProgram info")
+                            windowFactory.OpenDialog(target, "Version Info", "FakeOS2\nProgram info")
                         }
                     }
                 ]

@@ -1,9 +1,8 @@
 <template>
-    <div v-contextMenu="{ value: value }" class="f_collection-icon"
-    @mousedown="$emit('selected')" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent
-    :class="{ selected:isSelected }">
+    <div v-contextMenu="{ value: value }" :class="['f_collection-icon', { selected:isSelected, small:small }]"
+    @mousedown="$emit('selected')" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent>
         <div class="image-wrapper">
-            <img :src="model.icon" draggable="false" />
+            <img class="icon-image" :src="model.icon" draggable="false" />
             <img :src="shortcutImage" class="shortcut" v-if="model.isShortcut" />
         </div>
         <div class="f_collection-icon-label" :contenteditable="editable" @mousedown.stop ref="label">{{ model.label }}</div>
@@ -29,6 +28,10 @@ export default Vue.extend({
             type:Object as PropType<IconModel>
         },
         isSelected:{
+            type:Boolean,
+            default:false
+        },
+        small:{
             type:Boolean,
             default:false
         }
@@ -77,7 +80,7 @@ export default Vue.extend({
                     || appName !== _fileInfo?.appType?.app) {
                         return;
                     }
-                    WindowFactory.OpenProgram(appName, data);
+                    WindowFactory.OpenProgram(appName, _fileInfo, data);
                     break;
             }
             e.stopPropagation();
@@ -92,10 +95,7 @@ export default Vue.extend({
     display:inline-block;
     text-align:center;
     &-label {
-        overflow-wrap: break-word;
-        width: 75px;
-        height:1rem;
-        overflow-y:hidden;
+        overflow-wrap: anywhere;
         &[contenteditable=true]{
             background-color:$content-background;
             color:$content-foreground;
@@ -103,16 +103,38 @@ export default Vue.extend({
             text-shadow:none;
         }
     }
-    img {
-        width:64px;
-        height:64px;
-    }
     &.selected {
         background-color:$selected-background;
         .f_collection-icon-label {
             color:$selected-foreground;
             height:auto;
         }
+    }
+    &:not(.selected){
+        .f_collection-icon-label{
+            overflow-y:hidden;
+            height:1rem;
+        }
+    }
+}
+.f_collection-icon:not(.small) {
+    width: 5.1em;
+    .icon-image {
+        width:64px;
+        height:64px;
+    }
+    &-label {
+        font-size:1rem;
+    }
+}
+.f_collection-icon.small {
+    width: 3.55rem;
+    .icon-image {
+        width:36px;
+        height:36px;
+    }
+    .f_collection-icon-label {
+        font-size:0.8rem;
     }
 }
 .image-wrapper {

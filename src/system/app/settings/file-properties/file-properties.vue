@@ -65,7 +65,8 @@ export default Vue.extend({
     },
     methods:{
         open:function(fileInfo:IFileInfo){
-            WindowFactory.OpenProgram("core/explorer",{
+            WindowFactory.OpenProgram("core/explorer", undefined,
+            {
                 path:fileInfo.parent,
                 defaultSelection:fileInfo
             })

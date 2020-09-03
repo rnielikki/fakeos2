@@ -6,14 +6,15 @@ import SystemGlobal from '@/system/global'
 import DialogButton, { OKButton } from './components/dialogs/dialog-model'
 import { IMenuComponent } from '../menu/models/menu-model'
 import IconLoader from '../ui-components/icon/icon-loader'
+import { FileInfo } from '@/system/filesystem/fileinfo'
 
 export default {
     //options are propsData
-    OpenProgram:function(fullProgramName:string, options?:object) {
+    OpenProgram:function(fullProgramName:string, sender?:FileInfo, options?:object) {
         let _index = fullProgramName.lastIndexOf('/');
         let programName = (_index < 0)?fullProgramName:fullProgramName.substring(_index+1);
         import(`@/softwares/${fullProgramName}/${programName}.vue`).then((component)=>{
-            let comp = getComponentInPromise(component, options);
+            let comp = getComponentInPromise(component, { ...(sender?{sender:sender}:{}), ...options});
             OpenWindow(comp, programName, IconLoader.getIcon(programName), comp.$data.menu);
         })
         .catch((err)=>{
@@ -22,19 +23,20 @@ export default {
         })
     },
     OpenModal:function(parent:Vue | null, content:Vue, callback?:Function){
-        if(parent === null){
-            throw "Error: Parent cannot be null";
+        if(!parent){
+            throw "Error: Modal needs parent";
         }
+        let parentWindow = parent.$data.f_targetWindow;
         let _window = new Window({
             propsData:{
                 title:content?.$data?.title ?? "Modal Window",
                 hasMinimizer: false,
                 windowOptions: content?.$data?.windowOptions ?? new ModalOptions(),
-                parentElement:parent.$el,
+                parentElement:parentWindow.$el,
                 initToCenter: true
             },
             mixins:[ MixinFactory.CreateModalMixin() ],
-            parent: parent
+            parent: parentWindow
         })
         if(callback) {
             _window.$data.callback = callback;
@@ -43,8 +45,8 @@ export default {
         _window.$slots.default = [(content as any)._vnode];
         Object.assign(content.$data, { f_targetWindow: _window });
         _window.$mount();
-        parent.$props.hasModal = true;
-        parent.$el.appendChild(_window.$el);
+        parentWindow.$props.hasModal = true;
+        parentWindow.$el.appendChild(_window.$el);
     },
     OpenDialog:function(parent:Vue | null, title:string, message:string, buttons:Array<DialogButton> = OKButton, callback?:Function, windowOptions?:IWindowOptions) {
         let _message = new DialogTemplate({
@@ -61,7 +63,7 @@ export default {
             }
         });
         _message.$data.title = title;
-        (parent == null)?OpenWindow(_message, undefined, undefined, undefined, true):this.OpenModal(parent, _message, callback);
+        (!parent)?OpenWindow(_message, undefined, undefined, undefined, true):this.OpenModal(parent, _message, callback);
     },
     OpenSetting:function(settingName:string="main", options?:object){
         import(`@/system/app/settings/${settingName}/${settingName}.vue`).then((comp)=>{

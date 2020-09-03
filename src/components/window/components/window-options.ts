@@ -6,7 +6,8 @@ export default interface IWindowOptions{
     minWidth:number,
     minHeight:number,
     defaultWidth:number,
-    defaultHeight:number
+    defaultHeight:number,
+    maximizeOnStart:boolean
 }
 //If you want to use or edit default main window options, use this
 export class WindowOptions implements IWindowOptions{
@@ -16,6 +17,7 @@ export class WindowOptions implements IWindowOptions{
     minHeight:number = 480;
     defaultWidth:number = 800;
     defaultHeight:number = 600;
+    maximizeOnStart:boolean = false;
     constructor(init?:Partial<WindowOptions>){
         Object.assign(this, init);
     }
@@ -28,6 +30,7 @@ export class ModalOptions implements IWindowOptions{
     minHeight:number = 300;
     defaultWidth:number = 400;
     defaultHeight:number = 300;
+    get maximizeOnStart(){ return false; }
     constructor(init?:Partial<WindowOptions>){
         Object.assign(this, init);
     }

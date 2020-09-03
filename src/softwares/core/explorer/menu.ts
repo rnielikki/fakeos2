@@ -18,7 +18,7 @@ export default function(target:Vue){
         },
         {
             label: "Open in new window",
-            action: ()=> WindowFactory.OpenProgram("core/explorer", {
+            action: ()=> WindowFactory.OpenProgram("core/explorer", undefined, {
                 path:target.$data.f_path
             })
          },

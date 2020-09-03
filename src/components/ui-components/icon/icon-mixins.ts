@@ -4,11 +4,12 @@ import WindowFactory from '../../window/window-factory'
 import IconModel from './models/icon-model'
 import FileType from '@/system/filesystem/file-type'
 import windowManager from '@/system/window-manager'
+import modalContentMixin from '@/components/window/mixins/modal-content-mixin'
 
 export let defaultDirectoryAction = Vue.extend({
     methods:{
         openDirectory:function(dirInfo:DirectoryInfo) {
-            WindowFactory.OpenProgram("core/explorer", { path:dirInfo });
+            WindowFactory.OpenProgram("core/explorer", undefined, { path:dirInfo });
         }
     }
 })
@@ -16,6 +17,7 @@ export let defaultDirectoryAction = Vue.extend({
 export let defaultFileAction = Vue.extend({
     methods:{
         openFile:function(fileInfo:FileInfo) {
+            if((this as any).isModal) return;
             let data:object | null = null;
             let appName:string;
             if(fileInfo.appType?.typeName !== "application/vue"){
@@ -25,7 +27,7 @@ export let defaultFileAction = Vue.extend({
             else {
                 appName = Object(fileInfo.data).app;
             }
-            WindowFactory.OpenProgram(appName, data ?? {})
+            WindowFactory.OpenProgram(appName, fileInfo, data ?? {})
         }
     }
 })
@@ -36,6 +38,17 @@ export let openDirectoryOnExplorer = Vue.extend({
             Vue.set(this.$data, "f_path", dirInfo);
             windowManager.select(this.$data.f_targetWindow)
          }
+    }
+})
+
+export let passFileFromExplorer = Vue.extend({
+    mixins:[ modalContentMixin ],
+    methods:{
+        openFile:function(fileInfo:FileInfo){
+            let targetWindow = this.$data.f_targetWindow;
+            (this as any).setResult(fileInfo);
+            targetWindow.close()
+        }
     }
 })
 
@@ -51,6 +64,7 @@ let openAny = Vue.extend({
 export let backgroundIconSet = Vue.extend({
     mixins:[ defaultDirectoryAction, defaultFileAction, openAny ],
 })
+
 export let explorerIconSet = Vue.extend({
     mixins:[ openDirectoryOnExplorer, defaultFileAction, openAny ],
     methods:{

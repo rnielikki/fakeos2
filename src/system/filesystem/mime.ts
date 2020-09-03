@@ -84,6 +84,6 @@ export let checkType = {
         return parseType(file.appType.typeName) === "image";
     },
     ifSound:function(file:FileInfo){
-        return parseType(file.appType.typeName) === "image";
+        return parseType(file.appType.typeName) === "audio";
     }
 }
