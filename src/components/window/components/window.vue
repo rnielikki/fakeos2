@@ -5,7 +5,9 @@
             :data-movable="windowOptions.movable"
             :style="{ zIndex: zIndex }"
             >
-            <resizer v-if="windowOptions.resizable" v-show="!maximized" :minWidth="windowOptions.minWidth" :minHeight="windowOptions.minHeight" ref="resizer" :target="currentElement" />
+            <resizer v-if="windowOptions.resizable && modal===null"
+            v-show="!maximized" :minWidth="windowOptions.minWidth"
+            :minHeight="windowOptions.minHeight" ref="resizer" :target="currentElement" />
             <Window-title
                 v-if="title !== null"
                 :targetWindow="this"
@@ -226,6 +228,8 @@ export default class Window extends Vue {}
             text-align:initial;
             flex-grow: 1;
             overflow:auto;
+            display:flex;
+            flex-direction: column;
         }
         &:not(.selected) > .window-content .f_interactive div{
             pointer-events: auto;

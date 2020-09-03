@@ -15,7 +15,7 @@
 </template>
 <script lang="ts">
 import Vue, { PropType } from 'vue'
-import { FileInfo } from '@/system/filesystem/fileinfo'
+import IFileInfo, { FileInfo } from '@/system/filesystem/fileinfo'
 import { checkType } from '@/system/filesystem/mime';
 import { WindowOptions } from '@/components/window/components/window-options';
 import explorerModal from '@/softwares/core/explorer/explorer-modal'
@@ -54,7 +54,7 @@ export default Vue.extend({
             this.$set(this.$data, "imageStatus", { scale: scale ?? 1});
         },
         openImage:function(){
-            explorerModal(this, this.f_image, (file:FileInfo)=>this.f_image = file)
+            explorerModal.open(this, this.f_image, (file:FileInfo)=>this.f_image = file, checkType.ifImage)
         }
     },
     watch:{

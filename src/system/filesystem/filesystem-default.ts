@@ -1,8 +1,11 @@
-export default {
+let DefaultFileSystem = {
     "User":{
         "Images": toFileSystem(require.context("@/assets/images", true, /\.(jpe?g|png|gif|bmp)$/i).keys(), (name)=>"{\"name\":\""+require("@/assets/images/"+name)+"\"}"),
         "Musics": toFileSystem(require.context("@/assets/musics", true, /\.(mp3|ogg|wav)$/i).keys(), (name)=>"{\"name\":\""+require("@/assets/musics/"+name)+"\"}"),
-        "Documents": {},
+        "Documents": {
+            "DefaultText.txt": "{ \"content\": \"ASDF\" }",
+            "Anothertext.txt": "{ \"content\": \"--- FAKEOS 2 ---\\nThis is another text text\" }"
+        },
         "Desktop": {}
     },
     "Program":toFileSystem(require.context("@/softwares/", true, /^((?!core).)*\.vue$/).keys().filter(value=>isMainExecutable(value)),
@@ -46,3 +49,5 @@ function toFileSystem(input:Array<string>, contentResolver:(path:string)=>string
         }
     }
 }
+
+export default DefaultFileSystem;

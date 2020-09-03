@@ -5,6 +5,7 @@ import IconModel from './models/icon-model'
 import FileType from '@/system/filesystem/file-type'
 import windowManager from '@/system/window-manager'
 import modalContentMixin from '@/components/window/mixins/modal-content-mixin'
+import filesystemEditor from '@/system/filesystem/filesystem-editor'
 
 export let defaultDirectoryAction = Vue.extend({
     methods:{
@@ -47,10 +48,27 @@ export let passFileFromExplorer = Vue.extend({
         openFile:function(fileInfo:FileInfo){
             let targetWindow = this.$data.f_targetWindow;
             (this as any).setResult(fileInfo);
-            targetWindow.close()
+            targetWindow.close();
         }
     }
 })
+
+export let saveOnExplorer = Vue.extend({
+    mixins:[ modalContentMixin ],
+    data:function(){
+        return { name: "anything"}
+    },
+    methods:{
+        openFile:function(fileInfo:FileInfo){
+        },
+        saveFile:function(parent:DirectoryInfo, data:any, extension:string=""){
+            let nameText = (this.$refs.name as HTMLInputElement).value;
+            let name = nameText + extension;
+            filesystemEditor.add(new FileInfo(name, parent, data), parent);
+        }
+    }
+})
+
 
 let openAny = Vue.extend({
     methods:{

@@ -22,6 +22,7 @@ import DropTarget from '@/system/core/draggable/drop-target.vue'
 import IFileInfo, { FileInfo, DirectoryInfo } from '@/system/filesystem/fileinfo'
 import windowFactory from '../../window/window-factory'
 import IconGlobal from './models/icon-global'
+import FileType from '@/system/filesystem/file-type'
 
 export default Vue.extend({
     name:"IconCollection",
@@ -54,6 +55,10 @@ export default Vue.extend({
         small:{
             type:Boolean,
             default:false
+        },
+        filter:{
+            type:Function,
+            required:false
         }
     },
     computed:{
@@ -83,7 +88,11 @@ export default Vue.extend({
             this.select(-1);
         },
         generateIcons: function(f_path:DirectoryInfo) {
-            this.icons = f_path.files.map(file => new IconModel(file))
+            let files = f_path.files;
+            if(this.filter){
+                files = files.filter(file=>(file.fileType == FileType.Directory) || this.filter(file)===true)
+            }
+            this.icons = files.map(file => new IconModel(file))
         },
         dropToCollection:function(){
             IconGlobal.dropTarget = this.f_path

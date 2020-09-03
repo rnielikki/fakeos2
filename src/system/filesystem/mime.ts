@@ -61,6 +61,11 @@ export default {
             typeName:"image/svg",
             app: "core/image-viewer",
             icon: require("@/softwares/core/player/music-file.png")
+        },
+        ".txt":{
+            typeName:"text/plain",
+            app:"core/text-editor",
+            icon: require("@/softwares/core/player/music-file.png")
         }
     }
 }
@@ -85,5 +90,8 @@ export let checkType = {
     },
     ifSound:function(file:FileInfo){
         return parseType(file.appType.typeName) === "audio";
+    },
+    ifText:function(file:FileInfo){
+        return parseType(file.appType.typeName) === "text";
     }
 }

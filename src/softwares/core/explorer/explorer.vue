@@ -1,13 +1,19 @@
 <template>
     <div :class="['container', 'f_interactive', {'small':isModal}]">
-        <div class="index-wrapper f_non-interactive isModal">
+        <div class="index-wrapper f_non-interactive">
             <div class="index" ref="label" />
             <img :src="require('./up.png')" @click="()=>goToParent(f_path.parent)" />
         </div>
+
         <icon-collection :path="f_path" class="content f_interactive"
         :defaultSelection="defaultSelection"
         @open-icon="(item)=>openIcon(item)" ref="collection"
-        v-contextMenu="{ value: value }" :small="isModal" />
+        v-contextMenu="{ value: value }" :small="isModal" :filter="filter" />
+
+        <div class="index-wrapper f_non-interactive" v-if="isModal && isSave">
+            <input type="text" ref="name" class="input-text" />
+            <ui-button text="Save" :clicked="()=>{ setResult({ ok:true, dir:f_path }); $data.f_targetWindow.close() }" />
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -21,9 +27,10 @@ import ContextMenu from '@/components/menu/contextmenu'
 import explorerMenu from './menu'
 import Root from '@/system/filesystem/filesystem'
 import { WindowOptions } from '@/components/window/components/window-options'
+import UiButton from '@/components/ui-components/button.vue'
 
 export default Vue.extend({
-    components:{ IconCollection },
+    components:{ IconCollection, UiButton },
     directives:{ ContextMenu },
     data:function(){
         let winOptions = (this.isModal)?new WindowOptions({
@@ -56,6 +63,14 @@ export default Vue.extend({
         isModal:{
             type:Boolean,
             default:false
+        },
+        isSave:{
+            type:Boolean,
+            default:false
+        },
+        filter:{
+            type:Function,
+            required:false
         }
     },
     mounted:function(){
@@ -126,5 +141,9 @@ export default Vue.extend({
 .index, .content {
     background-color:$content-background;
     border:1px solid $window-button-border;
+}
+.input-text {
+    height: 1.75rem;
+    margin-right: .6rem;
 }
 </style>
