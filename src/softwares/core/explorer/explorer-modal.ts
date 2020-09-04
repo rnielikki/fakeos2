@@ -36,7 +36,6 @@ export default {
             mixins:[ saveOnExplorer ]
         });
         windowFactory.OpenModal(windowParent, content, (result:any)=>{
-            console.log(result)
             if(result?.ok===true){
                 let savedFile = (content as any).saveFile(result.dir, file.data, extension);
                 if(callback) callback({ ...result, file:savedFile });

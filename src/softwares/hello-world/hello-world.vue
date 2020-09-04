@@ -1,7 +1,15 @@
 <template>
-    <div>
-        <h1 @click="GetSomeMessage">Click to change the result!</h1>
-        <h2 ref="wtf">{{ testText }}</h2>
+    <div class="root">
+        <h1 @click="GetSomeMessage">Welcome to the FakeOS 2 Pre 1!</h1>
+        <div class="content">
+            <p>FakeOS 2 is very weird Vue-kernel-based Operating System!</p>
+            <p>This version is not stable, so you may not like it...</p>
+            <p>But anyway, enjoy!</p>
+            <p>Oh, you can contribute, too! See more on help settings! :)</p>
+            <br><br>
+            <p>Sincerely,</p>
+            <p>Mielikki (@rnielikki on GitHub)</p>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -18,37 +26,19 @@ export default Vue.extend({
             menu:AppMenu(this),
             testText:"nothing---"
         }
-    },
-    methods:{
-        GetSomeMessage:function(){
-            WindowFactory.OpenDialog(this, "animal question?", "Which type are you?", [
-                {
-                    text:"Moo",
-                    value:"Cow"
-                },
-                {
-                    text:"Meow",
-                    value:"Cat"
-                },
-                {
-                    text:"Hau",
-                    value:"Dog"
-                },
-                {
-                    text:"Quack",
-                    value:"Duck"
-                }
-            ], this.setText)
-        },
-        setText:function(result:string){
-            (this.$refs.wtf as HTMLElement).innerText = result
-        }
     }
 })
 </script>
 <style scoped>
+.root {
+    margin:1.5rem 2.7rem;
+    text-align:center;
+}
 h1 {
     font-weight: normal;
     font-family: 'Segoe UI';
+}
+.content{
+    font-size:1.27rem;
 }
 </style>

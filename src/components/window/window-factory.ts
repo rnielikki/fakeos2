@@ -45,7 +45,6 @@ export default {
         _window.$slots.default = [(content as any)._vnode];
         Object.assign(content.$data, { f_targetWindow: _window });
         _window.$mount();
-        console.log("_")
         parentWindow.$el.appendChild(_window.$el);
     },
     OpenDialog:function(parent:Vue | null, title:string, message:string, buttons:Array<DialogButton> = OKButton, callback?:Function, windowOptions?:IWindowOptions) {
