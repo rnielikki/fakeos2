@@ -15,7 +15,7 @@ export default {
         let programName = (_index < 0)?fullProgramName:fullProgramName.substring(_index+1);
         import(`@/softwares/${fullProgramName}/${programName}.vue`).then((component)=>{
             let comp = getComponentInPromise(component, { ...(sender?{sender:sender}:{}), ...options});
-            OpenWindow(comp, programName, IconLoader.getIcon(programName), comp.$data.menu);
+            OpenWindow(comp, programName, IconLoader.getIcon(fullProgramName), comp.$data.menu);
         })
         .catch((err)=>{
             this.OpenDialog(null, "Load Failed", `Couldn't find the ${fullProgramName}, or the program is corrupted?`)

@@ -26,6 +26,6 @@ export default class IconModel {
         if(fileInfo.fileType == FileType.Shortcut) {
             return this.getIcon((fileInfo as ShortcutInfo).originalFile);
         }
-        return (fileInfo.fileType == FileType.Directory)?require("@/softwares/core/explorer/icon.png"):(fileInfo as FileInfo).appType?.icon
+        return (fileInfo.fileType == FileType.Directory)?require("@/softwares/core/explorer/folder.png"):(fileInfo as FileInfo).appType?.icon
     }
 }

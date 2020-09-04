@@ -27,11 +27,8 @@ Currently you can contribute by:
   * **CSS renaming**: If css is not scoped, it should have prefix. We decided it to `f_`. Small fix, big help!
 * **Features**: the features below will be added
   * Not yet started
-    * Default apps
     * Calendar
-    * Background iamge change
   * Currently doing:
-    * Default settings
   * Done
     * Default clock observer
     * Popup (for example, status bar icons - menu uses popup too)
@@ -42,6 +39,9 @@ Currently you can contribute by:
       * Copying file
       * Moving file
       * Deleting file
+    * Default settings
+    * Background iamge change
+    * Default apps
 * **Bugs**: (Can be added:)
   * Currently a bug was found that callback doesn't update the binded component - even the watcher works, but force update doesn't work (You can see more about this on `softwares/hello-world/hello-world.vue`) and `src/components/window/components/dialog-template.vue`
     * So, some of Vue watching/updating works, but forceUpdate/updating DOM currently not working! (When use callback) For example, `components/statusbar/clcok-date-popup.vue`

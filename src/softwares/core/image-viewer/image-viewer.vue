@@ -57,7 +57,7 @@ export default Vue.extend({
         openImage:function(){
             explorerModal.open(this, this.f_image, (file:FileInfo)=>{
                 this.f_image = file;
-                //windowFactory.OpenProgram("core/image-viewer", file)
+                this.$data.f_targetWindow.f_title = `Image Viewer: (${file.name})`
             }, checkType.ifImage)
         }
     },

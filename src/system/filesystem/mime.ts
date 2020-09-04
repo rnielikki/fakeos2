@@ -40,32 +40,32 @@ export default {
         ".jpg":{
             typeName:"image/jpeg",
             app: "core/image-viewer",
-            icon: require("@/softwares/core/player/music-file.png")
+            icon: require("@/softwares/core/image-viewer/image-file.png")
         },
         ".jpeg":{
             typeName:"image/jpeg",
             app: "core/image-viewer",
-            icon: require("@/softwares/core/player/music-file.png")
+            icon: require("@/softwares/core/image-viewer/image-file.png")
         },
         ".png":{
             typeName:"image/png",
             app: "core/image-viewer",
-            icon: require("@/softwares/core/player/music-file.png")
+            icon: require("@/softwares/core/image-viewer/image-file.png")
         },
         ".gif":{
             typeName:"image/gif",
             app: "core/image-viewer",
-            icon: require("@/softwares/core/player/music-file.png")
+            icon: require("@/softwares/core/image-viewer/image-file.png")
         },
         ".svg":{
             typeName:"image/svg",
             app: "core/image-viewer",
-            icon: require("@/softwares/core/player/music-file.png")
+            icon: require("@/softwares/core/image-viewer/image-file.png")
         },
         ".txt":{
             typeName:"text/plain",
             app:"core/text-editor",
-            icon: require("@/softwares/core/player/music-file.png")
+            icon: require("@/softwares/core/text-editor/text-file.png")
         }
     }
 }
