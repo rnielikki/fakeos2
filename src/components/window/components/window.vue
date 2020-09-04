@@ -11,13 +11,13 @@
             <Window-title
                 v-if="title !== null"
                 :targetWindow="this"
-                :title="title"
+                :title="f_title"
                 :hasMinimizer="hasMinimizer"
                 :hasMaximizer="windowOptions.resizable"
                 :iconPath="iconPath"
                 v-contextMenu="{ value: rightClickMenu }"
             />
-            <div class="window-content" @contextmenu.stop>
+            <div class="window-content" @contextmenu.stop v-once>
                 <WindowMenu v-if="windowMenu" :menu="windowMenu" />
                 <slot></slot>
             </div>
@@ -55,6 +55,7 @@ import ContextMenu from '../../menu/contextmenu'
                 positionState:null,
                 zIndex:0,
                 selected:false,
+                f_title:(this as any).title
             }
         },
         props:{

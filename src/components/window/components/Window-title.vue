@@ -31,7 +31,7 @@ export default Vue.extend({
     },
     methods:{
         close(e:Event){
-            this.targetWindow.$destroy();
+            (this.targetWindow as any).close();
         }
     }
 })

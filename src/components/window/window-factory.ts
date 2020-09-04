@@ -45,7 +45,7 @@ export default {
         _window.$slots.default = [(content as any)._vnode];
         Object.assign(content.$data, { f_targetWindow: _window });
         _window.$mount();
-        parentWindow.$props.hasModal = true;
+        console.log("_")
         parentWindow.$el.appendChild(_window.$el);
     },
     OpenDialog:function(parent:Vue | null, title:string, message:string, buttons:Array<DialogButton> = OKButton, callback?:Function, windowOptions?:IWindowOptions) {
@@ -87,7 +87,7 @@ function OpenWindow(content:Vue, appName?:string, iconPath?:string, menu?:{conte
             windowMenu:menu?.content ?? [],
             rightClickMenu: menu?.rightClick ?? undefined
         },
-        mixins:[ MixinFactory.CreateWindowMixin() ]
+        mixins: MixinFactory.CreateWindowMixin(content.$data?.f_confirmSaving)
     });
     if(!_window.$props.rightClickMenu){
         _window.$props.rightClickMenu=[];

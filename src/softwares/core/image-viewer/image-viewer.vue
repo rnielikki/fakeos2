@@ -19,6 +19,7 @@ import IFileInfo, { FileInfo } from '@/system/filesystem/fileinfo'
 import { checkType } from '@/system/filesystem/mime';
 import { WindowOptions } from '@/components/window/components/window-options';
 import explorerModal from '@/softwares/core/explorer/explorer-modal'
+import windowFactory from '@/components/window/window-factory';
 
 export default Vue.extend({
     data:function(){
@@ -54,7 +55,10 @@ export default Vue.extend({
             this.$set(this.$data, "imageStatus", { scale: scale ?? 1});
         },
         openImage:function(){
-            explorerModal.open(this, this.f_image, (file:FileInfo)=>this.f_image = file, checkType.ifImage)
+            explorerModal.open(this, this.f_image, (file:FileInfo)=>{
+                this.f_image = file;
+                //windowFactory.OpenProgram("core/image-viewer", file)
+            }, checkType.ifImage)
         }
     },
     watch:{
@@ -65,6 +69,7 @@ export default Vue.extend({
         },
         f_image:function(value){
             (this.$refs.image as HTMLImageElement).src=value.data.name;
+            //this.imagePath = Object(value.data)?.name
             this.changeSize(1);
         }
     }

@@ -6,6 +6,7 @@ import FileType from '@/system/filesystem/file-type'
 import windowManager from '@/system/window-manager'
 import modalContentMixin from '@/components/window/mixins/modal-content-mixin'
 import filesystemEditor from '@/system/filesystem/filesystem-editor'
+import FileEditResult, { showDialogIfError } from '@/system/filesystem/file-edit-result'
 
 export let defaultDirectoryAction = Vue.extend({
     methods:{
@@ -64,7 +65,14 @@ export let saveOnExplorer = Vue.extend({
         saveFile:function(parent:DirectoryInfo, data:any, extension:string=""){
             let nameText = (this.$refs.name as HTMLInputElement).value;
             let name = nameText + extension;
-            filesystemEditor.add(new FileInfo(name, parent, data), parent);
+            let addResult = filesystemEditor.add(new FileInfo(name, parent, data), parent)
+            if(addResult == FileEditResult.Success) {
+                return parent.getFile(name)
+            }
+            else{
+                showDialogIfError(addResult, name);
+                return null;
+            }
         }
     }
 })

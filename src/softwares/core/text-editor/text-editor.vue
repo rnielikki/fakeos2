@@ -1,6 +1,6 @@
 <template>
     <div class="viewer-root">
-        <div class="editor" contenteditable="true" ref="content">{{ f_file.data.content }}</div>
+        <div class="editor" contenteditable="true" ref="content" @input="dataChange">{{ sender.data.content }}</div>
     </div>
 </template>
 <script lang="ts">
@@ -10,13 +10,20 @@ import { checkType } from '@/system/filesystem/mime';
 import { WindowOptions } from '@/components/window/components/window-options';
 import explorerModal from '@/softwares/core/explorer/explorer-modal'
 import AppMenu from './menu'
+import windowFactory from '@/components/window/window-factory';
+import { OkCancelButton } from '@/components/window/components/dialogs/dialog-model';
 
 export default Vue.extend({
     data:function(){
         return {
             title:`Text Editor - ${this.sender.name}`,
             menu:AppMenu(this),
-            f_file:this.sender
+            f_file:this.sender,
+            f_confirmSaving:{
+                title:"Save before exit",
+                content:"Do you want to leave? really?",
+                fileChanged:false
+            },
         }
     },
     props:{
@@ -32,21 +39,29 @@ export default Vue.extend({
     },
     methods:{
         openFile:function(){
-            explorerModal.open(this, this.f_file, (file:FileInfo)=>this.f_file = file, checkType.ifText)
+            explorerModal.open(this, this.$data.f_file, (file:FileInfo)=>{
+                windowFactory.OpenProgram("core/text-editor", file);
+            }, checkType.ifText)
         },
         saveFile:function(){
-            Object(this.f_file!.data).content = (this.$refs.content as HTMLElement).innerText;
-            explorerModal.save(this, this.f_file);
+            Object(this.$data.f_file!.data).content = (this.$refs.content as HTMLElement).innerText;
+            explorerModal.save(this, this.$data.f_file,(result:object)=>{
+                let ok = Object(result).ok;
+                if(ok){
+                    this.$data.f_targetWindow.f_title = `Text Editor - ${Object(result).file.name}`
+                }
+                this.f_confirmSaving.fileChanged = !ok
+            });
         },
-        setContent(value:string){
-            //@ts-ignore
-            this.$refs.content.innerText = value;
+        dataChange:function(e:Event){
+            this.$data.f_confirmSaving.fileChanged = true;
         }
     },
-    watch:{
-        f_file:function(file){
-            this.setContent(file.data.content);
-        }
+    beforeDestroy:function(){
+        windowFactory.OpenDialog(this, "Data not saved", "Do you want to leave without saving?", OkCancelButton, (result:boolean)=>{
+            if(result){ this.$data.f_targetWindow.close(); }
+        })
+        return;
     }
 })
 </script>

@@ -20,7 +20,7 @@ export default {
             },
             mixins:[ passFileFromExplorer ]
         });
-        windowFactory.OpenModal(windowParent, content, callback)
+        windowFactory.OpenModal(windowParent, content, (result:IFileInfo)=>{ if(result) callback(result) })
     },
     save:function(windowParent:Vue, file:FileInfo, callback?:Function, filter?:Function){
         if(filter && !filter(file)) return;
@@ -36,9 +36,10 @@ export default {
             mixins:[ saveOnExplorer ]
         });
         windowFactory.OpenModal(windowParent, content, (result:any)=>{
+            console.log(result)
             if(result?.ok===true){
-                (content as any).saveFile(result.dir, file.data, extension);
-                if(callback) callback();
+                let savedFile = (content as any).saveFile(result.dir, file.data, extension);
+                if(callback) callback({ ...result, file:savedFile });
             }
         })
     }
