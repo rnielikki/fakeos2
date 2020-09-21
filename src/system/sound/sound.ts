@@ -7,17 +7,20 @@ export default class Sound{
     private _paused:boolean = false;
     private _volume:number = 1;
     private _gainNode:GainNode | null = null;
+    private _isStarted = false;
     public get volume(){ return this._volume; }
-    constructor(path:string, autoPlay:boolean = true, defaultVolume:number = 1){
+    public get current(){
+        return this.context.currentTime
+    }
+    private _buffer:Uint8Array| undefined = undefined;
+    public get time(){
+        return this._audioSource.buffer?.duration;
+    }
+    constructor(path:string, autoPlay:boolean = true, repeat:boolean = false, defaultVolume:number = 1){
         this._audioSource = this.context.createBufferSource();
         this._soundPromise = fetch(path).then(res=>res.arrayBuffer()).then(buffer=>{
-            this.context.decodeAudioData(buffer, (buff)=>{
-                if(buff){
-                    this._audioSource.buffer = buff;
-                    this._audioSource.connect(this.context.destination)
-                    this._audioSource.addEventListener("ended", this.dispose)
-                }
-            })
+            this._buffer = new Uint8Array(buffer).slice(0);
+            this.decode(buffer, repeat)
         })
         .catch((err)=>{
             console.warn("ERROR while loading and initializing the sound.")
@@ -28,22 +31,37 @@ export default class Sound{
             this.setVolume(defaultVolume);
             SoundManager.MasterChangeListener.Add(this.updateVolume);
             if(autoPlay) {
-                this.play();
+                this.start();
             }
         });
     }
-    async start(point:number=0){
+    decode(buffer:ArrayBuffer, repeat:boolean){
+        this.context.decodeAudioData(buffer, (buff)=>{
+            if(buff){
+                this._audioSource.buffer = buff;
+                this._audioSource.connect(this.context.destination)
+                this.loop(repeat);
+                if(!repeat){
+                    this._audioSource.addEventListener("ended", ()=>this.stop(false))
+                }
+            }
+        })
+    }
+    async start(){
+        if(this._isStarted) return;
         await this._soundPromise;
-        this._audioSource.start(point);
+        this._audioSource.start(0);
+        this._isStarted = true;
     }
     async play(){
-        if(this._paused) {
+        await this._soundPromise;
+        if(!this._isStarted){
+            this.start();
+        }
+        else{
             this.context.resume();
-            this._paused = false;
         }
-        else {
-            await this.start(0);
-        }
+        this._paused = false;
     }
     async pause(){
         if(this._paused) return;
@@ -51,9 +69,22 @@ export default class Sound{
         this.context.suspend();
         this._paused = true;
     }
-    async stop(){
+    async stop(end:boolean = true){
         await this._soundPromise;
-        this._audioSource.stop();
+        if(this._isStarted){
+            this._audioSource.stop(0);
+        }
+        if(!end){
+            this._audioSource = this.context.createBufferSource();
+            this._isStarted = false;
+            this.decode(this._buffer!.slice(0).buffer, false);
+        }
+        else{
+            this.dispose();
+        }
+    }
+    loop(setLoop:boolean){
+        this._audioSource.loop = setLoop
     }
     //volume range is 0-1
     //the actual gain will be -1(mute) - 0 (full)

@@ -140,8 +140,10 @@ import ContextMenu from '../../menu/contextmenu'
                             _width = (_width < 0)?thisBoundingbox.width:_width;
                             _height = (_height < 0)?thisBoundingbox.height:_height;
                         }
-                        el.style.left = (parentBoundingBox.width - _width)/2 + "px"
-                        el.style.top = (parentBoundingBox.height - _height)/2 + "px"
+                        let resultWidth = (parentBoundingBox.width - _width);
+                        let resultHeight = (parentBoundingBox.height - _height);
+                        el.style.left = ((resultWidth > 0)? resultWidth/2 : 0).toString() + "px"
+                        el.style.top = ((resultHeight > 0)? resultHeight/2 : 0).toString() + "px"
                     }
                     else {
                         el.style.left = "0px"

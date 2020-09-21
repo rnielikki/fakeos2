@@ -61,7 +61,6 @@ export default Vue.extend({
         },
         f_image:function(value){
             (this.$refs.image as HTMLImageElement).src=value.data.name;
-            //this.imagePath = Object(value.data)?.name
             this.changeSize(1);
         }
     }
