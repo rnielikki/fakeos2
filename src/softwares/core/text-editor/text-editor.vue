@@ -1,6 +1,6 @@
 <template>
     <div class="viewer-root">
-        <div class="editor" contenteditable="true" ref="content" @input="dataChange">{{ sender.data.content }}</div>
+        <div class="editor" contenteditable="true" ref="content" @input="dataChange">{{ content }}</div>
     </div>
 </template>
 <script lang="ts">
@@ -12,13 +12,16 @@ import explorerModal from '@/softwares/core/explorer/explorer-modal'
 import AppMenu from './menu'
 import windowFactory from '@/components/window/window-factory';
 import { OkCancelButton } from '@/components/window/components/dialogs/dialog-model';
+import AppValidator from '@/system/app/app-validator'
+import GlobalPath from '@/system/filesystem/globalPath';
 
 export default Vue.extend({
+    mixins:[ AppValidator(checkType.ifText) ],
     data:function(){
         return {
-            title:`Text Editor - ${this.sender.name}`,
+            title:`Text Editor - ${this.$props?.sender?.name ?? "new file"}`,
             menu:AppMenu(this),
-            f_file:this.sender,
+            f_file:this.$props?.sender,
             f_confirmSaving:{
                 title:"Save before exit",
                 content:"Do you want to leave? really?",
@@ -26,26 +29,16 @@ export default Vue.extend({
             },
         }
     },
-    props:{
-        sender:{
-            type:Object as PropType<FileInfo>,
-            required:true,
-            validator:function(value){
-                if(value.disposed) return false;
-                let mimeName = value.appType.typeName
-                return checkType.ifText(value);
-            }
-        }
-    },
     methods:{
         openFile:function(){
-            explorerModal.open(this, this.$data.f_file, (file:FileInfo)=>{
+            explorerModal.open(this, this.f_file ?? GlobalPath.Document, (file:FileInfo)=>{
                 windowFactory.OpenProgram("core/text-editor", file);
             }, checkType.ifText)
         },
         saveFile:function(){
-            Object(this.$data.f_file!.data).content = (this.$refs.content as HTMLElement).innerText;
-            explorerModal.save(this, this.$data.f_file,(result:object)=>{
+            let file = this.$data.f_file ?? new FileInfo(".txt", GlobalPath.Document, {content:""});
+            file.data.content = (this.$refs.content as HTMLElement).innerText;
+            explorerModal.save(this, file,(result:object)=>{
                 let ok = Object(result).ok;
                 if(ok){
                     this.$data.f_targetWindow.f_title = `Text Editor - ${Object(result).file.name}`
@@ -57,11 +50,10 @@ export default Vue.extend({
             this.$data.f_confirmSaving.fileChanged = true;
         }
     },
-    beforeDestroy:function(){
-        windowFactory.OpenDialog(this, "Data not saved", "Do you want to leave without saving?", OkCancelButton, (result:boolean)=>{
-            if(result){ this.$data.f_targetWindow.close(); }
-        })
-        return;
+    computed:{
+        content:function(){
+            return this.$props.sender?.data?.content ?? "";
+        }
     }
 })
 </script>

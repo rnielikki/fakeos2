@@ -20,13 +20,16 @@ import { checkType } from '@/system/filesystem/mime';
 import { WindowOptions } from '@/components/window/components/window-options';
 import explorerModal from '@/softwares/core/explorer/explorer-modal'
 import windowFactory from '@/components/window/window-factory';
+import AppValidator from '@/system/app/app-validator'
+import GlobalPath from '@/system/filesystem/globalPath';
 
 export default Vue.extend({
+    mixins:[ AppValidator(checkType.ifImage) ],
     data:function(){
         return {
-            title:`Image Viewer: (${this.sender.name})`,
-            f_image:this.sender,
-            imagePath: Object(this.sender.data)?.name,
+            title:`Image Viewer: (${this.$props.sender?.name ?? ""})`,
+            f_image:this.$props.sender,
+            imagePath: Object(this.$props.sender?.data)?.name,
             windowOptions:new WindowOptions({
                 defaultWidth:640,
                 defaultHeight:480,
@@ -39,25 +42,14 @@ export default Vue.extend({
             }
         }
     },
-    props:{
-        sender:{
-            type:Object as PropType<FileInfo>,
-            required:true,
-            validator:function(value){
-                if(value.disposed) return false;
-                let mimeName = value.appType.typeName
-                return checkType.ifImage(value);
-            }
-        }
-    },
     methods:{
         changeSize:function(scale:number){
             this.$set(this.$data, "imageStatus", { scale: scale ?? 1});
         },
         openImage:function(){
-            explorerModal.open(this, this.f_image, (file:FileInfo)=>{
+            explorerModal.open(this, this.f_image ?? GlobalPath.Images, (file:FileInfo)=>{
                 this.f_image = file;
-                this.$data.f_targetWindow.f_title = `Image Viewer: (${file.name})`
+                this.$data.f_targetWindow.f_title = `Image Viewer: (${file?.name ?? ""})`
             }, checkType.ifImage)
         }
     },

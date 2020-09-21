@@ -4,12 +4,16 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import Vue, { PropType } from 'vue'
 import { WindowOptions } from '@/components/window/components/window-options'
 import Sound from '@/system/sound/sound'
+import { FileInfo } from '@/system/filesystem/fileinfo'
+import { checkType } from '@/system/filesystem/mime'
+import AppValidator from '@/system/app/app-validator'
 
 export default Vue.extend({
     name:"Player",
+    mixins:[ AppValidator(checkType.ifSound) ],
     data:function(){
         return {
             title:"Player 1",
@@ -25,7 +29,9 @@ export default Vue.extend({
         }
     },
     mounted:function() {
-        this.$data.soundRes = new Sound(require("@/assets/musics/sample.mp3"))
+        let realName = Object(this.$props.sender?.data)?.name;
+        if(!realName) return;
+        this.$data.soundRes = new Sound(realName)
     },
     beforeDestroy:function(){
         this.$data.soundRes?.stop()

@@ -41,9 +41,9 @@ export default {
         if(callback) {
             _window.$data.callback = callback;
         }
+        Object.assign(content.$data, { f_targetWindow: _window });
         content.$mount()
         _window.$slots.default = [(content as any)._vnode];
-        Object.assign(content.$data, { f_targetWindow: _window });
         _window.$mount();
         parentWindow.$el.appendChild(_window.$el);
     },
@@ -95,10 +95,10 @@ function OpenWindow(content:Vue, appName?:string, iconPath?:string, menu?:{conte
         _window.$props.rightClickMenu.push({ label: "--"})
     }
     _window.$props.rightClickMenu = _window.$props.rightClickMenu.concat(createRightClickMenu(_window));
+    Object.assign(content.$data, { f_targetWindow: _window });
     content.$mount()
     _window.$slots.default = [ (content as any)._vnode ];
     _window.$mount();
-    Object.assign(content.$data, { f_targetWindow: _window });
     SystemGlobal.background!.appendChild(_window.$el)
 }
 

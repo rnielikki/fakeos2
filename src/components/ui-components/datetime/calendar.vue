@@ -48,7 +48,6 @@ export default Vue.extend({
     methods:{
         changeMonth:function(change:number){
             Vue.set(this.$data,"f_date",new Date(this.f_date.setMonth(this.month-1+change)));
-            console.log(this.f_date)
         }
     }
 })

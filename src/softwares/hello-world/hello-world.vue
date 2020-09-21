@@ -1,6 +1,6 @@
 <template>
     <div class="root">
-        <h1 @click="GetSomeMessage">Welcome to the FakeOS 2 Pre 1!</h1>
+        <h1>Welcome to the FakeOS 2 Pre 1!</h1>
         <div class="content">
             <p>FakeOS 2 is very weird Vue-kernel-based Operating System!</p>
             <p>This version is not stable, so you may not like it...</p>
