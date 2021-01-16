@@ -5,10 +5,10 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import ResizerCollection from './resizer';
 
-export default Vue.extend({
+export default defineComponent({
     name: 'Resizer',
     data:function(){
         return {
@@ -32,6 +32,7 @@ export default Vue.extend({
     watch:{
         target:function(el:Element){
             if(this.$data.ifInit == false) {
+                //@ts-ignore
                 new ResizerCollection(this, this.$props.target, this.minWidth, this.minHeight);
                 this.$data.ifInit = true;
             }

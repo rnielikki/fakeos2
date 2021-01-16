@@ -3,6 +3,7 @@ import PopupInfo from '../popups/popup-info';
 import { IMenuComponent } from './models/menu-model'
 import Popup from '../popups/popup'
 import { createDefaultMenuInfo } from './models/menu-info'
+import { createApp } from 'vue';
 
 export default class MenuManager{
     value:IMenuComponent[];
@@ -16,9 +17,10 @@ export default class MenuManager{
         this.popup.callback = callback
     }
     menuFactory = ()=>{
-        return new Menu({ propsData: {
+        return createApp(Menu,
+        {
             value : this.value,
             onDeleted: this.popup.remove
-        }});
+        });
     }
 }

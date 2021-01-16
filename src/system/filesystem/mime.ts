@@ -15,7 +15,7 @@ const defaultMime = {
 
 export default {
     getType:function(name:string, data?:object | null):MimeType{
-        let type = name.substring(name.lastIndexOf("."));
+        const type = name.substring(name.lastIndexOf("."));
         if(Object.prototype.hasOwnProperty.call(this.list, type)) {
             return Object(this.list)[type];
         }
@@ -70,7 +70,7 @@ export default {
     }
 }
 function resolveExecutable(data:object){
-    let appName = (data as { "app":string })?.app;
+    const appName = (data as { "app":string })?.app;
     if(!appName){
         return defaultMime;
     }
@@ -84,7 +84,7 @@ function resolveExecutable(data:object){
 function parseType(mimeName:string){
     return mimeName.substring(0, mimeName.indexOf("/"));
 }
-export let checkType = {
+export const checkType = {
     ifImage:function(file:FileInfo){
         return parseType(file.appType.typeName) === "image";
     },

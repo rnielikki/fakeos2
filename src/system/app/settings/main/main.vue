@@ -13,10 +13,10 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import SettingItem from './setting-item.vue'
 
-export default Vue.extend({
+export default defineComponent({
     name:'Settings',
     components:{ SettingItem },
     data:function(){

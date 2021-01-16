@@ -1,19 +1,19 @@
 <template>
     <div class="dialog">
         <div class="message">{{ message }}</div>
-        <diV class="buttons">
+        <div class="buttons">
             <ui-button v-for="(btn, key) in buttons" :key="key" class="button" :clicked="setAction(btn.value)" :text="btn.text" />
         </div>
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { defineComponent,  PropType } from 'vue'
 import ModalContentMixin from '../../mixins/modal-content-mixin'
-import IWindowOptions from '../window-options'
+import IWin64Options from '../win64-options'
 import UiButton from '@/components/ui-components/button.vue'
 import DialogButton, { OKButton } from './dialog-model'
 
-export default Vue.extend({
+export default defineComponent({
     name:'DialogTemplate',
     components:{ UiButton },
     mixins:[ ModalContentMixin ],
@@ -30,15 +30,16 @@ export default Vue.extend({
             default:()=>OKButton
         },
         windowOptionsProp: {
-            type:Object as PropType<IWindowOptions>
+            type:Object as PropType<IWin64Options>
         }
     },
     methods:{
         setAction:function(value:any){
             return ()=>{
-                let targetWindow = this.$data.f_targetWindow;
+                //@ts-ignore
+                let targetWindows = this.$data.f_targetWindow;
                 (this as any).setResult(value);
-                targetWindow.close()
+                targetWindows.close()
             };
         }
     }

@@ -1,4 +1,4 @@
-let DefaultFileSystem = {
+const DefaultFileSystem = {
     "User":{
         "Images": toFileSystem(require.context("@/assets/images", true, /\.(jpe?g|png|gif|bmp)$/i).keys(), (name)=>"{\"name\":\""+require("@/assets/images/"+name)+"\"}"),
         "Musics": toFileSystem(require.context("@/assets/musics", true, /\.(mp3|ogg|wav)$/i).keys(), (name)=>"{\"name\":\""+require("@/assets/musics/"+name)+"\"}"),
@@ -20,20 +20,20 @@ export const DesktopIcons = {
 
 function isMainExecutable(path:string):boolean{
     path = path.substring(2);
-    let lastIndex = path.lastIndexOf("/");
-    let dir = path.substring(0, lastIndex);
-    let file = path.substring(lastIndex+1);
+    const lastIndex = path.lastIndexOf("/");
+    const dir = path.substring(0, lastIndex);
+    const file = path.substring(lastIndex+1);
     return dir.replace("/", ".")+".vue" === file;
 }
 function toFileSystem(input:Array<string>, contentResolver:(path:string)=>string) {
-    let root = {};
-    for(let path of input){
+    const root = {};
+    for(const path of input){
         Object.assign(root, toFileSystemRecursive(root, path.substring(2).split("/"), path));
     }
     return root;
     function toFileSystemRecursive(root:object, path:string[], fullPath:string):object{
         if(path.length > 1 ){
-            let folderName = path.shift();
+            const folderName = path.shift();
             if(Object.prototype.hasOwnProperty.call(root, folderName!)) {
                 Object.assign(Object(root)[folderName!], toFileSystemRecursive({}, path, fullPath));
             }
@@ -43,7 +43,7 @@ function toFileSystem(input:Array<string>, contentResolver:(path:string)=>string
             return root;
         }
         else{
-            let _obj = {}
+            const _obj = {}
             Object(_obj)[path[0]] = contentResolver(fullPath.substring(2));
             return _obj;
         }

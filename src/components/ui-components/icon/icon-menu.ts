@@ -1,10 +1,10 @@
-import Vue from 'vue'
+import Vue, { defineComponent } from 'vue'
 import { DirectoryInfo } from '@/system/filesystem/fileinfo'
 import FilesystemEditor from '@/system/filesystem/filesystem-editor';
 import FileEditResult, { showDialogIfError } from '@/system/filesystem/file-edit-result'
-import WindowFactory from '@/components/window/window-factory';
+import Win64Factory from '@/components/window/window-factory';
 
-export default Vue.extend({
+export default defineComponent({
     data:function(){
         return {
             value:[
@@ -34,18 +34,21 @@ export default Vue.extend({
     },
     methods:{
         editLabel:function(){
+            //@ts-ignore
             if(!this.$props.model.fileInfo.mutable){
+                //@ts-ignore
                 showDialogIfError(FileEditResult.Immutable, this.$props.model.fileInfo.name)
                 return;
             }
             this.editable = true;
-            let labelElement = this.$refs.label as HTMLElement;
-            let oldText = labelElement.textContent;
+            const labelElement = this.$refs.label as HTMLElement;
+            const oldText = labelElement.textContent;
             this.$nextTick(()=>{
                 labelElement.focus();
             })
             document.addEventListener("mousedown",()=>{
-                let editResult = FilesystemEditor.editFileName(this.$props.model.fileInfo, labelElement.textContent ?? "");
+                //@ts-ignore
+                const editResult = FilesystemEditor.editFileName(this.$props.model.fileInfo, labelElement.textContent ?? "");
                 if(editResult !== FileEditResult.Success) {
                     showDialogIfError(editResult, labelElement.textContent??"");
                     labelElement.textContent = oldText;
@@ -54,20 +57,24 @@ export default Vue.extend({
             }, { once: true })
         },
         delete:function(){
-            let _info = this.$props.model.fileInfo;
+            //@ts-ignore
+            const _info = this.$props.model.fileInfo;
             showDialogIfError(FilesystemEditor.delete(_info), _info.name);
         },
         move:function(target:DirectoryInfo){
-            let _info = this.$props.model.fileInfo;
+            //@ts-ignore
+            const _info = this.$props.model.fileInfo;
             showDialogIfError(FilesystemEditor.move(_info, target), _info.name, target.name);
         },
         openProperties:function(){
-            WindowFactory.OpenSetting("file-properties", {
+            Win64Factory.OpenSetting("file-properties", {
+                //@ts-ignore
                 icon:this.$props.model
             });
         },
         addShortcut:function(){
-            let _fileInfo = this.$props.model.fileInfo;
+            //@ts-ignore
+            const _fileInfo = this.$props.model.fileInfo;
             showDialogIfError(FilesystemEditor.addShortcut(_fileInfo), _fileInfo.name);
         }
     }

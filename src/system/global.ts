@@ -1,6 +1,6 @@
 let _desktop:Element | null;
 let _background:Element | null;
-let _globals:{
+const _globals:{
     desktop:Element,
     background:Element,
     getDesktop:()=>Promise<Element>,
@@ -51,7 +51,7 @@ let _globals:{
 }
 export default _globals;
 function getElement(query:string){
-    let elem = document.querySelector(query);
+    const elem = document.querySelector(query);
     if(elem == null){
         //throw "Error : Cannot open the "+ query+", Looks like explorer.exe has been stopped!"
         throw " Error: Cannot found "+query+". If "+query+" is used before the elements are fully loaded (e.g. global outside function), please use getDesktop() or getBackground() (Promises) instead";

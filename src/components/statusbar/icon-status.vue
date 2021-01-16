@@ -5,10 +5,10 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import SoundIcon from './icons/sound/sound-icon.vue'
 import InternetIcon from './icons/internet/internet.vue'
-export default Vue.extend({
+export default defineComponent({
     name:'IconStatus',
     components:{ SoundIcon, InternetIcon }
 })

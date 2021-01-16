@@ -1,12 +1,12 @@
 import Position from "./position";
-import VueComponent from 'vue';
 
 export default class ResizerCollection {
     constructor(resizer:any, target:HTMLElement, minWidth:number, minHeight:number) {
-        if(!(resizer instanceof VueComponent))
+        /* freeze until find type
+        if(!(resizer instanceof ComponentPublicInstance))
         {
             throw "The argument 'resizer' is not an instance of Vue component.";
-        }
+        }*/
         target.style.position = "absolute";
         for(resizer of resizer._vnode.children){
             new Resizer(resizer.elm as HTMLElement, target, resizer.data.class.toString(), minWidth, minHeight);
@@ -75,14 +75,14 @@ class Resizer {
         e.stopPropagation();
     }
     private resizeN = (e: MouseEvent) => {
-        let size: number = (this.pos!.height + (this.mouseY - e.clientY));
+        const size: number = (this.pos!.height + (this.mouseY - e.clientY));
         if (size >= this.minHeight && e.clientY >= 0) {
             this.target.style.height = size + "px";
             this.target.style.top = e.clientY + "px";
         }
     };
     private resizeW = (e: MouseEvent) => {
-        let size: number = (this.pos!.width + (this.mouseX - e.clientX));
+        const size: number = (this.pos!.width + (this.mouseX - e.clientX));
         if (size >= this.minWidth) {
             this.target.style.width = size + "px";
             this.target.style.left = e.clientX + "px";

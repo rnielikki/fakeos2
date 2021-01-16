@@ -6,13 +6,13 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import Clock from '@/components/ui-components/datetime/clock.vue'
 import SystemClock from '@/system/time/current'
 import ClockFormatter from '@/system/time/formatter'
 import Calendar from '@/components/ui-components/datetime/calendar.vue'
 
-export default Vue.extend({
+export default defineComponent({
     components: { Clock, Calendar },
     data:function(){
         return {

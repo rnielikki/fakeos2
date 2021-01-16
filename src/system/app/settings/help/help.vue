@@ -17,8 +17,8 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
+import { defineComponent } from 'vue'
+export default defineComponent({
     data:function(){
         return {
             title:"Help page"

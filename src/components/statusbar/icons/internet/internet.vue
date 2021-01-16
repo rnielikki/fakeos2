@@ -8,8 +8,8 @@ import InternetPopup from './internet-popup.vue'
 import Popup from '@/components/popups/popup'
 import PopupInfo, { popupDirection } from '@/components/popups/popup-info'
 
-import Vue from 'vue'
-export default Vue.extend({
+import { createApp, defineComponent } from 'vue'
+export default defineComponent({
     data:function(){
         return {
             iconStatus:"",
@@ -22,7 +22,7 @@ export default Vue.extend({
         window.addEventListener("offline", this.setStatusIcon);
     },
     mounted:function(){
-        new Popup(this.$el as HTMLElement, ()=>new InternetPopup(), "click", new PopupInfo({
+        new Popup(this.$el as HTMLElement, ()=>createApp(InternetPopup), "click", new PopupInfo({
             direction:popupDirection.topLeft,
             x:"100%"
         }));
@@ -30,14 +30,14 @@ export default Vue.extend({
     methods:{
         setStatusIcon:function(){
             this.isOnline = navigator.onLine;
-            Vue.set(this.$data,"iconStatus", this.getStatusIcon())
+            Object.assign(this.$data,{"iconStatus": this.getStatusIcon()})
         },
         getStatusIcon:function(){
             let ifOnline = (navigator.onLine)?"connected":"disconnected"
             return require(`./images/${ifOnline}.png`);
         }
     },
-    beforeDestroy:function(){
+    beforeUnmount:function(){
         window.removeEventListener("online", this.setStatusIcon);
         window.removeEventListener("offline", this.setStatusIcon);
     }

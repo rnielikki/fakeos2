@@ -17,11 +17,11 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import systemDate from '@/system/time/current'
-export default Vue.extend({
+export default defineComponent({
     data:function(){
-        var date = this.$props.date ?? systemDate.currentDate;
+        var date = this.$props.date ? new Date(this.$props.date) : systemDate.currentDate;
         return {
             f_date:date
         }
@@ -33,21 +33,21 @@ export default Vue.extend({
         }
     },
     computed:{
-        month(){ return this.$data.f_date.getMonth()+1 },
-        day(){ return this.$data.f_date.getDate() },
-        year(){ return this.$data.f_date.getFullYear() },
-        days(){
+        month():number{ return this.$data.f_date.getMonth()+1 },
+        day():number{ return this.$data.f_date.getDate() },
+        year():number{ return this.$data.f_date.getFullYear() },
+        days():number{
             //@ts-ignore
             return (new Date(this.year, this.month, 0)).getDate();
         },
-        firstDay(){
+        firstDay():number{
             //@ts-ignore
             return new Date(this.year, this.month-1, 1).getDay();
         }
     },
     methods:{
         changeMonth:function(change:number){
-            Vue.set(this.$data,"f_date",new Date(this.f_date.setMonth(this.month-1+change)));
+            Object.assign(this.$data,{"f_date":new Date(this.f_date.setMonth(this.month-1+change))});
         }
     }
 })

@@ -1,13 +1,13 @@
 <template>
     <div class="f_draggable-collection" @dragover.prevent @drop="(e)=>drop(e, collection.length-1)">
         <div v-for="(item, index) in collection" :key="item[collectionKeyName]" :style="computedCss" class="f_draggable-collection-item">
-            <drop-target :horizontal="horizontal" :gap="gap" v-on:drop.native="(e)=>{ drop(e, index); }" :size="size" />
+            <drop-target :horizontal="horizontal" :gap="gap" v-on:drop="(e)=>{ drop(e, index); }" :size="size" />
             <slot v-bind:model="item" v-bind:dragend="(e)=>endDrag(e, item, collection)"></slot>
         </div>
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { defineComponent,  PropType } from 'vue'
 import DropTarget from './drop-target.vue'
 
 //DropInfo should be global for communication between elements (e.g. icon move from folder window to background)
@@ -15,7 +15,7 @@ import DropTarget from './drop-target.vue'
 const EmptyDropInfo = { targetIndex: -1, collection:[] as Array<unknown>, item:{} as object }
 let dropInfo = { ...EmptyDropInfo }
 
-export default Vue.extend({
+export default defineComponent({
     name:"DraggableCollection",
     components: { DropTarget },
     props:{
@@ -71,7 +71,8 @@ export default Vue.extend({
                 return { flexDirection: "column" }
             }
         }
-    }
+    },
+    emits:['drop', 'dblclick', 'dragend']
 })
 </script>
 <style scoped>

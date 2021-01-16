@@ -1,10 +1,9 @@
 <template>
-    <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="horizontal" ref="collection" collectionKeyName="id" @drop.native="dropToCollection">
+    <draggable-collection class="iconCollection" :style="gridFlow" :collection="icons" :horizontal="horizontal" ref="collection" collectionKeyName="id" @drop="dropToCollection" >
              <template v-slot:default="model">
                  <icon :model="model.model"
                  :small="small"
-                 v-on:dragend.native="model.dragend"
-                 @dblclick.native="$emit('open-icon', model.model)"
+                 @dragend="(e)=>model.dragend(e)"
                  @open-icon="$emit('open-icon', model.model)"
                  @selected="()=>select(model.model.id)"
                 :isSelected ="selected===model.model.id"
@@ -13,7 +12,7 @@
     </draggable-collection>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { defineComponent,  PropType } from 'vue'
 import Icon from '@/components/ui-components/icon/icon.vue'
 import IconModel from './models/icon-model'
 import { IconDirection } from './models/icon-collection-model'
@@ -24,9 +23,9 @@ import windowFactory from '../../window/window-factory'
 import IconGlobal from './models/icon-global'
 import FileType from '@/system/filesystem/file-type'
 
-export default Vue.extend({
+export default defineComponent({
     name:"IconCollection",
-    components:{ Icon, DraggableCollection },
+    components:{ "icon":Icon, "draggable-collection":DraggableCollection },
     data:function(){
         return {
             selected:-1,
@@ -44,7 +43,7 @@ export default Vue.extend({
         path:{
             type:Object as PropType<DirectoryInfo>,
             required:true,
-            validator:function(value){
+            validator:function(value:IFileInfo){
                 return !value.disposed
             }
         },
@@ -72,15 +71,21 @@ export default Vue.extend({
         }
     },
     created:function(){
+        //@ts-ignore
         this.horizontal = (this.direction == IconDirection.row);
         this.generateIcons(this.f_path);
+        //@ts-ignore
         this.selected = (this.defaultSelection)?this.f_path.files.indexOf(this.defaultSelection):-1;
     },
     mounted:function(){
-        document.addEventListener("mousedown", this.deselect, true)
-        this.$nextTick(()=>{this.select(this.selected)})
+        document.addEventListener("mousedown", this.deselect, true);
+        //@ts-ignore
+        this.$nextTick(()=>{this.select(this.selected)});
     },
     methods: {
+        log:function(item:any){
+            console.log(item);
+        },
         select:function(id:number) {
             this.selected = id
         },
@@ -101,12 +106,13 @@ export default Vue.extend({
     watch:{
         f_path:function(value) {
             this.files = value.files;
-            this.$set(this.$data, "f_path", value as DirectoryInfo);
+            Object.assign(this.$data, {"f_path": value as DirectoryInfo});
         },
         files:function(newValue, oldValue){
             this.generateIcons(this.f_path);
         }
     },
+    emits:['open-icon', 'dragend']
 })
 </script>
 <style lang="scss" scoped>

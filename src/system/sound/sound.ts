@@ -2,8 +2,8 @@ import SoundManager from './sound-manager'
 
 export default class Sound{
     private context:AudioContext = new AudioContext()
-    private _soundPromise:Promise<unknown>;
-    private _audioSource:AudioBufferSourceNode;
+    private _soundPromise:Promise<unknown> | null;
+    private _audioSource:AudioBufferSourceNode | null;
     private _paused:boolean = false;
     private _volume:number = 1;
     private _gainNode:GainNode | null = null;
@@ -14,9 +14,14 @@ export default class Sound{
     }
     private _buffer:Uint8Array| undefined = undefined;
     public get time(){
-        return this._audioSource.buffer?.duration;
+        return this._audioSource?.buffer?.duration;
     }
     constructor(path:string, autoPlay:boolean = true, repeat:boolean = false, defaultVolume:number = 1){
+        if(!path){
+            this._audioSource = null;
+            this._soundPromise = null;
+            return;
+        }
         this._audioSource = this.context.createBufferSource();
         this._soundPromise = fetch(path).then(res=>res.arrayBuffer()).then(buffer=>{
             this._buffer = new Uint8Array(buffer).slice(0);
@@ -38,11 +43,11 @@ export default class Sound{
     decode(buffer:ArrayBuffer, repeat:boolean){
         this.context.decodeAudioData(buffer, (buff)=>{
             if(buff){
-                this._audioSource.buffer = buff;
-                this._audioSource.connect(this.context.destination)
+                this._audioSource!.buffer = buff;
+                this._audioSource!.connect(this.context.destination)
                 this.loop(repeat);
                 if(!repeat){
-                    this._audioSource.addEventListener("ended", ()=>this.stop(false))
+                    this._audioSource!.addEventListener("ended", ()=>this.stop(false))
                 }
             }
         })
@@ -50,7 +55,7 @@ export default class Sound{
     async start(){
         if(this._isStarted) return;
         await this._soundPromise;
-        this._audioSource.start(0);
+        this._audioSource!.start(0);
         this._isStarted = true;
     }
     async play(){
@@ -72,7 +77,7 @@ export default class Sound{
     async stop(end:boolean = true){
         await this._soundPromise;
         if(this._isStarted){
-            this._audioSource.stop(0);
+            this._audioSource!.stop(0);
         }
         if(!end){
             this._audioSource = this.context.createBufferSource();
@@ -84,7 +89,7 @@ export default class Sound{
         }
     }
     loop(setLoop:boolean){
-        this._audioSource.loop = setLoop
+        this._audioSource!.loop = setLoop
     }
     //volume range is 0-1
     //the actual gain will be -1(mute) - 0 (full)
@@ -95,14 +100,14 @@ export default class Sound{
             return;
         }
         this._volume = volume;
-        let actualSound = (volume*SoundManager.masterSound-1)
+        const actualSound = (volume*SoundManager.masterSound-1)
         if(this._gainNode !== null){
-            this._audioSource.disconnect(this._gainNode);
+            this._audioSource!.disconnect(this._gainNode);
         }
         this._gainNode = this.context.createGain();
         this._gainNode.gain.value = actualSound;
         this._gainNode.connect(this.context.destination)
-        this._audioSource.connect(this._gainNode)
+        this._audioSource!.connect(this._gainNode)
     }
     updateVolume = ()=>{
         this.setVolume(this._volume)

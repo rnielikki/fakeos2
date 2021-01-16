@@ -4,10 +4,10 @@
     </div>
 </template>
 <script lang="ts">
-import VueCopmonent from 'vue'
+import { defineComponent } from 'vue';
 import { Component, Vue } from 'vue-property-decorator';
 import ContextMenu from '../menu/contextmenu'
-import WindowFactory from '../window/window-factory'
+import Win64Factory from '../window/window-factory'
 import IconCollection from '@/components/ui-components/icon/icon-collection.vue'
 import BackgroundMenu from './background-menu'
 import { Path } from '@/system/filesystem/filesystem'
@@ -17,7 +17,7 @@ import { backgroundIconSet } from '@/components/ui-components/icon/icon-mixins'
 import IconModel from '../ui-components/icon/models/icon-model';
 import GlobalPath from '@/system/filesystem/globalPath'
 
-@Component({
+export default defineComponent({
     directives:{
         contextmenu: ContextMenu
     },
@@ -31,7 +31,6 @@ import GlobalPath from '@/system/filesystem/globalPath'
         }
     }
 })
-export default class Background extends Vue {}
 </script>
 <style lang="scss" scoped>
     .f_background {

@@ -5,9 +5,9 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import WindowFactory from '@/components/window/window-factory'
-export default Vue.extend({
+import { defineComponent } from 'vue'
+import Win64Factory from '@/components/window/window-factory'
+export default defineComponent({
     props:{
         name:{
             type:String,
@@ -15,13 +15,13 @@ export default Vue.extend({
         }
     },
     computed:{
-        icon:function(){
-            return { maskImage: "url('"+require(`../${this.name}/icon.svg`)+"')" }
+        icon:function():unknown{
+            return { maskImage: "url('"+require(`../${this.$props.name}/icon.svg`)+"')" }
         }
     },
     methods:{
         openSetting:function() {
-            WindowFactory.OpenSetting(this.$props.name);
+            Win64Factory.OpenSetting(this.$props.name);
         }
     }
 })

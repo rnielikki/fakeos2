@@ -13,11 +13,11 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import WindowFactory from '../../components/window/window-factory'
+import { defineComponent } from 'vue'
+import Win64Factory from '../../components/window/window-factory'
 import AppMenu from './menu'
 
-export default Vue.extend({
+export default defineComponent({
     name:'HelloWorld',
     data:function(){
         return {

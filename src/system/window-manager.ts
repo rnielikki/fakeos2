@@ -1,32 +1,34 @@
-import Window from '../components/window/components/Window.vue'
+import { ComponentPublicInstance } from 'vue';
 import Observable from './core/observer'
+
 // currently opened windows.
 // the array is in the order of recent selection.
 //- ADD TEST: window target array index should be same as z-index
-let openedWindows = new Array<Window>();
-let currentWindow:Window | null = null;
+let openedWin64s = new Array<ComponentPublicInstance>();
+let currentWin64:ComponentPublicInstance | null = null;
 document.addEventListener("mousedown",(e)=>select(null, e), true);
 
-let addedObservable = new Observable<Window>();
-let removedObservable = new Observable<Window>();
+const addedObservable = new Observable<ComponentPublicInstance>();
+const removedObservable = new Observable<ComponentPublicInstance>();
 
 //- ADD TEST:only one or less window 'selected' is true
-//- ADD TEST:and it's same as currentWindow (if 0 selected then currentWindow is null)
+//- ADD TEST:and it's same as currentWin64 (if 0 selected then currentWin64 is null)
 export default {
-    register:function(target:Window){
-        target.$data.zIndex = openedWindows.length;
+    register:function(target:ComponentPublicInstance){
+        //@ts-ignore
+        target.$data.zIndex = openedWin64s.length;
         selectAndPush(target);
         addedObservable.invoke(target)
     },
-    unregister:function(target:Window){
+    unregister:function(target:ComponentPublicInstance){
         if(deleteWindow(target)) {
             removedObservable.invoke(target);
-            currentWindow = null;
+            currentWin64 = null;
             reorderZIndex();
         }
     },
-    select:function(target:Window){
-        if(currentWindow === target) return;
+    select:function(target:ComponentPublicInstance){
+        if(currentWin64 === target) return;
         if(deleteWindow(target)){
             selectAndPush(target);
         }
@@ -34,51 +36,54 @@ export default {
     deselect:function(){
         select(null);
     },
-    isSelected:function(target:Window){
-        return currentWindow === target;
+    isSelected:function(target:ComponentPublicInstance){
+        return currentWin64 === target;
     }
 }
-export let WindowEvents = {
+export const Win64Events = {
     OnAdded:{
-        subscribe:function(func:(target:Window)=>void){
+        subscribe:function(func:(target:ComponentPublicInstance)=>void){
             addedObservable.register(func);
         },
-        unsubscribe:function(func:(target:Window)=>void):boolean{
+        unsubscribe:function(func:(target:ComponentPublicInstance)=>void):boolean{
             return addedObservable.unregister(func);
         }
     },
     OnRemoved:{
-        subscribe:function(func:(target:Window)=>void){
+        subscribe:function(func:(target:ComponentPublicInstance)=>void){
             return removedObservable.register(func);
         },
-        unsubscribe:function(func:(target:Window)=>void):boolean{
+        unsubscribe:function(func:(target:ComponentPublicInstance)=>void):boolean{
             return removedObservable.unregister(func);
         }
     }
 }
-function selectAndPush(target:Window){
+function selectAndPush(target:ComponentPublicInstance){
     select(target);
-    target.$data.zIndex = openedWindows.length;
-    openedWindows.push(target);
+    //@ts-ignore
+    target.$data.zIndex = openedWin64s.length;
+    openedWin64s.push(target);
 }
-function select(target:Window | null, e?:Event){
-    let id = (e?.target as HTMLElement)?.dataset?.windowId
-    if(id && id == (currentWindow as any)?._uid){
+function select(target:ComponentPublicInstance | null, e?:Event){
+    const id = (e?.target as HTMLElement)?.dataset?.windowId
+    if(id && id == (currentWin64 as any)?._uid){
         return;
     }
-    if(currentWindow !== null){
-        currentWindow.$data.selected = false;
+    if(currentWin64 !== null){
+        //@ts-ignore
+        currentWin64.$data.selected = false;
     }
     if(target !== null){
+        //@ts-ignore
         target.$data.selected = true;
     }
-    currentWindow = target;
+    currentWin64 = target;
 }
-function deleteWindow(target:Window):boolean{
-    let oldLength = openedWindows.length;
-    let targetId = (target as any)._uid
-    openedWindows = openedWindows.filter((w:any)=>w._uid!==targetId);
-    if(oldLength !== openedWindows.length){
+function deleteWindow(target:ComponentPublicInstance):boolean{
+    const oldLength = openedWin64s.length;
+    const targetId = (target as any)._uid
+    openedWin64s = openedWin64s.filter((w:any)=>w._uid!==targetId);
+    if(oldLength !== openedWin64s.length){
         reorderZIndex();
         return true;
     }
@@ -87,9 +92,11 @@ function deleteWindow(target:Window):boolean{
     }
 }
 function reorderZIndex(){
-    for(let i=0; i < openedWindows.length; i++) {
-        let data = openedWindows[i].$data;
+    for(let i=0; i < openedWin64s.length; i++) {
+        const data = openedWin64s[i].$data;
+        //@ts-ignore
         data.selected = false;
+        //@ts-ignore
         data.zIndex = i;
     }
 }

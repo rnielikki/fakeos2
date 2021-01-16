@@ -1,5 +1,5 @@
-import Window from './components/window.vue'
-import IWindowOptions, { WindowOptions, ModalOptions } from './components/window-options'
+import Win64 from './components/win64.vue'
+import IWin64Options, { Win64Options, ModalOptions } from './components/win64-options'
 import DialogTemplate from './components/dialogs/dialog-template.vue'
 import MixinFactory from './mixins/window-mixin-factory'
 import SystemGlobal from '@/system/global'
@@ -7,49 +7,56 @@ import DialogButton, { OKButton } from './components/dialogs/dialog-model'
 import { IMenuComponent } from '../menu/models/menu-model'
 import IconLoader from '../ui-components/icon/icon-loader'
 import { FileInfo } from '@/system/filesystem/fileinfo'
+import { App, ComponentPublicInstance, createApp } from 'vue'
+import instantiater from '@/system/instantiater'
 
 export default {
-    //options are propsData
+    //options are props
     OpenProgram:function(fullProgramName:string, sender?:FileInfo, options?:object) {
-        let _index = fullProgramName.lastIndexOf('/');
-        let programName = (_index < 0)?fullProgramName:fullProgramName.substring(_index+1);
+        const _index = fullProgramName.lastIndexOf('/');
+        const programName = (_index < 0)?fullProgramName:fullProgramName.substring(_index+1);
         import(`@/softwares/${fullProgramName}/${programName}.vue`).then((component)=>{
-            let comp = getComponentInPromise(component, { ...(sender?{sender:sender}:{}), ...options});
-            OpenWindow(comp, programName, IconLoader.getIcon(fullProgramName), comp.$data.menu);
+            const comp = getComponentInPromise(component, { ...(sender?{sender:sender}:{}), ...options});
+            OpenWin64(comp, programName, IconLoader.getIcon(fullProgramName), component.default.data.menu);
         })
         .catch((err)=>{
             this.OpenDialog(null, "Load Failed", `Couldn't find the ${fullProgramName}, or the program is corrupted?`)
             console.warn(err)
         })
     },
-    OpenModal:function(parent:Vue | null, content:Vue, callback?:Function){
+    OpenModal:function(parent:ComponentPublicInstance | null, content:App<Element>, callback?:Function){
         if(!parent){
             throw "Error: Modal needs parent";
         }
-        let parentWindow = parent.$data.f_targetWindow;
-        let _window = new Window({
-            propsData:{
-                title:content?.$data?.title ?? "Modal Window",
-                hasMinimizer: false,
-                windowOptions: content?.$data?.windowOptions ?? new ModalOptions(),
-                parentElement:parentWindow.$el,
-                initToCenter: true
+        const _content = createApp(content);
+        //@ts-ignore
+        const parentWin64 = parent.$data.f_targetWindow;
+        const _window = createApp(Win64, {
+            props:{
+                //@ts-ignore
+                title:content?._data?.title ?? "Modal Alert!",
+                hasMinimizer: ()=>false,
+                //@ts-ignore
+                windowOptions: content?._data?.windowOptions ?? new ModalOptions(),
+                parentElement:parentWin64.$el,
+                initToCenter: ()=>true
             },
             mixins:[ MixinFactory.CreateModalMixin() ],
-            parent: parentWindow
-        })
+            parent: parentWin64,
+            slots: [ _content ]
+        });
         if(callback) {
-            _window.$data.callback = callback;
+            //@ts-ignore
+            _window._data.callback = callback;
         }
-        Object.assign(content.$data, { f_targetWindow: _window });
-        content.$mount()
-        _window.$slots.default = [(content as any)._vnode];
-        _window.$mount();
-        parentWindow.$el.appendChild(_window.$el);
+        const mountedWindow = createApp(_window).mount(parent.$el??SystemGlobal.background);
+        const mountedContent = _content.mount(mountedWindow.$el);
+        parentWin64.$el.appendChild(mountedWindow.$el);
+        Object.assign(mountedContent.$data, { f_targetWindow: _window });
     },
-    OpenDialog:function(parent:Vue | null, title:string, message:string, buttons:Array<DialogButton> = OKButton, callback?:Function, windowOptions?:IWindowOptions) {
-        let _message = new DialogTemplate({
-            propsData: {
+    OpenDialog:function(parent:ComponentPublicInstance | null, title:string, message:string, buttons:Array<DialogButton> = OKButton, callback?:Function, windowOptions?:IWin64Options) {
+        const _message = createApp(DialogTemplate,{
+            props: {
                 message: message,
                 buttons:buttons,
                 windowOptionsProp:windowOptions ?? new ModalOptions({
@@ -61,76 +68,83 @@ export default {
                 callback:callback
             }
         });
-        _message.$data.title = title;
-        (!parent)?OpenWindow(_message, undefined, undefined, undefined, true):this.OpenModal(parent, _message, callback);
+        (!parent)?OpenWin64(_message, undefined, undefined, undefined, true):this.OpenModal(parent, _message, callback);
     },
     OpenSetting:function(settingName:string="main", options?:object){
         import(`@/system/app/settings/${settingName}/${settingName}.vue`).then((comp)=>{
-            OpenWindow(getComponentInPromise(comp, options), undefined, require("@/system/app/settings/icon.png"));
+            OpenWin64(getComponentInPromise(comp, options), undefined, require("@/system/app/settings/icon.png"));
         }).catch((err)=>{
             this.OpenDialog(null, "Load Failed", `Setting ${settingName} does not exist!`)
             console.warn(err);
         })
     }
 }
-function OpenWindow(content:Vue, appName?:string, iconPath?:string, menu?:{content?:IMenuComponent[], rightClick?:IMenuComponent[]}, center:boolean = false) {
-    let _window = new Window({
-        propsData:{
+function OpenWin64(content:App<Element>, appName?:string, iconPath?:string, menu?:{content?:IMenuComponent[], rightClick?:IMenuComponent[]}, center:boolean = false) {
+    const _window = createApp(Win64,{
             appName: appName,
-            title:content?.$data?.title,
-            hasMinimizer:content?.$data?.hasMinimizer ?? true,
-            windowOptions:content?.$data?.windowOptions ?? new WindowOptions(),
+            //@ts-ignore
+            title:content?._data?.title,
+            //@ts-ignore
+            hasMinimizer:content?._data?.hasMinimizer ?? true,
+            //@ts-ignore
+            windowOptions:content?._data?.windowOptions ?? new Win64Options(),
             parentElement:SystemGlobal.background,
             initToCenter: center,
             iconPath: iconPath,
             windowMenu:menu?.content ?? [],
             rightClickMenu: menu?.rightClick ?? undefined
-        },
-        mixins: MixinFactory.CreateWindowMixin(content.$data?.f_confirmSaving)
-    });
-    if(!_window.$props.rightClickMenu){
-        _window.$props.rightClickMenu=[];
+        }
+    )
+    //@ts-ignore
+    .mixin(MixinFactory.CreateWin64Mixin(content._data?.f_confirmSaving))
+    .component("slot", content);
+    //@ts-ignore
+    if(!_window._props.rightClickMenu){
+        //@ts-ignore
+        _window._props.rightClickMenu=[];
     }
     else{
-        _window.$props.rightClickMenu.push({ label: "--"})
+        //@ts-ignore
+        _window._props.rightClickMenu.push({ label: "--"})
     }
-    _window.$props.rightClickMenu = _window.$props.rightClickMenu.concat(createRightClickMenu(_window));
-    Object.assign(content.$data, { f_targetWindow: _window });
-    content.$mount()
-    _window.$slots.default = [ (content as any)._vnode ];
-    _window.$mount();
-    SystemGlobal.background!.appendChild(_window.$el)
+    //@ts-ignore
+    _window._props.rightClickMenu = _window._props?.rightClickMenu?.concat(createRightClickMenu(_window));
+    const mountedWindow = instantiater.Mount(_window, SystemGlobal.background);
+    //const mountedContent = instantiater.Mount(content, mountedWindow.$el);
+    //Object.assign(mountedContent.$data, { f_targetWindow: _window });
 }
 
 function getComponentInPromise(component:any, options?:any){
     if(options){
-        return new component.default({
-            propsData: options
+        return createApp(component.default, {
+            props: options
         })
     }
     else{
-        return new component.default();
+        return createApp(component.default);
     }
 }
 
-function createRightClickMenu(_window:Window){
-    let _anyWindow = _window as any;
-    let _actions=[
+function createRightClickMenu(_window:App<Element>){
+    const _anyWin64 = _window as any;
+    const _actions=[
         {
             label: "Close",
-            action:_anyWindow.close
+            action:_anyWin64.close
         }
     ]
-    if(_window.$props.windowOptions.resizable) {
+    //@ts-ignore
+    if(_window._props.windowOptions?.resizable) {
         _actions.unshift({
             label:"Maximize",
-            action:_anyWindow.maximize
+            action:_anyWin64.maximize
         })
     }
-    if(_window.$props.hasMinimizer) {
+    //@ts-ignore
+    if(_window._props.hasMinimizer) {
         _actions.unshift({
             label:"Minimize",
-            action:_anyWindow.minimize
+            action:_anyWin64.minimize
         })
     }
     return _actions;

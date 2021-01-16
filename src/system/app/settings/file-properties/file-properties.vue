@@ -20,22 +20,22 @@
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { defineComponent,  PropType } from 'vue'
 import IconModel from '@/components/ui-components/icon/models/icon-model'
 import FileType from '@/system/filesystem/file-type';
 import IFileInfo from '@/system/filesystem/fileinfo';
-import { WindowOptions } from '@/components/window/components/window-options'
+import { Win64Options } from '@/components/window/components/win64-options'
 import UiButton from '@/components/ui-components/button.vue'
-import WindowFactory from '@/components/window/window-factory';
+import Win64Factory from '@/components/window/window-factory';
 
-export default Vue.extend({
+export default defineComponent({
     components:{ UiButton},
     data:function(){
         return {
             title:"Properties",
             file:this.icon.fileInfo,
             windowOptions:
-                new WindowOptions({
+                new Win64Options({
                     defaultWidth:-1,
                     defaultHeight:-1,
                     minWidth:300,
@@ -65,7 +65,7 @@ export default Vue.extend({
     },
     methods:{
         open:function(fileInfo:IFileInfo){
-            WindowFactory.OpenProgram("core/explorer", undefined,
+            Win64Factory.OpenProgram("core/explorer", undefined,
             {
                 path:fileInfo.parent,
                 defaultSelection:fileInfo

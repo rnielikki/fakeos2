@@ -2,20 +2,20 @@
     <div>
         <div class="f_window-content-menu" v-for="(menuItem, key) in menu" :key="key" v-menu="{
             value:menuItem.submenu,
-            menuInfo:getWindowInfo
+            menuInfo:getWin64Info
         }">
             {{ menuItem.label }}
         </div>
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { defineComponent,  PropType } from 'vue'
 import { IMenuComponent } from '../../menu/models/menu-model'
 import menu from '@/components/menu/menu'
 import PopupInfo, { popupDirection } from '../../popups/popup-info'
 
-export default Vue.extend({
-    name:"WindowMenu",
+export default defineComponent({
+    name:"Win64Menu",
     directives:{ menu },
     props:{
         menu:{
@@ -24,7 +24,7 @@ export default Vue.extend({
         }
     },
     computed:{
-        getWindowInfo:function(){
+        getWin64Info:function(){
             return new PopupInfo({ direction: popupDirection.bottomRight, y:"100%" })
         }
     }

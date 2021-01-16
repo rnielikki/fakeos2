@@ -1,5 +1,6 @@
 <template>
     <div v-contextMenu="{ value: value }" :class="['f_collection-icon', { selected:isSelected, small:small }]"
+    @dblclick="$emit('open-icon')"
     @mousedown="$emit('selected')" @dragstart="dragging" @dragend="dragged" @drop="dropped" @dragover.prevent>
         <div class="image-wrapper">
             <img class="icon-image" :src="model.icon" draggable="false" />
@@ -9,9 +10,9 @@
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { defineComponent,  PropType } from 'vue'
 import ContextMenu from '@/components/menu/contextmenu'
-import WindowFactory from '@/components/window/window-factory'
+import Win64Factory from '@/components/window/window-factory'
 import IconModel from './models/icon-model'
 import backgroundMenu from '@/components/background/background-menu'
 import { DirectoryInfo, FileInfo, ShortcutInfo } from '@/system/filesystem/fileinfo'
@@ -19,7 +20,7 @@ import IconMenu from './icon-menu'
 import IconGlobal from './models/icon-global'
 import FileType from '@/system/filesystem/file-type'
 
-export default Vue.extend({
+export default defineComponent({
     name:"Icon",
     directives:{ ContextMenu },
     mixins: [ IconMenu ],
@@ -51,23 +52,25 @@ export default Vue.extend({
             if(IconGlobal.dropTarget){
                 IconGlobal.dropTarget = null;
             }
+            this.$emit('dragend', e);
         },
         dropped:function(e:Event){
-            IconGlobal.dropTarget = this.model.fileInfo;
+            IconGlobal.dropTarget = this.model!.fileInfo;
             e.stopPropagation()
         },
         dragToApp:function(e:Event){
-            if(this.$props.model.fileInfo == IconGlobal.dropTarget) return;
+            if(this.$props.model?.fileInfo == IconGlobal.dropTarget) return;
             let _target = (IconGlobal.dropTarget?.fileType == FileType.Shortcut)?
                 (IconGlobal.dropTarget as ShortcutInfo).originalFile
                 :IconGlobal.dropTarget;
-            let _fileInfo = (this.$props.model.fileInfo.fileType == FileType.Shortcut)?
+            let _fileInfo = (this.$props?.model?.fileInfo.fileType == FileType.Shortcut)?
+            //@ts-ignore
                 this.$props.model.fileInfo.originalFile
-                :this.$props.model.fileInfo;
+                :this.$props.model?.fileInfo;
 
             switch(_target?.fileType) {
                 case FileType.Directory:
-                    if(this.$props.model.fileInfo !== _target) {
+                    if(this.$props.model?.fileInfo !== _target) {
                         (this as any).move(_target);
                     }
                     break;
@@ -80,12 +83,13 @@ export default Vue.extend({
                     || appName !== _fileInfo?.appType?.app) {
                         return;
                     }
-                    WindowFactory.OpenProgram(appName, _fileInfo, data);
+                    Win64Factory.OpenProgram(appName, _fileInfo, data);
                     break;
             }
             e.stopPropagation();
         }
-    }
+    },
+    emits:['dragstart', 'dragend', 'selected', 'open-icon']
 })
 </script>
 <style lang="scss" scoped>

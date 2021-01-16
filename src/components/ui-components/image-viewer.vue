@@ -5,21 +5,21 @@
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
-import { DirectoryInfo, FileInfo } from '@/system/filesystem/fileinfo'
+import { defineComponent,  PropType } from 'vue'
+import IFileInfo, { DirectoryInfo, FileInfo } from '@/system/filesystem/fileinfo'
 import { checkType } from '@/system/filesystem/mime'
 import FileType from '@/system/filesystem/file-type'
-export default Vue.extend({
+export default defineComponent({
     data:function(){
         return {
-            files:this.path.files.filter(file=>(file.fileType == FileType.File) && checkType.ifImage(file as FileInfo))
+            files:this.path.files.filter((file:IFileInfo)=>(file.fileType == FileType.File) && checkType.ifImage(file as FileInfo))
         }
     },
     props:{
         path:{
             type:Object as PropType<DirectoryInfo>,
             required:true,
-            validator:function(value){
+            validator:function(value:IFileInfo){
                 return !value.disposed
             }
         }

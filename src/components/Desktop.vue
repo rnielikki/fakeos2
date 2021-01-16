@@ -5,16 +5,14 @@
 </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { defineComponent } from 'vue';
 import Background from './background/background.vue';
-import Window from './window/components/window.vue'
 import StatusBar from './statusbar/statusbar.vue'
 import Menu from './menu/menu'
-import { DirectiveOptions } from 'vue';
 import DesktopIcons from './desktop-icons'
 
-@Component({
-    components: { Window, StatusBar, Background },
+export default defineComponent({
+    components: { StatusBar, Background },
     directives: {
         menu: Menu
     },
@@ -22,7 +20,6 @@ import DesktopIcons from './desktop-icons'
         DesktopIcons();
     }
 })
-export default class Desktop extends Vue {}
 </script>
 <style lang="scss" scoped>
     .f_desktop {

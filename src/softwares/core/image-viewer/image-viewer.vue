@@ -14,23 +14,23 @@
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { defineComponent,  PropType } from 'vue'
 import IFileInfo, { FileInfo } from '@/system/filesystem/fileinfo'
 import { checkType } from '@/system/filesystem/mime';
-import { WindowOptions } from '@/components/window/components/window-options';
+import { Win64Options } from '@/components/window/components/win64-options';
 import explorerModal from '@/softwares/core/explorer/explorer-modal'
 import windowFactory from '@/components/window/window-factory';
 import AppValidator from '@/system/app/app-validator'
 import GlobalPath from '@/system/filesystem/globalPath';
 
-export default Vue.extend({
+export default defineComponent({
     mixins:[ AppValidator(checkType.ifImage) ],
     data:function(){
         return {
             title:`Image Viewer: (${this.$props.sender?.name ?? ""})`,
             f_image:this.$props.sender,
             imagePath: Object(this.$props.sender?.data)?.name,
-            windowOptions:new WindowOptions({
+            windowOptions:new Win64Options({
                 defaultWidth:640,
                 defaultHeight:480,
                 minWidth:300,
@@ -44,11 +44,12 @@ export default Vue.extend({
     },
     methods:{
         changeSize:function(scale:number){
-            this.$set(this.$data, "imageStatus", { scale: scale ?? 1});
+            Object.assign(this.$data, {"imageStatus": { scale: scale ?? 1}});
         },
         openImage:function(){
             explorerModal.open(this, this.f_image ?? GlobalPath.Images, (file:FileInfo)=>{
                 this.f_image = file;
+                //@ts-ignore
                 this.$data.f_targetWindow.f_title = `Image Viewer: (${file?.name ?? ""})`
             }, checkType.ifImage)
         }

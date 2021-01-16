@@ -1,6 +1,7 @@
 import windowFactory from '@/components/window/window-factory'
+import { ComponentPublicInstance } from 'vue'
 
-export default function(target:Vue){
+export default function(target:ComponentPublicInstance){
     return {
         content:[
             {
@@ -15,6 +16,7 @@ export default function(target:Vue){
                     },
                     {
                         label:"close",
+                        //@ts-ignore
                         action:()=>target.$data.f_targetWindow.close()
                     }
                 ]

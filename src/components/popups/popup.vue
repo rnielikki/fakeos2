@@ -6,9 +6,9 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import PopupInfo, { popupDirection } from './popup-info';
-export default Vue.extend({
+export default defineComponent({
     name:"Popup",
     props:{
         popupInfo:{
@@ -17,7 +17,7 @@ export default Vue.extend({
     },
     computed:{
         directionStyle:function(){
-            let direction = this.popupInfo.direction as object
+            let direction = this.popupInfo?.direction as object
             return direction;
         }
     }

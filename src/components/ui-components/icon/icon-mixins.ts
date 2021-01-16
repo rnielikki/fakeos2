@@ -1,6 +1,6 @@
-import Vue from 'vue'
+import Vue, { defineComponent } from 'vue'
 import { DirectoryInfo, FileInfo, ShortcutInfo } from '@/system/filesystem/fileinfo'
-import WindowFactory from '../../window/window-factory'
+import Win64Factory from '../../window/window-factory'
 import IconModel from './models/icon-model'
 import FileType from '@/system/filesystem/file-type'
 import windowManager from '@/system/window-manager'
@@ -8,15 +8,15 @@ import modalContentMixin from '@/components/window/mixins/modal-content-mixin'
 import filesystemEditor from '@/system/filesystem/filesystem-editor'
 import FileEditResult, { showDialogIfError } from '@/system/filesystem/file-edit-result'
 
-export let defaultDirectoryAction = Vue.extend({
+export const defaultDirectoryAction = defineComponent({
     methods:{
         openDirectory:function(dirInfo:DirectoryInfo) {
-            WindowFactory.OpenProgram("core/explorer", undefined, { path:dirInfo });
+            Win64Factory.OpenProgram("core/explorer", undefined, { path:dirInfo });
         }
     }
 })
 
-export let defaultFileAction = Vue.extend({
+export const defaultFileAction = defineComponent({
     methods:{
         openFile:function(fileInfo:FileInfo) {
             if((this as any).isModal) return;
@@ -29,32 +29,34 @@ export let defaultFileAction = Vue.extend({
             else {
                 appName = Object(fileInfo.data).app;
             }
-            WindowFactory.OpenProgram(appName, fileInfo, data ?? {})
+            Win64Factory.OpenProgram(appName, fileInfo, data ?? {})
         }
     }
 })
 
-export let openDirectoryOnExplorer = Vue.extend({
+export const openDirectoryOnExplorer = defineComponent({
     methods:{
         openDirectory:function(dirInfo:DirectoryInfo){
-            Vue.set(this.$data, "f_path", dirInfo);
+            Object.assign(this.$data, {"f_path": dirInfo})
+            //@ts-ignore
             windowManager.select(this.$data.f_targetWindow)
          }
     }
 })
 
-export let passFileFromExplorer = Vue.extend({
+export const passFileFromExplorer = defineComponent({
     mixins:[ modalContentMixin ],
     methods:{
         openFile:function(fileInfo:FileInfo){
-            let targetWindow = this.$data.f_targetWindow;
+            //@ts-ignore
+            const targetWindows = this.$data.f_targetWindow;
             (this as any).setResult(fileInfo);
-            targetWindow.close();
+            targetWindows.close();
         }
     }
 })
 
-export let saveOnExplorer = Vue.extend({
+export const saveOnExplorer = defineComponent({
     mixins:[ modalContentMixin ],
     data:function(){
         return { name: "anything"}
@@ -63,9 +65,9 @@ export let saveOnExplorer = Vue.extend({
         openFile:function(fileInfo:FileInfo){
         },
         saveFile:function(parent:DirectoryInfo, data:any, extension:string=""){
-            let nameText = (this.$refs.name as HTMLInputElement).value;
-            let name = nameText + extension;
-            let addResult = filesystemEditor.add(new FileInfo(name, parent, data), parent)
+            const nameText = (this.$refs.name as HTMLInputElement).value;
+            const name = nameText + extension;
+            const addResult = filesystemEditor.add(new FileInfo(name, parent, data), parent)
             if(addResult == FileEditResult.Success) {
                 return parent.getFile(name)
             }
@@ -78,20 +80,20 @@ export let saveOnExplorer = Vue.extend({
 })
 
 
-let openAny = Vue.extend({
+const openAny = defineComponent({
     methods:{
         openIcon:function(model:IconModel) {
-            let fileInfo = (model.isShortcut)?(model.fileInfo as ShortcutInfo).originalFile:model.fileInfo;
+            const fileInfo = (model.isShortcut)?(model.fileInfo as ShortcutInfo).originalFile:model.fileInfo;
             (fileInfo.fileType == FileType.Directory)?(this as any).openDirectory(fileInfo):(this as any).openFile(fileInfo);
         }
     }
 });
 //
-export let backgroundIconSet = Vue.extend({
+export const backgroundIconSet = defineComponent({
     mixins:[ defaultDirectoryAction, defaultFileAction, openAny ],
 })
 
-export let explorerIconSet = Vue.extend({
+export const explorerIconSet = defineComponent({
     mixins:[ openDirectoryOnExplorer, defaultFileAction, openAny ],
     methods:{
         goToParent:function(dirInfo:DirectoryInfo){

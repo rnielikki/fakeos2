@@ -1,10 +1,10 @@
 import Movable from '@/system/core/movable';
 
 export default {
-    bind: function (el:HTMLElement, binding:any, vnode:any) {
+    beforeMount: function (el:HTMLElement, binding:any, vnode:any) {
       if(!binding?.value?.active) return;
-      var handleName:string = binding?.value?.handle as string;
-      var handle:HTMLElement;
+      const handleName:string = binding?.value?.handle as string;
+      let handle:HTMLElement;
       if(handleName == null) {
         handle = el;
       }

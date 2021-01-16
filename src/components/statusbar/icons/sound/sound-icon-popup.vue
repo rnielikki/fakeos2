@@ -7,10 +7,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import SoundManager from '@/system/sound/sound-manager'
 
-export default Vue.extend({
+export default defineComponent({
     name:'SoundIconPopup',
     methods:{
         changed:function(e:Event) {

@@ -2,21 +2,21 @@
     <div class="f_clockdate-content">
         <clock class="f_clockdate-clock" />
         <calendar class="cal" />
-        <div class="popup-button" @mousedown="openTimeSettingWindow">Clock Settings</div>
+        <div class="popup-button" @mousedown="openTimeSettingWin64">Clock Settings</div>
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import Clock from '@/components/ui-components/datetime/clock.vue'
-import WindowFactory from '@/components/window/window-factory'
+import Win64Factory from '@/components/window/window-factory'
 import Calendar from '@/components/ui-components/datetime/calendar.vue'
 
-export default Vue.extend({
+export default defineComponent({
     name:'ClockDatePopup',
     components: { Clock, Calendar },
     methods:{
-        openTimeSettingWindow:function(){
-            return WindowFactory.OpenSetting("time")
+        openTimeSettingWin64:function(){
+            return Win64Factory.OpenSetting("time")
         }
     }
 })

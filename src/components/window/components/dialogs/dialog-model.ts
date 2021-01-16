@@ -2,7 +2,7 @@ export default interface DialogButton {
     text:string;
     value:any;
 }
-export let OkCancelButton = [
+export const OkCancelButton = [
     {
         text:"OK",
         value:true
@@ -12,7 +12,7 @@ export let OkCancelButton = [
         value:false
     }
 ]
-export let OKButton = [
+export const OKButton = [
     {
         text:"OK",
         value:true

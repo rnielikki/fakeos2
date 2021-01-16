@@ -9,8 +9,8 @@
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
-import { WindowOptions } from '@/components/window/components/window-options'
+import { defineComponent,  PropType } from 'vue'
+import { Win64Options } from '@/components/window/components/win64-options'
 import Sound from '@/system/sound/sound'
 import { FileInfo } from '@/system/filesystem/fileinfo'
 import { checkType } from '@/system/filesystem/mime'
@@ -18,16 +18,16 @@ import AppValidator from '@/system/app/app-validator'
 import explorerModal from '@/softwares/core/explorer/explorer-modal'
 import GlobalPath from '@/system/filesystem/globalPath';
 
-export default Vue.extend({
+export default defineComponent({
     name:"Player",
     mixins:[ AppValidator(checkType.ifSound) ],
     data:function(){
         return {
             title:`Player: (${this.$props.sender?.name ?? ""})`,
-            soundRes:null,
+            soundRes:new Sound(""),
             f_file:this.$props.sender,
             windowOptions:
-                new WindowOptions({
+                new Win64Options({
                     defaultWidth:-1,
                     defaultHeight:-1,
                     minWidth:300,
@@ -37,25 +37,26 @@ export default Vue.extend({
         }
     },
     mounted:function() {
-        let sender = this.$props.sender;
+        let sender = this.$props.sender as FileInfo;
         if(sender) {
-            this.startPlaying(this.$props.sender);  
+            this.startPlaying(this.$props.sender!);
          }
     },
     methods:{
         open:function(){
             explorerModal.open(this, this.$data.f_file ?? GlobalPath.Music, (file:FileInfo)=>{
                 this.$data.f_file = file;
+                //@ts-ignore
                 this.$data.f_targetWindow.f_title = `Player: (${file?.name ?? ""})`
             }, checkType.ifSound)
         },
         startPlaying:function(music:FileInfo){
             let realName = Object(music.data)?.name;
             if(!realName) return;
-            this.$data.soundRes = new Sound(realName)
+            this.$data.soundRes = new Sound(realName);
         },
         play:function(){
-            this.$data.soundRes?.play()
+            this.$data.soundRes.play()
         },
         pause:function(){
             this.$data.soundRes?.pause()
@@ -72,7 +73,7 @@ export default Vue.extend({
             this.startPlaying(value);
         }
     },
-    beforeDestroy:function(){
+    beforeUnmount:function(){
         if(this.$data.soundRes){
             this.$data.soundRes.stop()
         }

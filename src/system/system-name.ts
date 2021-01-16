@@ -1,5 +1,5 @@
-let computerName = "system32";
-let userName = "RooT";
+const computerName = "system32";
+const userName = "RooT";
 const ua = navigator.userAgent;
 const info = parseUA(ua);
 

@@ -1,11 +1,11 @@
-import WindowFactory from '../window/window-factory'
+import Win64Factory from '../window/window-factory'
 import { OkCancelButton } from '../window/components/dialogs/dialog-model'
 import { DirectoryInfo, FileInfo } from '@/system/filesystem/fileinfo'
 import globalPath from '@/system/filesystem/globalPath'
 export default [
     {
         label: 'Help',
-        action:()=>{ WindowFactory.OpenSetting("help") }
+        action:()=>{ Win64Factory.OpenSetting("help") }
     },
     {
         label:'Programs',
@@ -17,12 +17,12 @@ export default [
             ...getPrograms(globalPath.Program)
         ]
     },
-    { label: 'Settings' , action:()=>{ WindowFactory.OpenSetting() }},
+    { label: 'Settings' , action:()=>{ Win64Factory.OpenSetting() }},
     { label: 'Sleep' },
     {
         label: 'Restart',
         action:()=>{
-            WindowFactory.OpenDialog(null, 'Confirming', 'All of your settings will be removed!\nDo you really want to restart?',
+            Win64Factory.OpenDialog(null, 'Confirming', 'All of your settings will be removed!\nDo you really want to restart?',
                 OkCancelButton,
                 (result:boolean)=>{
                     if(result) location.reload();
@@ -31,17 +31,17 @@ export default [
     },
     {
         label: 'Turn Off',
-        action:()=>{ WindowFactory.OpenDialog(null, 'Cannot turn off', 'We cannot count our sheeps for technical reason.\nUnderflow, I guess.') }
+        action:()=>{ Win64Factory.OpenDialog(null, 'Cannot turn off', 'We cannot count our sheeps for technical reason.\nUnderflow, I guess.') }
     }
 ]
 
 function getPrograms(pathDir:DirectoryInfo){
     return pathDir.files.map(item=>{
-        let realFileName = Object(((item as DirectoryInfo).getFile(item.name+".vue") as FileInfo)?.data)?.app;
+        const realFileName = Object(((item as DirectoryInfo).getFile(item.name+".vue") as FileInfo)?.data)?.app;
         if(!realFileName) return { label:"Error" }
         return {
             label:item.name,
-            action:()=>WindowFactory.OpenProgram(realFileName)
+            action:()=>Win64Factory.OpenProgram(realFileName)
         };
     })
 }

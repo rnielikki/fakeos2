@@ -6,9 +6,9 @@
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { PropType, defineComponent } from 'vue'
 import { IMenuComponent, MenuItem, ParentMenuItem } from './models/menu-model'
-export default Vue.extend({
+export default defineComponent({
     name:'MenuLabel',
     data:()=>{
         return {
@@ -17,13 +17,16 @@ export default Vue.extend({
         }
     },
     props:{
-        item:Object as PropType<IMenuComponent>,
+        item:{
+            type:Object as PropType<IMenuComponent>,
+            required:true
+        },
         onDeleted:Function
     },
     mounted:function(){
         var checkActivated = (item:IMenuComponent)=>{
             if(Object.prototype.hasOwnProperty.call(item, "action")){
-                this.$el.addEventListener("click", (e)=>{ (item as MenuItem).action(); this.onDeleted(); e.stopPropagation() });
+                this.$el.addEventListener("click", (e:Event)=>{ (item as MenuItem).action(); if(this.onDeleted) this.onDeleted(); e.stopPropagation() });
                 return true;
             }
             else return false;

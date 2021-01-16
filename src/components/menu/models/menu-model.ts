@@ -8,7 +8,7 @@ export class MenuItem implements IMenuComponent {
     constructor (label:string, action:()=>void){
         this.label = label;
         this.action = action;
-    };
+    }
 }
 
 export class ParentMenuItem implements IMenuComponent {
@@ -17,5 +17,5 @@ export class ParentMenuItem implements IMenuComponent {
     constructor (label:string, submenu:IMenuComponent){
         this.label = label;
         this.submenu = submenu;
-    };
+    }
 }

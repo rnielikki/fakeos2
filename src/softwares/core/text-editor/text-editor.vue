@@ -4,10 +4,10 @@
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { defineComponent,  PropType } from 'vue'
 import { FileInfo } from '@/system/filesystem/fileinfo'
 import { checkType } from '@/system/filesystem/mime';
-import { WindowOptions } from '@/components/window/components/window-options';
+import { Win64Options } from '@/components/window/components/win64-options';
 import explorerModal from '@/softwares/core/explorer/explorer-modal'
 import AppMenu from './menu'
 import windowFactory from '@/components/window/window-factory';
@@ -15,7 +15,7 @@ import { OkCancelButton } from '@/components/window/components/dialogs/dialog-mo
 import AppValidator from '@/system/app/app-validator'
 import GlobalPath from '@/system/filesystem/globalPath';
 
-export default Vue.extend({
+export default defineComponent({
     mixins:[ AppValidator(checkType.ifText) ],
     data:function(){
         return {
@@ -37,10 +37,12 @@ export default Vue.extend({
         },
         saveFile:function(){
             let file = this.$data.f_file ?? new FileInfo(".txt", GlobalPath.Document, {content:""});
+            //@ts-ignore
             file.data.content = (this.$refs.content as HTMLElement).innerText;
             explorerModal.save(this, file,(result:object)=>{
                 let ok = Object(result).ok;
                 if(ok){
+                    //@ts-ignore
                     this.$data.f_targetWindow.f_title = `Text Editor - ${Object(result).file.name}`
                 }
                 this.f_confirmSaving.fileChanged = !ok
@@ -51,7 +53,8 @@ export default Vue.extend({
         }
     },
     computed:{
-        content:function(){
+        content:function():string{
+            //@ts-ignore
             return this.$props.sender?.data?.content ?? "";
         }
     }

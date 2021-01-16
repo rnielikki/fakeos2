@@ -5,7 +5,7 @@ export default class Observable<T> {
         this.subscribers.push(subscriber)
     }
     unregister(unsubscriber:(value:T)=>void):boolean{
-        let index = this.subscribers.indexOf(unsubscriber);
+        const index = this.subscribers.indexOf(unsubscriber);
         if(index === -1){
             return false;
         }

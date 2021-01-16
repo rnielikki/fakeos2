@@ -1,9 +1,9 @@
 import windowFactory from '@/components/window/window-factory';
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { FileInfo } from '../filesystem/fileinfo';
 
 export default function(validator:(sender:FileInfo)=>unknown){
-    return Vue.extend({
+    return defineComponent({
         props:{
             sender:{
                 type:Object as PropType<FileInfo>,
@@ -11,7 +11,7 @@ export default function(validator:(sender:FileInfo)=>unknown){
             }
         },
         mounted:function(){
-            let sender = this.$props.sender;
+            const sender = this.$props.sender;
             if(!sender){
                 return;
             }
@@ -27,6 +27,7 @@ export default function(validator:(sender:FileInfo)=>unknown){
         methods:{
             f_throwError:function(content:string){
                 this.$nextTick(()=>{
+                    //@ts-ignore
                     windowFactory.OpenDialog(this, "Error while opening", content, undefined, ()=>this.$data.f_targetWindow.close());
                 })
             }

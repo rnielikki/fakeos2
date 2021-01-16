@@ -2,11 +2,11 @@
     <span>{{ currentTime }}</span>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import SystemClock from '@/system/time/current'
 import ClockFormatter from '@/system/time/formatter'
 import ClockObserver from '@/system/time/timer'
-export default Vue.extend({
+export default defineComponent({
     name:'ClockDatePopup',
     data:function(){
         return {
@@ -20,11 +20,11 @@ export default Vue.extend({
     computed:{
         clockChanger:function(){
             return (date:Date)=>{
-                this.$set(this.$data, "currentTime", ClockFormatter.getTimeFormat(date))
+                Object.assign(this.$data, {"currentTime": ClockFormatter.getTimeFormat(date)})
             }
         }
     },
-    beforeDestroy:function(){
+    beforeUnmount:function(){
         ClockObserver.seconds.unsubscribe(this.clockChanger)
     }
 })

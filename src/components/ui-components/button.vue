@@ -3,8 +3,8 @@
 </template>
 <script lang="ts">
 //provides basic button with default theme.
-import Vue from 'vue'
-export default Vue.extend({
+import { defineComponent } from 'vue'
+export default defineComponent({
     name: 'UiButton',
     props:{
         text: String,

@@ -10,16 +10,16 @@
     </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { defineComponent } from 'vue';
 import Desktop from './components/desktop.vue';
 
-@Component({
+export default defineComponent({
+    name:'BlueScreen',
     props:{
         error:String,
         info:String
     }
-})
-export default class BlueScreen extends Vue {}
+});
 </script>
 <style lang="scss" scoped>
 .bsod{

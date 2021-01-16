@@ -8,16 +8,14 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import SystemName from '@/system/system-name'
-export default Vue.extend({
+
+export default defineComponent({
     data:function(){
         return {
             title:"User Info"
         }
-    },
-    created:function(){
-        Vue.prototype.$f_userName = "MyName"
     },
     computed:{
         userName:function(){

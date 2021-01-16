@@ -16,13 +16,13 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import current from '@/system/time/current'
 import UiButton from '@/components/ui-components/button.vue'
-import WindowFactory from '@/components/window/window-factory'
+import Win64Factory from '@/components/window/window-factory'
 import { OkCancelButton } from '@/components/window/components/dialogs/dialog-model'
 import SystemName from '@/system/system-name'
-export default Vue.extend({
+export default defineComponent({
     data:function(){
         return {
             title:"Computer information"
@@ -45,19 +45,19 @@ export default Vue.extend({
     },
     methods:{
         checkUpdate:function(){
-            WindowFactory.OpenDialog(this, "Found 1 update", "We found 1 offical virus as update. Do you want to install?", OkCancelButton,
+            Win64Factory.OpenDialog(this, "Found 1 update", "We found 1 offical virus as update. Do you want to install?", OkCancelButton,
                 (result:boolean)=>{
                     (result)?
-                        WindowFactory.OpenDialog(this, "Cannot find the update", "You didn't pay the bitcoin so you cannot update it.\nIf you want to pay it, please send money to me.")
-                        :WindowFactory.OpenDialog(this, "lol", "I will find you and I will install virus on your computer!")
+                        Win64Factory.OpenDialog(this, "Cannot find the update", "You didn't pay the bitcoin so you cannot update it.\nIf you want to pay it, please send money to me.")
+                        :Win64Factory.OpenDialog(this, "lol", "I will find you and I will install virus on your computer!")
                 }
             );
         },
         activate:function(){
-            WindowFactory.OpenDialog(this, "Error", "To activate your computer, update your computer first.")
+            Win64Factory.OpenDialog(this, "Error", "To activate your computer, update your computer first.")
         },
         feedback:function(){
-            WindowFactory.OpenSetting("help");
+            Win64Factory.OpenSetting("help");
         }
     }
 })

@@ -2,7 +2,7 @@ import Observable from '@/system/core/observer'
 
 //mastersound range is 0-1.
 let master:number = 1;
-let observableMasterSound = new Observable<number>();
+const observableMasterSound = new Observable<number>();
 
 export default {
     get masterSound(){

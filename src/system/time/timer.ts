@@ -9,7 +9,7 @@ let minuteRegistered:number = 0;
 let secondIntervalId:number = -1;
 let minuteIntervalId:number = -1;
 
-let listenSecondsForMinute = function(date:Date){
+const listenSecondsForMinute = function(date:Date){
     if(date.getSeconds()==0) {
         //minute interval starts
         onMinuteChanged.invoke(CurrentDateTime.currentDate);

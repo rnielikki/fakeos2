@@ -1,5 +1,5 @@
-import Vue from 'vue'
-export default Vue.extend({
+import Vue, { defineComponent } from 'vue'
+export default defineComponent({
     data:function(){
         return {
             result:false as any

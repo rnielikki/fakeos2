@@ -1,15 +1,15 @@
 <template>
     <div class="f_popup-content">
-        <div @mousedown="openInternetWindow">Open Internet Window...</div>
+        <div @mousedown="openInternetWin64">Open Internet Win64...</div>
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import WindowFactory from '@/components/window/window-factory'
-export default Vue.extend({
+import { defineComponent } from 'vue'
+import Win64Factory from '@/components/window/window-factory'
+export default defineComponent({
     methods:{
-        openInternetWindow:function(){
-            return WindowFactory.OpenSetting("internet")
+        openInternetWin64:function(){
+            return Win64Factory.OpenSetting("internet")
         }
     }
 })

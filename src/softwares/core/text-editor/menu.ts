@@ -1,8 +1,7 @@
 import windowFactory from '@/components/window/window-factory'
-import explorerModal from '../explorer/explorer-modal'
-import { checkType } from '@/system/filesystem/mime'
+import { ComponentPublicInstance } from 'vue'
 
-export default function(target:Vue){
+export default function(target:ComponentPublicInstance){
     return {
         content:[
             {
@@ -18,6 +17,7 @@ export default function(target:Vue){
                     },
                     {
                         label:"Close",
+                        //@ts-ignore
                         action:()=>target.$data.f_targetWindow.close()
                     }
                 ]

@@ -3,8 +3,8 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
+import { defineComponent } from 'vue'
+export default defineComponent({
     name:"DropTarget",
     props:{
         horizontal:{
@@ -21,7 +21,7 @@ export default Vue.extend({
         }
     },
     computed:{
-        calculatedSize:function(){
+        calculatedSize:function():{width:String, height:String}{
             if(this.horizontal) {
                 return {
                     width:this.gap,
@@ -35,6 +35,7 @@ export default Vue.extend({
                 }
             }
         }
-    }
+    },
+    emits:['drop']
 })
 </script>

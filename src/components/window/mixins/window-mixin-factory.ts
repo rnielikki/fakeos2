@@ -1,15 +1,15 @@
-import MainWindowMixin from './main-window-mixin'
+import MainWin64Mixin from './main-window-mixin'
 import ModalMixin from './modal-mixin'
-import WindowConfirmSaving from './window-confirm-saving'
+import Win64ConfirmSaving from './window-confirm-saving'
 
 export default {
-    CreateWindowMixin:function(confirmSaving?:object){
+    CreateWin64Mixin:function(confirmSaving?:object){
         if(confirmSaving){
-            let _confirm = WindowConfirmSaving(confirmSaving);
-            return [ _confirm, MainWindowMixin ]
+            const _confirm = Win64ConfirmSaving(confirmSaving);
+            return [ _confirm, MainWin64Mixin ]
         }
         else{
-            return [ MainWindowMixin ]
+            return [ MainWin64Mixin ]
         }
     },
     CreateModalMixin:function(){

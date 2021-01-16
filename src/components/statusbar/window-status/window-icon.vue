@@ -7,22 +7,24 @@
             }"
             :style="{ backgroundImage: 'url('+targetApp.$props.iconPath+')' }"
             @click="selectOrMinimize"
+            @dragend="$emit('dragend')"
             :data-window-id="this.targetApp._uid"
             @dragover.prevent>
         </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Window from '@/components/window/components/window.vue'
-import WindowManager from '@/system/window-manager'
+import { defineComponent } from 'vue'
+import Win64 from '@/components/window/components/win64.vue'
+import Win64Manager from '@/system/window-manager'
 
 //import { IMenuComponent } from '@/components/menu/models/menu-model'
 import ContextMenu from '../../menu/contextmenu'
 import PopupInfo, { popupDirection } from '../../popups/popup-info'
+import { PropType, ComponentPublicInstance } from 'vue'
 
-export default Vue.extend({
+export default defineComponent({
     props:{
-        targetApp:Window
+        targetApp:Object as PropType<ComponentPublicInstance>
     },
     directives:{ contextMenu:ContextMenu },
     computed:{
@@ -31,19 +33,23 @@ export default Vue.extend({
         }
     },
     mounted:function(){
-        this.$el.addEventListener("mousedown,",e=>e.stopPropagation(),false)
+        this.$el.addEventListener("mousedown,",(e:Event)=>e.stopPropagation(),false)
     },
     methods:{
         selectOrMinimize:function(){
             let app = this.$props.targetApp;
-            if(WindowManager.isSelected(app) || app.minimized) {
-                this.$props.targetApp.minimize();
+            //@ts-ignore
+            if(Win64Manager.isSelected(app) || app.minimized) {
+                //@ts-ignore
+                app.minimize();
             }
             else {
-                WindowManager.select(app)
+                //@ts-ignore
+                Win64Manager.select(app)
             }
         }
-    }
+    },
+    emits:['dragend']
 })
 </script>
 <style lang="scss" scoped>

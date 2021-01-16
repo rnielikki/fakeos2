@@ -1,7 +1,7 @@
 /// FROM FAKEOS V1
 /// NOTE: DON'T USE DOCWIDTH / DOCHEIGHT OUTSIDE OF WINDOW MAX/MIN POSITION AREA!
 /// THIS IS NOT *REAL* WIDTH / HEIGHT!
-let docWidth: number = window.innerWidth - 100, docHeight: number = window.innerHeight - 20;
+const docWidth: number = window.innerWidth - 100, docHeight: number = window.innerHeight - 20;
 
 export default class Position {
     private _width: number;

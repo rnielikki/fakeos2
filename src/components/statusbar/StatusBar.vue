@@ -7,24 +7,24 @@
           }">
           <img :src="require('./start.png')" />
           </diV>
-        <Window-status />
+        <Win64-status />
         <Icon-status />
         <Clock-date />
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import ClockDate from './clock-date/clock-date.vue'
-import WindowStatus from './window-status/window-status.vue'
+import Win64Status from './window-status/window-status.vue'
 import IconStatus from './icon-status.vue'
 import StartMenu from './start-menu'
 
 import Menu from '../menu/menu'
 import PopupInfo, { PopupDirection, popupDirection } from '../popups/popup-info'
 
-export default Vue.extend({
+export default defineComponent({
     name:'Statusbar',
-    components: { WindowStatus, ClockDate, IconStatus },
+    components: { Win64Status, ClockDate, IconStatus },
     directives: { Menu },
     data:function(){
         return {

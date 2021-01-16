@@ -4,7 +4,7 @@ interface IconGlobalType {
     dropTarget:IFileInfo | null;
 }
 
-let IconGlobal:IconGlobalType = {
+const IconGlobal:IconGlobalType = {
     dropTarget:null
 }
 

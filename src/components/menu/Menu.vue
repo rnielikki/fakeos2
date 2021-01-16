@@ -8,13 +8,13 @@
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { defineComponent,  PropType } from 'vue'
 import { IMenuComponent, MenuItem, ParentMenuItem } from './models/menu-model'
 import Popup from '../popups/popup.vue'
 import { createDefaultSubmenuInfo } from './models/menu-info'
 import MenuLabel from './menu-label.vue'
 
-export default Vue.extend({
+export default defineComponent({
     name:'Menu',
     components:{ MenuLabel, Popup },
     data:function(){

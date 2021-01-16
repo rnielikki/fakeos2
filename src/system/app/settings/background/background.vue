@@ -27,7 +27,7 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import ImageViewer from '@/components/ui-components/image-viewer.vue'
 import SelectButton from '@/components/ui-components/select-button.vue'
 import { Path } from '@/system/filesystem/filesystem'
@@ -35,7 +35,7 @@ import { DirectoryInfo, FileInfo } from '@/system/filesystem/fileinfo'
 import GlobalPath from '@/system/filesystem/globalPath'
 import SystemGlobal from '@/system/global'
 
-export default Vue.extend({
+export default defineComponent({
     components:{ ImageViewer, SelectButton },
     data:function(){
         let _background = SystemGlobal.background as HTMLElement

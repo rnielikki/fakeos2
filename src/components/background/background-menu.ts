@@ -1,4 +1,4 @@
-import WindowFactory from '../window/window-factory'
+import Win64Factory from '../window/window-factory'
 import filesystemEditor from '@/system/filesystem/filesystem-editor';
 import { DirectoryInfo } from '@/system/filesystem/fileinfo';
 import GlobalPath from '@/system/filesystem/globalPath'
@@ -18,7 +18,7 @@ export default [
     {
         label: 'Set Background',
         action:function(){
-            WindowFactory.OpenSetting("background");
+            Win64Factory.OpenSetting("background");
         }
     }
 ]

@@ -1,31 +1,31 @@
 <template>
-    <draggable-collection class="windows-collection" :collection="allWindows" :horizontal="true" gap="0.9rem" collectionKeyName="_uid">
+    <draggable-collection class="windows-collection" :collection="allWin64s" :horizontal="true" gap="0.9rem" collectionKeyName="_uid">
         <template v-slot:default="model">
-            <window-icon :targetApp="model.model" v-on:dragend.native="model.dragend" />
+            <window-icon :targetApp="model.model" v-on:dragend="(e)=>model.dragend(e)" />
         </template>
     </draggable-collection>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import WindowIcon from './window-icon.vue'
-import { WindowEvents } from '@/system/window-manager'
+import { ComponentPublicInstance, defineComponent } from 'vue'
+import Win64Icon from './window-icon.vue'
+import { Win64Events } from '@/system/window-manager'
 import DraggableCollection from '@/system/core/draggable/draggable-collection.vue'
 
-export default Vue.extend({
-    name: 'WindowStatus',
-    components:{ WindowIcon, DraggableCollection },
+export default defineComponent({
+    name: 'Win64Status',
+    components:{ "window-icon":Win64Icon, "draggable-collection":DraggableCollection },
     data:function(){
         return {
-            allWindows:new Array<Window>()
+            allWin64s:new Array<ComponentPublicInstance>()
         }
     },
     created:function(){
-        WindowEvents.OnAdded.subscribe((win)=>{
-            this.$data.allWindows.push(win);
+        Win64Events.OnAdded.subscribe((win)=>{
+            this.$data.allWin64s.push(win);
         });
-        WindowEvents.OnRemoved.subscribe((win)=>{
+        Win64Events.OnRemoved.subscribe((win)=>{
             let id = (win as any)._uid
-            this.$set(this.$data, "allWindows", this.$data.allWindows.filter((w:any)=>w._uid !== id))
+            Object.assign(this.$data, {"allWin64s": this.$data.allWin64s.filter((w:any)=>w._uid !== id)})
         });
     }
 })

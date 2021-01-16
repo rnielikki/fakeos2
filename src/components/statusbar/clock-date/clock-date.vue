@@ -5,7 +5,7 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { createApp, defineComponent } from 'vue'
 import Timer from '@/system/time/timer'
 import CurrentDateTime from '@/system/time/current'
 import Formatter from '@/system/time/formatter'
@@ -13,7 +13,7 @@ import Popup from '../../popups/popup'
 import ClockDatePopup from './clock-date-popup.vue'
 import PopupInfo, { popupDirection } from '@/components/popups/popup-info'
 
-export default Vue.extend({
+export default defineComponent({
     name:'ClockDate',
     data:function(){
         let current = CurrentDateTime.currentDate;
@@ -32,7 +32,7 @@ export default Vue.extend({
             })
     },
     mounted:function(){
-        new Popup(this.$el as HTMLElement, ()=>new ClockDatePopup(), "click", new PopupInfo({
+        new Popup(this.$el as HTMLElement, ()=>createApp(ClockDatePopup), "click", new PopupInfo({
             direction:popupDirection.topLeft,
             x:"100%"
         }));

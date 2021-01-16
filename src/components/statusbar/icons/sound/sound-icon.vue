@@ -4,13 +4,13 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { createApp, defineComponent } from 'vue'
 import SoundIconPopup from './sound-icon-popup.vue'
 import SoundManager from '@/system/sound/sound-manager'
 import Popup from '@/components/popups/popup'
 import PopupInfo, { popupDirection } from '@/components/popups/popup-info'
 
-export default Vue.extend({
+export default defineComponent({
     name:'SoundIcon',
     data:function(){
         return {
@@ -28,11 +28,11 @@ export default Vue.extend({
         this.$data.volume = this.getSoundScale(SoundManager.masterSound);
     },
     mounted:function(){
-        new Popup(this.$el as HTMLElement, ()=>new SoundIconPopup(), "click", new PopupInfo({
+        new Popup(this.$el as HTMLElement, ()=>createApp(SoundIconPopup), "click", new PopupInfo({
             direction:popupDirection.topLeft,
             x:"100%"
         }));
-        SoundManager.MasterChangeListener.Add((vol)=>this.$set(this.$data, "volume", this.getSoundScale(vol)));
+        SoundManager.MasterChangeListener.Add((vol)=>Object.assign(this.$data, {"volume": this.getSoundScale(vol)}));
     },
     methods:{
         getSoundScale:function(volume:number){
@@ -50,7 +50,7 @@ export default Vue.extend({
             if(!this.$data.icons[this.$data.volume]) {
                 this.$data.icons[this.$data.volume] = require(`./images/sound${this.$data.volume}.png`);
             }
-            this.$set(this.$data, "soundIcon",this.getSoundIcon(this.$data.volume));
+            Object.assign(this.$data, {"soundIcon":this.getSoundIcon(this.$data.volume)});
         },
     }
 })

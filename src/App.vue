@@ -6,29 +6,29 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { defineComponent } from 'vue';
 import Desktop from './components/desktop.vue';
 import BlueScreen from './components/bluescreen.vue'
 import FileSystem from '@/system/filesystem/filesystem'
 
-@Component({
+export default defineComponent({
+  name:'App',
   components: {
     Desktop, BlueScreen
   },
-  errorCaptured(err, vm, info){
-    this.$data.info = info;
-    this.$data.errorInfo = err;
-    this.$data.error = true;
-  },
   data(){
     return {
-      error: false,
-      errorInfo: undefined,
-      info: undefined
+      error: false
     }
+  },
+  errorCaptured(err, vm, info){
+    this.$data.error = true;
+    Object.assign(this.$data,{
+      info: info,
+      errorInfo: err
+    });
   }
 })
-export default class App extends Vue {}
 </script>
 
 <style lang="scss">

@@ -11,9 +11,9 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import Globals from '@/system/global'
-export default Vue.extend({
+export default defineComponent({
     data:function(){
         return {
             title:"Language settings",

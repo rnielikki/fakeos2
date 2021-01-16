@@ -7,11 +7,11 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import UiButton from '@/components/ui-components/button.vue'
-import WindowFactory from '@/components/window/window-factory'
+import Win64Factory from '@/components/window/window-factory'
 
-export default Vue.extend({
+export default defineComponent({
     components:{ UiButton },
     data:function(){
         return {
@@ -27,13 +27,13 @@ export default Vue.extend({
     methods:{
         checkInternet:function(){
             let ifOnline = (navigator.onLine)?"online":"offline"
-            WindowFactory.OpenDialog(this, "Connection check", "Now you're "+ifOnline+".");
+            Win64Factory.OpenDialog(this, "Connection check", "Now you're "+ifOnline+".");
         },
         setStatus:function(){
-            Vue.set(this.$data,"status",(navigator.onLine)?"Online":"Offline")
+            Object.assign(this.$data,{"status":(navigator.onLine)?"Online":"Offline"})
         }
     },
-    beforeDestroy:function(){
+    beforeUnmount:function(){
         window.removeEventListener("online", this.setStatus);
         window.removeEventListener("offline", this.setStatus);
     },

@@ -1,28 +1,28 @@
 <template>
-    <div class="window-title" @dblclick="targetWindow.maximize">
+    <div class="window-title" @dblclick="targetWindows.maximize">
         <img v-if="iconPath" :src="iconPath" />
         <span class="window-title-text">{{ title }}</span>
         <div class="window-title-buttons">
-            <Ui-button v-if="hasMinimizer" :clicked="targetWindow.minimize" text = "_" />
-            <Ui-button v-if="hasMaximizer" :clicked="targetWindow.maximize" text = "[]" />
+            <Ui-button v-if="hasMinimizer" :clicked="targetWindows.minimize" text = "_" />
+            <Ui-button v-if="hasMaximizer" :clicked="targetWindows.maximize" text = "[]" />
             <Ui-button :clicked="close" text = "x" />
         </div>
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { ComponentPublicInstance, defineComponent,  PropType } from 'vue'
 import UiButton from '../../ui-components/button.vue'
-import Window from './window.vue'
+import Win64 from './win64.vue'
 
-export default Vue.extend({
-    name:'Window-title',
+export default defineComponent({
+    name:'Win64-title',
     props:{
         iconPath:String,
         title:String,
         hasMinimizer:Boolean,
         hasMaximizer:Boolean,
-        targetWindow:{
-            type:Window,
+        targetWindows:{
+            type:Object as PropType<ComponentPublicInstance>,
             required:true
         }
     },
@@ -31,7 +31,7 @@ export default Vue.extend({
     },
     methods:{
         close(e:Event){
-            (this.targetWindow as any).close();
+            (this.targetWindows as any).close();
         }
     }
 })
