@@ -20,6 +20,7 @@ Help us to fix this app by fixing these problems:
 
 * We cannot **slot** with `createApp()`.
 * Parent element is erased when appending with `createApp(...).mount(parentElement)`.
+* Some events won't work (add, remove files etc.) - Remember to add `emits[...]`.
 
 Since Vue 3 is currently on beta, features can be removed / added / changed / fixed (or broken?). Please keep on eye of them while you're contributing in this branch.
 

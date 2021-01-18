@@ -1,6 +1,7 @@
 import PopupInfo from './popup-info';
 import PopupComponent from './popup.vue'
 import { App, ComponentPublicInstance, createApp } from 'vue'
+import instantiater from '@/system/instantiater';
 
 export default class Popup {
     parentElement:HTMLElement;
@@ -13,10 +14,10 @@ export default class Popup {
     private childApp:App<Element> | null = null;
     private popupApp:ComponentPublicInstance | null = null;
     constructor(button:HTMLElement, contentFactory:()=>App<Element>, bindingType:string, popupInfo?:PopupInfo, parent?:HTMLElement){
+        this.popupInfo = popupInfo ?? new PopupInfo();
         this.parentElement = parent ?? button;
         this.contentFactory = contentFactory;
         this.bindingType = bindingType;
-        this.popupInfo = popupInfo ?? new PopupInfo();
         button.addEventListener(bindingType, this.show, false);
     }
     //1. v-if attaches too many <!-- --> damn
@@ -26,14 +27,18 @@ export default class Popup {
         this.popupContent = createApp(PopupComponent,{
             popupInfo: this.popupInfo
         });//.slots: [ this.childApp ];
-        this.popupApp = this.popupContent.mount(this.parentElement);
+        this.popupApp = instantiater.Mount(this.popupContent, this.parentElement);
+
+        /* SLOT-FILL */
         this.popupElement = this.popupApp.$el;
-        this.childApp.mount(this.popupElement!);
+        instantiater.SetSlot(this.childApp, this.popupElement!, ".f_popup-wrapper");
         this.parentElement.appendChild(this.popupElement!);
     }
     remove = ()=>{
         if(!this.popupContent) return;
-        this.childApp?.unmount(this.popupElement!);
+        if(this.childApp!=null){
+            instantiater.UnSetSlot(this.childApp);
+        }
         this.parentElement.removeChild(this.popupElement!);
         this.popupContent?.unmount(this.parentElement!);
         this.popupContent = null;
@@ -41,13 +46,14 @@ export default class Popup {
         this.parentElement.classList.remove("f_popup-selected")
     }
     show = (e:Event)=>{
+        if(this.callback !== null){
+            this.callback(e as MouseEvent);
+        }
         if(this.popupContent == null){
             this.create();
         }
         e.preventDefault();
         document.addEventListener("mousedown", this.remove, { once: true, capture: false });
-        if(this.callback !== null)
-            this.callback(e as MouseEvent);
         e.stopPropagation();
         this.parentElement.classList.add("f_popup-selected")
     }

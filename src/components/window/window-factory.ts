@@ -32,7 +32,6 @@ export default {
         //@ts-ignore
         const parentWin64 = parent.$data.f_targetWindow;
         const _window = createApp(Win64, {
-            props:{
                 //@ts-ignore
                 title:content?._data?.title ?? "Modal Alert!",
                 hasMinimizer: ()=>false,
@@ -40,33 +39,29 @@ export default {
                 windowOptions: content?._data?.windowOptions ?? new ModalOptions(),
                 parentElement:parentWin64.$el,
                 initToCenter: ()=>true
-            },
-            mixins:[ MixinFactory.CreateModalMixin() ],
-            parent: parentWin64,
-            slots: [ _content ]
-        });
+        }).mixin([ MixinFactory.CreateModalMixin() ]);
+
         if(callback) {
             //@ts-ignore
             _window._data.callback = callback;
         }
-        const mountedWindow = createApp(_window).mount(parent.$el??SystemGlobal.background);
-        const mountedContent = _content.mount(mountedWindow.$el);
+        const mountedWindow = instantiater.Mount(_window, parent.$el??SystemGlobal.background);
+        const mountedContent = instantiater.SetSlot(content, mountedWindow.$el, ".window-content div");
         parentWin64.$el.appendChild(mountedWindow.$el);
-        Object.assign(mountedContent.$data, { f_targetWindow: _window });
+        Object.assign(mountedContent!.$data, { f_targetWindow: _window });
+        Object.assign(mountedContent!, { parent: parentWin64 });
     },
     OpenDialog:function(parent:ComponentPublicInstance | null, title:string, message:string, buttons:Array<DialogButton> = OKButton, callback?:Function, windowOptions?:IWin64Options) {
         const _message = createApp(DialogTemplate,{
-            props: {
-                message: message,
-                buttons:buttons,
-                windowOptionsProp:windowOptions ?? new ModalOptions({
-                    defaultWidth:-1,
-                    defaultHeight:-1,
-                    minWidth:300,
-                    minHeight:100
-                }),
-                callback:callback
-            }
+            message: message,
+            buttons:buttons,
+            windowOptionsProp:windowOptions ?? new ModalOptions({
+                defaultWidth:-1,
+                defaultHeight:-1,
+                minWidth:300,
+                minHeight:100
+            }),
+            callback:callback
         });
         (!parent)?OpenWin64(_message, undefined, undefined, undefined, true):this.OpenModal(parent, _message, callback);
     },
@@ -97,7 +92,6 @@ function OpenWin64(content:App<Element>, appName?:string, iconPath?:string, menu
     )
     //@ts-ignore
     .mixin(MixinFactory.CreateWin64Mixin(content._data?.f_confirmSaving))
-    .component("slot", content);
     //@ts-ignore
     if(!_window._props.rightClickMenu){
         //@ts-ignore
@@ -110,15 +104,13 @@ function OpenWin64(content:App<Element>, appName?:string, iconPath?:string, menu
     //@ts-ignore
     _window._props.rightClickMenu = _window._props?.rightClickMenu?.concat(createRightClickMenu(_window));
     const mountedWindow = instantiater.Mount(_window, SystemGlobal.background);
-    //const mountedContent = instantiater.Mount(content, mountedWindow.$el);
-    //Object.assign(mountedContent.$data, { f_targetWindow: _window });
+    const mountedContent = instantiater.SetSlot(content, mountedWindow.$el, ".window-content div");
+    Object.assign(mountedContent!.$data, { f_targetWindow: _window });
 }
 
 function getComponentInPromise(component:any, options?:any){
     if(options){
-        return createApp(component.default, {
-            props: options
-        })
+        return createApp(component.default, options)
     }
     else{
         return createApp(component.default);

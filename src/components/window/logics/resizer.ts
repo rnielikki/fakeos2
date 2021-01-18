@@ -8,8 +8,8 @@ export default class ResizerCollection {
             throw "The argument 'resizer' is not an instance of Vue component.";
         }*/
         target.style.position = "absolute";
-        for(resizer of resizer._vnode.children){
-            new Resizer(resizer.elm as HTMLElement, target, resizer.data.class.toString(), minWidth, minHeight);
+        for(const r of resizer.$el.children){
+            new Resizer(r as HTMLElement, target, r.classList.value, minWidth, minHeight);
         }
     }
 }
