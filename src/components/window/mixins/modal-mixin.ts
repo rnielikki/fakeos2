@@ -1,20 +1,20 @@
-import Vue, { defineComponent } from 'vue'
-import Win64Manager from '@/system/window-manager'
+import { defineComponent } from 'vue'
+import WindowManager from '@/system/window-manager'
 
 export default defineComponent({
     mounted:function(){
         //@ts-ignore
         this.$parent.$props.modal = this;
         //@ts-ignore
-        Win64Manager.select(this.$parent)
+        WindowManager.select(this.$parent)
         //@ts-ignore
-        this.$el.addEventListener("mousedown", ()=>Win64Manager.select(this.$parent), true);
+        this.$el.addEventListener("mousedown", ()=>WindowManager.select(this.$parent), true);
         //@ts-ignore
         this.$data.selected = true;
     },
     beforeUnmount:function(){
         //@ts-ignore
-        Win64Manager.select(this.$parent)
+        WindowManager.select(this.$parent)
         //@ts-ignore
         this.$parent.$props.modal = null;
 

@@ -9,7 +9,7 @@ export default {
         handle = el;
       }
       else {
-        handle = vnode.children.find((child:any)=>child.componentOptions?.tag==handleName)?.elm;
+        handle = vnode.children.find((child:any)=>child.type?.name==handleName)?.el;
         if(!handle) {
           throw(`Error: Component name ${handleName} cannot found.`);
         }

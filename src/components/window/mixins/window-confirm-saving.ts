@@ -1,7 +1,7 @@
 import Vue, { defineComponent } from 'vue'
 import windowFactory from '../window-factory';
 import { OkCancelButton } from '../components/dialogs/dialog-model';
-import Win64Manager from '@/system/window-manager';
+import WindowManager from '@/system/window-manager';
 
 export default function(message:object){
     const title = Object(message)?.title ?? "You have unchanged data";

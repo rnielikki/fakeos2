@@ -1,5 +1,5 @@
 <template>
-    <draggable-collection class="windows-collection" :collection="allWin64s" :horizontal="true" gap="0.9rem" collectionKeyName="_uid">
+    <draggable-collection class="windows-collection" :collection="allWin64s" :horizontal="true" gap="0.9rem" collectionKeyName="_.uid">
         <template v-slot:default="model">
             <window-icon :targetApp="model.model" v-on:dragend="(e)=>model.dragend(e)" />
         </template>
@@ -24,8 +24,8 @@ export default defineComponent({
             this.$data.allWin64s.push(win);
         });
         Win64Events.OnRemoved.subscribe((win)=>{
-            let id = (win as any)._uid
-            Object.assign(this.$data, {"allWin64s": this.$data.allWin64s.filter((w:any)=>w._uid !== id)})
+            let id = (win as any)._.uid
+            Object.assign(this.$data, {"allWin64s": this.$data.allWin64s.filter((w:any)=>w._.uid !== id)})
         });
     }
 })

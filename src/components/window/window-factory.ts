@@ -28,26 +28,27 @@ export default {
         if(!parent){
             throw "Error: Modal needs parent";
         }
-        const _content = createApp(content);
+        //@ts-ignore
+        const data = content._component.data();
         //@ts-ignore
         const parentWin64 = parent.$data.f_targetWindow;
         const _window = createApp(Win64, {
                 //@ts-ignore
-                title:content?._data?.title ?? "Modal Alert!",
+                title:data?.title ?? "Modal Alert!",
                 hasMinimizer: ()=>false,
                 //@ts-ignore
-                windowOptions: content?._data?.windowOptions ?? new ModalOptions(),
+                windowOptions: data?.windowOptions ?? new ModalOptions(),
                 parentElement:parentWin64.$el,
                 initToCenter: ()=>true
         }).mixin([ MixinFactory.CreateModalMixin() ]);
 
-        if(callback) {
-            //@ts-ignore
-            _window._data.callback = callback;
-        }
         const mountedWindow = instantiater.Mount(_window, parent.$el??SystemGlobal.background);
         const mountedContent = instantiater.SetSlot(content, mountedWindow.$el, ".window-content div");
         parentWin64.$el.appendChild(mountedWindow.$el);
+        if(callback) {
+            //@ts-ignore
+            mountedWindow.$data.callback = callback;
+        }
         Object.assign(mountedContent!.$data, { f_targetWindow: _window });
         Object.assign(mountedContent!, { parent: parentWin64 });
     },
@@ -55,7 +56,8 @@ export default {
         const _message = createApp(DialogTemplate,{
             message: message,
             buttons:buttons,
-            windowOptionsProp:windowOptions ?? new ModalOptions({
+            title:title,
+            windowOptions:windowOptions ?? new ModalOptions({
                 defaultWidth:-1,
                 defaultHeight:-1,
                 minWidth:300,
@@ -70,19 +72,22 @@ export default {
             OpenWin64(getComponentInPromise(comp, options), undefined, require("@/system/app/settings/icon.png"));
         }).catch((err)=>{
             this.OpenDialog(null, "Load Failed", `Setting ${settingName} does not exist!`)
-            console.warn(err);
+            console.error(err);
         })
     }
 }
 function OpenWin64(content:App<Element>, appName?:string, iconPath?:string, menu?:{content?:IMenuComponent[], rightClick?:IMenuComponent[]}, center:boolean = false) {
+    //@ts-ignore
+    const data = content._component.data();
+    const prop = content._props;
     const _window = createApp(Win64,{
             appName: appName,
             //@ts-ignore
-            title:content?._data?.title,
+            title:data?.title ?? prop.title,
             //@ts-ignore
-            hasMinimizer:content?._data?.hasMinimizer ?? true,
+            hasMinimizer:data?.hasMinimizer ?? true,
             //@ts-ignore
-            windowOptions:content?._data?.windowOptions ?? new Win64Options(),
+            windowOptions:data?.windowOptions ?? prop.windowOptions ?? new Win64Options(),
             parentElement:SystemGlobal.background,
             initToCenter: center,
             iconPath: iconPath,
@@ -90,8 +95,7 @@ function OpenWin64(content:App<Element>, appName?:string, iconPath?:string, menu
             rightClickMenu: menu?.rightClick ?? undefined
         }
     )
-    //@ts-ignore
-    .mixin(MixinFactory.CreateWin64Mixin(content._data?.f_confirmSaving))
+    .mixin(MixinFactory.CreateWin64Mixin(data?.f_confirmSaving));
     //@ts-ignore
     if(!_window._props.rightClickMenu){
         //@ts-ignore

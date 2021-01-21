@@ -3,6 +3,7 @@ import Observable from './core/observer'
 
 // currently opened windows.
 // the array is in the order of recent selection.
+// It contains also *Z-INDEX ORDERS*, so don't change it to set or map.
 //- ADD TEST: window target array index should be same as z-index
 let openedWin64s = new Array<ComponentPublicInstance>();
 let currentWin64:ComponentPublicInstance | null = null;
@@ -15,12 +16,14 @@ const removedObservable = new Observable<ComponentPublicInstance>();
 //- ADD TEST:and it's same as currentWin64 (if 0 selected then currentWin64 is null)
 export default {
     register:function(target:ComponentPublicInstance){
+        if(target?.$options?.name!="Win64") return;
         //@ts-ignore
         target.$data.zIndex = openedWin64s.length;
         selectAndPush(target);
         addedObservable.invoke(target)
     },
     unregister:function(target:ComponentPublicInstance){
+        if(target?.$options?.name!="Win64") return;
         if(deleteWindow(target)) {
             removedObservable.invoke(target);
             currentWin64 = null;
@@ -28,6 +31,7 @@ export default {
         }
     },
     select:function(target:ComponentPublicInstance){
+        if(target?.$options?.name!="Win64") return;
         if(currentWin64 === target) return;
         if(deleteWindow(target)){
             selectAndPush(target);
@@ -37,6 +41,7 @@ export default {
         select(null);
     },
     isSelected:function(target:ComponentPublicInstance){
+        if(target?.$options?.name!="Win64") return;
         return currentWin64 === target;
     }
 }
@@ -59,14 +64,16 @@ export const Win64Events = {
     }
 }
 function selectAndPush(target:ComponentPublicInstance){
+    if(target?.$options?.name!="Win64") return;
     select(target);
     //@ts-ignore
     target.$data.zIndex = openedWin64s.length;
     openedWin64s.push(target);
 }
 function select(target:ComponentPublicInstance | null, e?:Event){
+    if(target!=null && target?.$options?.name!="Win64") return;
     const id = (e?.target as HTMLElement)?.dataset?.windowId
-    if(id && id == (currentWin64 as any)?._uid){
+    if(id && id == (currentWin64 as any)?._.uid){
         return;
     }
     if(currentWin64 !== null){
@@ -81,8 +88,8 @@ function select(target:ComponentPublicInstance | null, e?:Event){
 }
 function deleteWindow(target:ComponentPublicInstance):boolean{
     const oldLength = openedWin64s.length;
-    const targetId = (target as any)._uid
-    openedWin64s = openedWin64s.filter((w:any)=>w._uid!==targetId);
+    const targetId = (target as any)._.uid
+    openedWin64s = openedWin64s.filter((w:any)=>w._.uid!==targetId);
     if(oldLength !== openedWin64s.length){
         reorderZIndex();
         return true;

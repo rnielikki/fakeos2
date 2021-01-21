@@ -4,7 +4,6 @@ import { App } from "vue";
 export default {
     Mount: function(app:App<Element>, target:Element){
         const frag = document.createElement("div");
-        frag.classList.add("temp-parent");
         const mounted = app.mount(frag);
         target.appendChild(mounted.$el);
         frag.remove();

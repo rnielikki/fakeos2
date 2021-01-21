@@ -1,7 +1,7 @@
 <template>
         <div v-show="!this.minimized"
             :class="['window', { selected: selected && modal === null }]"
-            v-movable="{ active:windowOptions.movable && title !== null, handle: 'Win64-title' }"
+            v-movable="{ active:windowOptions.movable && title !== null, handle: 'Win64-Title' }"
             :data-movable="windowOptions.movable"
             :style="{ zIndex: zIndex }"
             >
@@ -10,7 +10,7 @@
             :minHeight="windowOptions.minHeight" ref="resizer" :target="currentElement" />
             <Win64-Title
                 v-if="title !== null"
-                :targetWindows="this"
+                :targetWindow="this"
                 :title="f_title"
                 :hasMinimizer="hasMinimizer"
                 :hasMaximizer="windowOptions.resizable"
@@ -25,13 +25,12 @@
         </div>
 </template>
 <script lang="ts">
-import VueType, { PropType, defineComponent, ComponentPublicInstance } from 'vue'
-import Component from 'vue-class-component'
+import { PropType, defineComponent, ComponentPublicInstance } from 'vue'
 
 import Movable from '@/system/core/movable-directive'
 import Win64Title from './win64-title.vue'
-import IWin64Options, { Win64Options } from './win64-options'
-import Win64Manager from '@/system/window-manager';
+import IWin64Options from './win64-options'
+import WindowManager from '@/system/window-manager';
 import Win64Menu from './win64-menu.vue'
 
 import Resizer from '../logics/resizer.vue'
@@ -158,18 +157,17 @@ export default defineComponent({
             },
             minimize:function() {
                 if(!this.$props.hasMinimizer) return;
-
                 if(this.$props.modal){
-                    Win64Manager.select(this);
+                    WindowManager.select(this);
                     return;
                 }
 
                 let minimized = this.$data.minimized;
                 if(minimized) {
-                    Win64Manager.select(this)
+                    WindowManager.select(this)
                 }
                 else {
-                    Win64Manager.deselect()
+                    WindowManager.deselect()
                 }
                 this.$data.minimized = !minimized;
             },
@@ -177,7 +175,7 @@ export default defineComponent({
                 if(!this.$props.windowOptions?.resizable) return;
 
                 if(this.$props.modal){
-                    Win64Manager.select(this);
+                    WindowManager.select(this);
                     return;
                 }
 
@@ -194,10 +192,20 @@ export default defineComponent({
             },
             close:function(){
                 if(this.$props.modal){
-                    Win64Manager.select(this);
+                    WindowManager.select(this);
                     return;
                 }
-                this.$.appContext.app.unmount(this.parentElement);
+                this.$.appContext.app.unmount(this.$.appContext.app._container)
+            },
+            /* something doesn't work on Vue 3 so... sigh. */
+            closeApp:function(){
+                //@ts-ignore
+                if(this._props.modal){
+                    WindowManager.select(this);
+                    return;
+                }
+                //@ts-ignore
+                this._context.app.unmount(this._context.app._container)
             },
             getContent:function(){
                 return ((this.$slots.default)?this.$slots.default:null);
@@ -209,9 +217,6 @@ export default defineComponent({
                 slot.unmount();
             }
         },*/
-        unmounted:function(){
-            this.$props.parentElement.removeChild(this.$el);
-        }
     })
 </script>
 <style lang="scss">
@@ -237,6 +242,13 @@ export default defineComponent({
             overflow:auto;
             display:flex;
             flex-direction: column;
+            > div{
+                display:flex;
+                flex-grow: 1;
+                > div{
+                    width:100%;
+                }
+            }
         }
         &:not(.selected) > .window-content .f_interactive div{
             pointer-events: auto;

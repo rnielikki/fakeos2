@@ -20,7 +20,6 @@ export default defineComponent({
     data:function(){
         return {
             hasMinimizer:false,
-            windowOptions: this.windowOptionsProp
         }
     },
     props:{
@@ -29,17 +28,18 @@ export default defineComponent({
             type:Array as PropType<DialogButton[]>,
             default:()=>OKButton
         },
-        windowOptionsProp: {
+        windowOptions: {
             type:Object as PropType<IWin64Options>
-        }
+        },
+        title:String
     },
     methods:{
         setAction:function(value:any){
             return ()=>{
                 //@ts-ignore
-                let targetWindows = this.$data.f_targetWindow;
+                let targetWindow = this.$data.f_targetWindow;
                 (this as any).setResult(value);
-                targetWindows.close()
+                targetWindow._component.methods.closeApp.bind(targetWindow)();
             };
         }
     }

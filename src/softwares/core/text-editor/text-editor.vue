@@ -5,7 +5,7 @@
 </template>
 <script lang="ts">
 import { defineComponent,  PropType } from 'vue'
-import { FileInfo } from '@/system/filesystem/fileinfo'
+import IFileInfo, { FileInfo } from '@/system/filesystem/fileinfo'
 import { checkType } from '@/system/filesystem/mime';
 import { Win64Options } from '@/components/window/components/win64-options';
 import explorerModal from '@/softwares/core/explorer/explorer-modal'
@@ -19,7 +19,7 @@ export default defineComponent({
     mixins:[ AppValidator(checkType.ifText) ],
     data:function(){
         return {
-            title:`Text Editor - ${this.$props?.sender?.name ?? "new file"}`,
+            title:`Text Editor - new file`,
             menu:AppMenu(this),
             f_file:this.$props?.sender,
             f_confirmSaving:{
@@ -43,13 +43,18 @@ export default defineComponent({
                 let ok = Object(result).ok;
                 if(ok){
                     //@ts-ignore
-                    this.$data.f_targetWindow.f_title = `Text Editor - ${Object(result).file.name}`
+                    this.changeTitle(Object(result)).file.name;
                 }
                 this.f_confirmSaving.fileChanged = !ok
             });
         },
         dataChange:function(e:Event){
             this.$data.f_confirmSaving.fileChanged = true;
+        },
+        changeTitle(name:(String | undefined)){
+            this.$data.title = `Text Editor - ${name ?? "new file"}`;
+            //@ts-ignore
+            this.$data.f_targetWindow.f_title = this.$data.title;
         }
     },
     computed:{

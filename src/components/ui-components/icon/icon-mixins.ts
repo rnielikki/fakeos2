@@ -49,9 +49,9 @@ export const passFileFromExplorer = defineComponent({
     methods:{
         openFile:function(fileInfo:FileInfo){
             //@ts-ignore
-            const targetWindows = this.$data.f_targetWindow;
+            const targetWindow = this.$data.f_targetWindow;
             (this as any).setResult(fileInfo);
-            targetWindows.close();
+            targetWindow.close();
         }
     }
 })

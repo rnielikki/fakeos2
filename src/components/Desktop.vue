@@ -1,18 +1,18 @@
 <template>
 <div class="f_desktop" id="f_desktop">
     <background />
-    <StatusBar />
+    <!--<StatusBar />-->
 </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Background from './background/background.vue';
-import StatusBar from './statusbar/statusbar.vue'
+//import StatusBar from './statusbar/statusbar.vue'
 import Menu from './menu/menu'
 import DesktopIcons from './desktop-icons'
 
 export default defineComponent({
-    components: { StatusBar, Background },
+    components: { /*StatusBar,*/ Background },
     directives: {
         menu: Menu
     },

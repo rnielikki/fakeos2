@@ -1,10 +1,10 @@
 <template>
-    <div class="window-title" @dblclick="targetWindows.maximize">
+    <div class="window-title" @dblclick="targetWindow.maximize">
         <img v-if="iconPath" :src="iconPath" />
         <span class="window-title-text">{{ title }}</span>
         <div class="window-title-buttons">
-            <Ui-button v-if="hasMinimizer" :clicked="targetWindows.minimize" text = "_" />
-            <Ui-button v-if="hasMaximizer" :clicked="targetWindows.maximize" text = "[]" />
+            <Ui-button v-if="hasMinimizer" :clicked="targetWindow.minimize" text = "_" />
+            <Ui-button v-if="hasMaximizer" :clicked="targetWindow.maximize" text = "[]" />
             <Ui-button :clicked="close" text = "x" />
         </div>
     </div>
@@ -12,26 +12,25 @@
 <script lang="ts">
 import { ComponentPublicInstance, defineComponent,  PropType } from 'vue'
 import UiButton from '../../ui-components/button.vue'
-import Win64 from './win64.vue'
 
 export default defineComponent({
-    name:'Win64-title',
+    name:'Win64-Title',
     props:{
         iconPath:String,
         title:String,
         hasMinimizer:Boolean,
         hasMaximizer:Boolean,
-        targetWindows:{
+        targetWindow:{
             type:Object as PropType<ComponentPublicInstance>,
             required:true
         }
     },
     components:{
-        UiButton
+        "Ui-button":UiButton
     },
     methods:{
         close(e:Event){
-            (this.targetWindows as any).close();
+            (this.targetWindow as any).close();
         }
     }
 })
@@ -71,7 +70,7 @@ export default defineComponent({
             vertical-align: middle;
         }
     }
-    ui-button {
+    Ui-button {
         padding:.1rem;
     }
 </style>

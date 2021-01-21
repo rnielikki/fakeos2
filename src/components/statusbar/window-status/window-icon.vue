@@ -8,14 +8,14 @@
             :style="{ backgroundImage: 'url('+targetApp.$props.iconPath+')' }"
             @click="selectOrMinimize"
             @dragend="$emit('dragend')"
-            :data-window-id="this.targetApp._uid"
+            :data-window-id="this.targetApp._.uid"
             @dragover.prevent>
         </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Win64 from '@/components/window/components/win64.vue'
-import Win64Manager from '@/system/window-manager'
+import WindowManager from '@/system/window-manager'
 
 //import { IMenuComponent } from '@/components/menu/models/menu-model'
 import ContextMenu from '../../menu/contextmenu'
@@ -24,7 +24,10 @@ import { PropType, ComponentPublicInstance } from 'vue'
 
 export default defineComponent({
     props:{
-        targetApp:Object as PropType<ComponentPublicInstance>
+        targetApp:{
+            type:Object as PropType<ComponentPublicInstance>,
+            required:true
+        }
     },
     directives:{ contextMenu:ContextMenu },
     computed:{
@@ -39,13 +42,13 @@ export default defineComponent({
         selectOrMinimize:function(){
             let app = this.$props.targetApp;
             //@ts-ignore
-            if(Win64Manager.isSelected(app) || app.minimized) {
+            if(WindowManager.isSelected(app) || app.minimized) {
                 //@ts-ignore
                 app.minimize();
             }
             else {
                 //@ts-ignore
-                Win64Manager.select(app)
+                WindowManager.select(app)
             }
         }
     },
