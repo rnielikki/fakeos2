@@ -28,7 +28,7 @@ export default function(validator:(sender:FileInfo)=>unknown){
             f_throwError:function(content:string){
                 this.$nextTick(()=>{
                     //@ts-ignore
-                    windowFactory.OpenDialog(this, "Error while opening", content, undefined, ()=>this.$data.f_targetWindow.close());
+                    windowFactory.OpenDialog(this, "Error while opening", content, undefined, ()=> windowController.close(target.$data.f_targetWindow));
                 })
             }
         }

@@ -12,12 +12,12 @@
 
         <div class="index-wrapper f_non-interactive" v-if="isModal && isSave">
             <input type="text" ref="name" class="input-text" />
-            <ui-button text="Save" :clicked="()=>{ setResult({ ok:true, dir:f_path }); $data.f_targetWindow.close() }" />
+            <ui-button text="Save" :clicked="()=>{ setResult({ ok:true, dir:f_path }); close($data.f_targetWindow) }" />
         </div>
     </div>
 </template>
 <script lang="ts">
-import { defineComponent,  PropType } from 'vue'
+import { ComponentOptionsBase, ComponentPublicInstance, defineComponent,  PropType } from 'vue'
 import IconCollection from "@/components/ui-components/icon/icon-collection.vue";
 import IFileInfo, { DirectoryInfo } from '@/system/filesystem/fileinfo'
 import DefaultDrive, { Path } from "@/system/filesystem/filesystem";
@@ -28,6 +28,7 @@ import explorerMenu from './menu'
 import Root from '@/system/filesystem/filesystem'
 import { Win64Options } from '@/components/window/components/win64-options'
 import UiButton from '@/components/ui-components/button.vue'
+import WindowController from '@/components/window/window-controller';
 
 export default defineComponent({
     components:{ IconCollection, UiButton },
@@ -82,6 +83,11 @@ export default defineComponent({
             //@ts-ignore
             (this.$refs.label as HTMLElement).innerText = this.$props.path.currentPath;
         })
+    },
+    methods:{
+        close:function(target:ComponentPublicInstance){
+            WindowController.close(target);
+        }
     },
     watch:{
         f_path:function(){

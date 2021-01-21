@@ -17,7 +17,7 @@ export default function(target:ComponentPublicInstance){
                     {
                         label:"close",
                         //@ts-ignore
-                        action:()=>target.$data.f_targetWindow.close()
+                        action:()=> windowController.close(target.$data.f_targetWindow)
                     }
                 ]
             },

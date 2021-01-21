@@ -12,6 +12,7 @@ import ModalContentMixin from '../../mixins/modal-content-mixin'
 import IWin64Options from '../win64-options'
 import UiButton from '@/components/ui-components/button.vue'
 import DialogButton, { OKButton } from './dialog-model'
+import WindowController from '../../window-controller'
 
 export default defineComponent({
     name:'DialogTemplate',
@@ -39,7 +40,7 @@ export default defineComponent({
                 //@ts-ignore
                 let targetWindow = this.$data.f_targetWindow;
                 (this as any).setResult(value);
-                targetWindow._component.methods.closeApp.bind(targetWindow)();
+                WindowController.close(targetWindow);
             };
         }
     }

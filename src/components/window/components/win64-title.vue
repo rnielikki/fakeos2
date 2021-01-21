@@ -12,6 +12,7 @@
 <script lang="ts">
 import { ComponentPublicInstance, defineComponent,  PropType } from 'vue'
 import UiButton from '../../ui-components/button.vue'
+import WindowController from '../window-controller';
 
 export default defineComponent({
     name:'Win64-Title',
@@ -30,7 +31,7 @@ export default defineComponent({
     },
     methods:{
         close(e:Event){
-            (this.targetWindow as any).close();
+            WindowController.close(this.targetWindow);
         }
     }
 })

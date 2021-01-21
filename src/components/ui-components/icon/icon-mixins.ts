@@ -7,6 +7,7 @@ import windowManager from '@/system/window-manager'
 import modalContentMixin from '@/components/window/mixins/modal-content-mixin'
 import filesystemEditor from '@/system/filesystem/filesystem-editor'
 import FileEditResult, { showDialogIfError } from '@/system/filesystem/file-edit-result'
+import WindowController from '@/components/window/window-controller'
 
 export const defaultDirectoryAction = defineComponent({
     methods:{
@@ -51,7 +52,7 @@ export const passFileFromExplorer = defineComponent({
             //@ts-ignore
             const targetWindow = this.$data.f_targetWindow;
             (this as any).setResult(fileInfo);
-            targetWindow.close();
+            WindowController.close(targetWindow);
         }
     }
 })

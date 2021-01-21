@@ -1,3 +1,4 @@
+import windowController from '@/components/window/window-controller'
 import windowFactory from '@/components/window/window-factory'
 import { ComponentPublicInstance } from 'vue'
 
@@ -18,7 +19,7 @@ export default function(target:ComponentPublicInstance){
                     {
                         label:"Close",
                         //@ts-ignore
-                        action:()=>target.$data.f_targetWindow.close()
+                        action:()=> windowController.close(target.$data.f_targetWindow)
                     }
                 ]
             },

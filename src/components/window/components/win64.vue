@@ -38,6 +38,7 @@ import Position from '../logics/position'
 
 import { IMenuComponent } from '@/components/menu/models/menu-model'
 import ContextMenu from '../../menu/contextmenu'
+import WindowController from '../window-controller';
 
 export default defineComponent({
         name: "Win64",
@@ -122,7 +123,7 @@ export default defineComponent({
             this.$data.currentElement = this.$el;
             (this as any).initWin64State();
             if(this.$props.windowOptions?.maximizeOnStart){
-                this.$nextTick(()=>(this as any).maximize())
+                this.$nextTick(()=>WindowController.maximize(this))
             }
         },
         methods:{
@@ -156,46 +157,13 @@ export default defineComponent({
                 })
             },
             minimize:function() {
-                if(!this.$props.hasMinimizer) return;
-                if(this.$props.modal){
-                    WindowManager.select(this);
-                    return;
-                }
-
-                let minimized = this.$data.minimized;
-                if(minimized) {
-                    WindowManager.select(this)
-                }
-                else {
-                    WindowManager.deselect()
-                }
-                this.$data.minimized = !minimized;
+                WindowController.minimize(this);
             },
             maximize:function() {
-                if(!this.$props.windowOptions?.resizable) return;
-
-                if(this.$props.modal){
-                    WindowManager.select(this);
-                    return;
-                }
-
-                if(this.$data.maximized) {
-                    //unmaximize
-                    this.$data.maximized = false;
-                    this.$props.windowOptions.movable = true;
-                }
-                else {
-                    //maximize
-                    this.$data.maximized = true;
-                    this.$props.windowOptions.movable = false;
-                }
+                WindowController.maximize(this);
             },
             close:function(){
-                if(this.$props.modal){
-                    WindowManager.select(this);
-                    return;
-                }
-                this.$.appContext.app.unmount(this.$.appContext.app._container)
+                WindowController.close(this);
             },
             /* something doesn't work on Vue 3 so... sigh. */
             closeApp:function(){

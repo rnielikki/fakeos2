@@ -21,6 +21,7 @@ import WindowManager from '@/system/window-manager'
 import ContextMenu from '../../menu/contextmenu'
 import PopupInfo, { popupDirection } from '../../popups/popup-info'
 import { PropType, ComponentPublicInstance } from 'vue'
+import WindowController from '@/components/window/window-controller'
 
 export default defineComponent({
     props:{
@@ -43,8 +44,7 @@ export default defineComponent({
             let app = this.$props.targetApp;
             //@ts-ignore
             if(WindowManager.isSelected(app) || app.minimized) {
-                //@ts-ignore
-                app.minimize();
+                WindowController.minimize(app);
             }
             else {
                 //@ts-ignore
